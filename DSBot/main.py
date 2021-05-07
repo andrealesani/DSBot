@@ -89,8 +89,8 @@ if __name__ == '__main__':
     #kmeans = Kmeans(titanic_ds.dataset, n_clust=3).res
     #scatterplot = Plot(titanic_ds).scatter(kmeans.labels)
 
-    os.system("onmt_translate -model ../OpenNMT-py/wf/run/model_step_1000.pt -src ../OpenNMT-py/wf/try.txt -output ../OpenNMT-py/wf/pred_1000.txt -gpu 0 -verbose")
-    with open("../OpenNMT-py/wf/pred_1000.txt", 'r') as f:
+    os.system("onmt_translate -model ./wf/run/model_step_1000.pt -src wf/try.txt -output ./wf/pred_1000.txt -gpu -1 -verbose")
+    with open("wf/pred_1000.txt", 'r') as f:
         x = f.readlines()
     #print(x)
     workflow =  x[0].strip().split(' ')
