@@ -1,0 +1,141 @@
+I want to cluster data
+cluster
+cluster data
+Use logistic regression to classify data
+Dont know
+Find groups
+are u able to find 10 groups?
+i want to find genes clusters
+classify data
+these data have a label, can you retrieve them?
+can you classify these data?
+please perform classification
+classify the data I uploaded
+do not know what to do
+please find something
+can you find something?
+please i want to see the groups that are present in the data
+find something
+is there anything?
+build a logistic regression for X and evaluate performances for alpha
+firstly remove features with variance less than 0.5
+normalize the data and classify them
+visualize the performances for the number  of clusters for kmeans
+Visualize data
+Compute performances for classification of these data and visualize them
+divide data into groups and find the best number of groups
+predict the label of these data
+understand the data
+see data analysis, then filter the data and then classify them
+see the performances of the classification
+find the patterns in the data
+find the groups and see them
+Organize data into groups and determine the optimal number of groups.
+look at the classification's results
+I'd like to see the classes that are represented in the results.
+Will you find any groups?
+classify the information I provided
+apply a classification algorithm and show me performances
+use a classification algorithm to show me the results
+extract 3 clusters and show me them
+use kmeans with number of clusters equal to 7 and use the scatterplot
+find 2 groups of data and compute the silhouette measure
+kmeans with 5 cliusters
+find 8 clusters
+show me 10 groups
+find 2 groups, and plot them
+perform kmeans clustering with 6 as number of clusters
+clusterize the data using 4 clusters
+find 5 groups
+apply clustering algorithm with 9 clusters
+reduce the dimensionality of the data and then find the groups
+please find the group in the data and show them
+show me the scatterplot of the clusters
+apply kmeans algorithm to find the best number of groups
+after a dimensionality reduction, apply kmeans algorithm
+are there any group in the data
+Calculate and diagram the classification output of these results.
+divide the data into groups and determine the optimal number of groups
+predict the mark of these data
+comprehend the information
+see data analysis, then filter the data, and finally identify them
+look at the classification's results,
+look for trends in the numbers
+look at the categories.
+Will you come across any groups?
+classify the data I got
+use a classification algorithm, and show me the results
+present me the findings using a classification algorithm
+Take three clusters and show them to me.
+Will you retrieve these data so they have a label?
+Can you categorize these data?
+Please conduct classification.
+Please classify the data I uploaded
+I'm at a loss about what to do.
+normalize and categorize the information
+visualize the efficiency of kmeans for the number of clusters
+Data visualization
+Calculate and illustrate classification output for these results.
+divide the data into groups and determine the optimal number of groups
+estimate the label of the data
+use kmeans on the reduced data
+can you apply kmeans and find the groups?
+remove low variance data and then find the groups in the remaining ones
+remove low variance data and then display the groups in the remaining ones
+do kmeans
+apply a clustering algorithm
+search for groups
+can you spot some groups?
+what is the meaning of those data?
+show me the data separated into groups
+analyze the data and predict the label
+find insights in the data
+can you select some relevant features?
+Display me the data that has been divided into categories.
+visualize the performances of the classification
+see the groups
+apply kmeans with 5 clusters
+Show me the data that has been organized into groups.
+visualize the classification's success
+Please locate and display the community in the details.
+Please identify and highlight the community in the information.
+normalize and classify the information
+show me some statistics regarding the data
+Use kmeans with 5 clusters.
+perform basic analysis
+analysis
+can you find patterns in the data?
+spot the patterns in the table
+divide the data into groups and show me the result
+using kmeans, divide the data into groups
+Divide the data into sets using kmeans.
+display the sets you find applying kmeans algorithm
+show the sets you discovered using the kmeans algorithm
+present the sets you found using the kmeans algorithm
+applying random forest classify the data according to the given label
+Using a Random Tree Sort the data into categories based on the label given.
+Sort the data into categories based on the label given.
+apply logistic regression  for classifying the data
+To classify the results, use logistic regression. Then comput the performances and plot them
+Perform the dimensionality reduction of the data and find groups with kmeans
+Compute the pca of the data and find groups using kmeans algorithm, show me visually the performances
+Classify my data and show me the boxplots of the performances
+I want to keep only high variance data and performing on them a feature selection, Then classify the remained data applying RF and show me the results.
+Please show me the median and the variance of the data, then clusterize them and show me the groups.
+can you find the correlation among the data?
+please compute the correlation among the data
+can you select only the relevant features?
+select the most important features and clusterize them
+extract the most important features and show me the groups you retrieve
+compute pearson correlation of the data
+compute spearman correlation of the data
+can you find the data that are correlated?
+can you use pearson measure to compute the correlation of the data?
+which are the features that are most related to the label?
+can you find a relation among the features and the label?
+are there some rules regarding the features and the label?
+find the association rules in the data
+can you retrieve frequent itemsets?
+please find the frequent itemsets in the data
+extract meaningful rules in the data
+i want to mine the frequent itemsets in the dataset
