@@ -1,0 +1,21 @@
+find groups
+find clusters
+do you find clusters?
+Help me
+please do clustering
+insights
+something interesting
+apply preprocessing step
+see groups in my data
+analyze the data and predict the label
+do you see any pattern in these data?
+fix the data and find the groups in those data
+can you extract 4 clusters?
+find 5 clusters
+extract 10 groups and show me them
+use the clustering algorithm for nine clusters
+Reduce the dimensionality of the data before locating the classes
+Please locate and display the community in the details.
+Present me the cluster scatterplot.
+using kmeans, divide the data into groups
+Compute the pca of the data and find groups using kmeans algorithm, show me visually the performances

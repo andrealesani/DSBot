@@ -1,0 +1,13 @@
+do kmeans
+apply a clustering algorithm
+search for groups
+can you spot some groups?
+what is the meaning of those data?
+show me the data separated into groups
+analyze the data and predict the label
+find insights in the data 
+can you select some relevant features?
+Display me the data that has been divided into categories.
+visualize the performances of the classification
+see the groups
+apply kmeans with 5 clusters
