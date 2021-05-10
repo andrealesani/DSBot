@@ -1,4 +1,5 @@
 from flask import Flask, jsonify, request
+from flask_cors import CORS
 from flask_restful import reqparse
 
 app = Flask(__name__)
@@ -8,15 +9,16 @@ session_id = 1
 
 @app.route('/receiveds', methods=['POST'])
 def receive_ds():
+    print("Ehiehiehi")
     has_index = request.form['has_index']
-    has_columns_name = request.form['has_columns_name']
+    has_columns_name = request.form['has_column_names']
 
-    uploaded_file = request.files['file']
+    uploaded_file = request.files['ds']
     if uploaded_file.filename != '':
         uploaded_file.save(uploaded_file.filename)
         # TODO: apri il file e salvalo
 
-    return {"session_id": session_id}
+    return jsonify({"session_id": session_id})
 
 
 @app.route('/utterance', methods=['POST'])
@@ -53,4 +55,4 @@ def execute():
     return jsonify({"message": "ok"})
 
 
-app.run(port=5000)
+app.run(port=5000, debug=True)

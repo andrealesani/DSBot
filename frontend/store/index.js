@@ -20,3 +20,5 @@ export const mutations = {
     state.e1 = newValue
   },
 }
+
+export const actions = {}
