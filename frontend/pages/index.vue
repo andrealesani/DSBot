@@ -22,7 +22,7 @@
           <v-stepper-content step="1">
             <input-form></input-form>
 
-            <v-btn color="primary" @click="e1 = 2"> Continue </v-btn>
+            <v-btn color="primary" @click="setStep(2)"> Continue </v-btn>
 
             <v-btn text> Cancel </v-btn>
           </v-stepper-content>
@@ -32,7 +32,7 @@
               <insert-sentence></insert-sentence>
             </v-card>
 
-            <v-btn color="primary" @click="e1 = 3"> Continue </v-btn>
+            <v-btn color="primary" @click="setStep(3)"> Continue </v-btn>
 
             <v-btn text> Cancel </v-btn>
           </v-stepper-content>
@@ -40,7 +40,7 @@
           <v-stepper-content step="3">
             <results></results>
 
-            <v-btn color="primary" @click="e1 = 1"> Continue </v-btn>
+            <v-btn color="primary" @click="setStep(1)"> Continue </v-btn>
 
             <v-btn text> Cancel </v-btn>
           </v-stepper-content>
@@ -51,6 +51,8 @@
 </template>
 
 <script>
+import { mapState, mapMutations } from 'vuex'
+
 import InputForm from '~/components/InputForm'
 import InsertSentence from '~/components/InsertSentence'
 import Results from '~/components/Results'
@@ -63,8 +65,14 @@ export default {
   },
   data() {
     return {
-      e1: 1,
+      // e1: 1,
     }
+  },
+  methods: {
+    ...mapMutations(['setStep']),
+  },
+  computed: {
+    ...mapState(['e1']),
   },
 }
 </script>
