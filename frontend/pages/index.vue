@@ -29,8 +29,7 @@
 
           <v-stepper-content step="2">
             <v-card class="mb-12" height="200px">
-              What you want to obtain?
-              <v-textarea></v-textarea>
+              <insert-sentence></insert-sentence>
             </v-card>
 
             <v-btn color="primary" @click="e1 = 3"> Continue </v-btn>
@@ -39,7 +38,7 @@
           </v-stepper-content>
 
           <v-stepper-content step="3">
-            <v-card class="mb-12" height="200px"> Here the results! </v-card>
+            <results></results>
 
             <v-btn color="primary" @click="e1 = 1"> Continue </v-btn>
 
@@ -53,10 +52,14 @@
 
 <script>
 import InputForm from '~/components/InputForm'
+import InsertSentence from '~/components/InsertSentence'
+import Results from '~/components/Results'
 
 export default {
   components: {
     InputForm,
+    InsertSentence,
+    Results,
   },
   data() {
     return {
