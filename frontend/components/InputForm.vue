@@ -1,12 +1,12 @@
 <template>
   <div>
-    <v-card class="mb-12" height="200px">
+    <v-card class="mb-12" height="300px">
       Upload your data
-      <v-file-input truncate-length="15"></v-file-input>
+      <v-file-input truncate-length="15" v-model="dataset"></v-file-input>
       <v-switch
         v-model="hasIndex"
         flat
-        :label="`The file rows have ${hasKeys ? '' : 'not'} Keys`"
+        :label="`The file rows have ${hasIndex ? '' : 'not'} Keys`"
       ></v-switch>
       <v-switch
         v-model="hasColumnNames"
@@ -15,6 +15,11 @@
           hasColumnNames ? '' : 'not'
         } column names`"
       ></v-switch>
+      <v-select
+        v-model="separator"
+        :items="separator_list"
+        label="Separator"
+      ></v-select>
     </v-card>
     <!-- <v-btn color="primary"> Continue </v-btn> -->
     <v-btn color="primary" @click="sendData"> ConAAAtinue </v-btn>
@@ -29,13 +34,20 @@ export default {
       e1: 1,
       hasIndex: true,
       hasColumnNames: true,
+      separator_list: [',', ';'],
+      separator: ',',
+      dataset: null,
     }
   },
   methods: {
     async sendData() {
+      console.log(this.dataset)
       const formdata = new FormData()
       formdata.append('has_column_names', this.hasColumnNames)
+      formdata.append('ds', this.dataset)
       formdata.append('has_index', this.hasIndex)
+      formdata.append('separator', this.separator)
+      formdata.append('format', '.csv')
 
       const res = await this.$axios
         .post('/receiveds', formdata, {

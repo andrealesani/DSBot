@@ -11,18 +11,20 @@ session_id = 1
 
 @app.route('/receiveds', methods=['POST'])
 def receive_ds():
-    print("Ehiehiehi")
+    print(request.files)
     has_index = request.form['has_index']
     has_columns_name = request.form['has_column_names']
     sep = request.form['separator']
     format = request.form['format']
-    return jsonify({"session_id": session_id})
-"""
+
     uploaded_file = request.files['ds']
     if uploaded_file.filename != '':
-        uploaded_file.save(uploaded_file.filename)
+        print("si salva!")
+        #uploaded_file.save(uploaded_file.filename)
         # TODO: apri il file e salvalo
-"""
+
+    return jsonify({"session_id": session_id})
+
 
 
 
