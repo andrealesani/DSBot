@@ -1,24 +1,29 @@
-from flask import Flask, jsonify, request
+import flask
+from flask import Flask, jsonify, request, send_file
 from flask_cors import CORS
 from flask_restful import reqparse
 
 app = Flask(__name__)
+cors = CORS(app)
+app.config['CORS_HEADERS'] = 'application/json'
 
 session_id = 1
-
 
 @app.route('/receiveds', methods=['POST'])
 def receive_ds():
     print("Ehiehiehi")
     has_index = request.form['has_index']
     has_columns_name = request.form['has_column_names']
-
+    sep = request.form['separator']
+    format = request.form['format']
+    return jsonify({"session_id": session_id})
+"""
     uploaded_file = request.files['ds']
     if uploaded_file.filename != '':
         uploaded_file.save(uploaded_file.filename)
         # TODO: apri il file e salvalo
+"""
 
-    return jsonify({"session_id": session_id})
 
 
 @app.route('/utterance', methods=['POST'])
@@ -55,4 +60,13 @@ def execute():
     return jsonify({"message": "ok"})
 
 
+@app.route('/results/<int:received_id>')
+def get_results(received_id):
+    #return jsonify({"ready": False, "session_id": session_id})
+    filename = "assets/prove.jpeg"
+    return send_file(filename, mimetype='image/gif')
+
+
 app.run(port=5000, debug=True)
+
+
