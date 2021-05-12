@@ -48,8 +48,4 @@ export default {
 }
 </script>
 
-<style scoped>
-img {
-  /* height: 200px; */
-}
-</style>
+<style scoped></style>

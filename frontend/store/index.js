@@ -1,5 +1,5 @@
 export const state = () => ({
-  e1: 3,
+  e1: 1,
   sessionId: 1,
   requestDescription: '',
   resultsReady: false,
@@ -79,9 +79,6 @@ export const actions = {
           console.log(response)
           context.commit('setImage', response.data.img)
           context.commit('setResultsReady', response.data.ready)
-          //   if (response.data.ready) {
-          // Plotta l'immagine
-          //   }
         })
       return pollingResponse
     }
