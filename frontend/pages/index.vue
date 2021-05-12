@@ -21,10 +21,6 @@
         <v-stepper-items>
           <v-stepper-content step="1">
             <input-form></input-form>
-
-            <v-btn color="primary" @click="setStep(2)"> Continue </v-btn>
-
-            <v-btn text> Cancel </v-btn>
           </v-stepper-content>
 
           <v-stepper-content step="2">
@@ -32,9 +28,9 @@
               <insert-sentence></insert-sentence>
             </v-card>
 
-            <v-btn color="primary" @click="setStep(3)"> Continue </v-btn>
+            <!-- <v-btn color="primary" @click="setStep(3)"> Continue </v-btn>
 
-            <v-btn text> Cancel </v-btn>
+            <v-btn text> Cancel </v-btn> -->
           </v-stepper-content>
 
           <v-stepper-content step="3">
