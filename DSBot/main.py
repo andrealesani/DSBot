@@ -95,9 +95,11 @@ if __name__ == '__main__':
     #print(x)
     workflow =  x[0].strip().split(' ')
     print(workflow)
+
     #kb = KnowledgeBase().kb
     #print(kb)
     #request = 'kmeans scatterplot'
     #kb = filter_kb(kb, request)
-    #print(kb)v
+    #print(kb)
+
 

@@ -139,3 +139,5 @@ can you retrieve frequent itemsets?
 please find the frequent itemsets in the data
 extract meaningful rules in the data
 i want to mine the frequent itemsets in the dataset
+can you find if the data are related?
+are those data related?
