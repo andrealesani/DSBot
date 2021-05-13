@@ -84,7 +84,7 @@ export default {
       miniVariant: false,
       right: true,
       rightDrawer: false,
-      title: 'Sara culo',
+      title: 'Data Science Pipeline Constructor',
     }
   },
 }
