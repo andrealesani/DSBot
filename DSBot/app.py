@@ -2,6 +2,9 @@ import flask
 from flask import Flask, jsonify, request, send_file
 from flask_cors import CORS
 from flask_restful import reqparse
+import os
+import pandas as pd
+
 
 app = Flask(__name__)
 cors = CORS(app)
@@ -11,9 +14,8 @@ session_id = 1
 
 @app.route('/receiveds', methods=['POST'])
 def receive_ds():
-    print(request.files)
-    has_index = request.form['has_index']
-    has_columns_name = request.form['has_column_names']
+    has_index = 0 if request.form['has_index']=='true' else None
+    has_columns_name = 0 if request.form['has_column_names']=='true' else None
     sep = request.form['separator']
     format = request.form['format']
 
@@ -21,31 +23,34 @@ def receive_ds():
     if uploaded_file.filename != '':
         print("si salva!")
         #uploaded_file.save(uploaded_file.filename)
-        # TODO: apri il file e salvalo
+        uploaded_file.save('./temp' + uploaded_file.filename)
+        global dataset
+        dataset = pd.read_csv(str(uploaded_file.filename), header=has_columns_name, index_col=has_index,  sep=sep)
+        dataset.to_csv('./temp' + uploaded_file.filename)
 
     return jsonify({"session_id": session_id})
 
-
-
-
 @app.route('/utterance', methods=['POST'])
 def receive_utterance():
+    print('ciaoooooo')
     parser = reqparse.RequestParser()
     parser.add_argument('session_id', required=True, type=int, help='No session provided')
     parser.add_argument('message', required=True)
     args = parser.parse_args()
 
     if (args['session_id'] == session_id):
-        pass
-        # TODO chhiama nlp su args['message']
+        with open('temp/message'+str(session_id)+'.txt', 'w') as f:
+            f.write(args['message'])
 
+        os.system('onmt_translate -model DSBot/wf/run/model_step_1000.pt -src temp/message'+str(session_id)+'.txt -output temp/pred'+str(session_id)+'.txt -gpu -1 -verbose')
+
+        with open('temp/pred'+str(session_id)+'.txt', 'r') as f:
+            wf = f.readlines()
+        print(wf)
         return jsonify({"session_id": session_id,
                         "parsed_requests": [
                             {"operation_id": 1,
-                             "request": "Clusterami stocazzo"},
-                            {"operation_id": 2,
-                             "request": "Faccio la regressione lineare su il numero di utenti per a seconda del mese "
-                                        "di nascita"}
+                             "request": str(wf)}
                         ]})
     return jsonify({"message": "Errore"})
 
