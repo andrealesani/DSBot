@@ -67,11 +67,11 @@ text = [re.sub(BAD_SYMBOLS_RE, "", t) for t in text]
 text = [t.lower().translate(str.maketrans('', '', string.punctuation)).strip() for t in text if t.lower().translate(str.maketrans('', '', string.punctuation)).strip()!='']
 '''
 
-#glove_6b = "glove/glove.6B.100d.txt"
+#glove_6b = "glove/glove.6B.300d.txt"
 
 #loading the glove vectors
-#glove2word2vec.glove2word2vec(glove_6b,'word2vec_out.txt')
-with open('word2vec_out.txt', "rb") as lines:
+#glove2word2vec.glove2word2vec(glove_6b,'word2vec_out_300.txt')
+with open('word2vec_out_300.txt', "rb") as lines:
      wvec = {line.split()[0].decode('utf-8'):np.array(line.split()[1:],dtype=np.float32) for line in lines}
        # line.split()[0].decode(encoding): np.array(line.split()[1:],
        #                                                  dtype=np.float32)
@@ -90,19 +90,27 @@ y = [i.lower().replace('-',' ').translate(str.maketrans('', '', string.punctuati
 text_data2 = y
 #for sent in text_data2:
     #print(sent)
-em_model = Word2Vec(text_data2, size=100, window=10, min_count=2, workers=4)
+em_model = Word2Vec(text_data2, size=300, window=30, min_count=2, workers=8, sg = 1)
 w2v = {w: vec for w, vec in zip(em_model.wv.index2word, em_model.wv.vectors)}
 #print(w2v)
 a = list(w2v.keys())
 #print(len(a))
 #mixing them both
 for i in a:
-    if i in wvec:
-       continue
+    if i not in ['pearson','spearman','kendall','cramer']:
+        if i in wvec:
+           continue
+        else:
+            wvec.update({i: w2v[i]})
+            print(i)
+    elif i in ['pearson','spearman','kendall','cramer']:
+        wvec.update({i: w2v[i]})
+        print(i)
     else:
-       wvec.update({ i  : w2v[i]})
+        wvec.update({ i  : w2v[i]})
+        print(i)
 print(len(wvec))
 
-with open('../wf/try_glove_new.txt', "w") as f:
+with open('../wf/try_glove_new_300_try.txt', "w") as f:
     for k,v in wvec.items():
         f.write(str(k)+' '+' '.join(map(str, v))+'\n')

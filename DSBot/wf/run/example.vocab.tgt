@@ -1,5 +1,5 @@
-plot	49
-clustering	46
+plot	50
+clustering	48
 classification	35
 kmeans	19
 performance	15
@@ -7,9 +7,13 @@ ds	9
 statistics	9
 range	8
 preprocessing	7
+featureSelection	7
+aPriori	7
 pca	5
-featureSelection	4
 logisticRegression	3
 randomForest	3
+correlation	3
 scatterplot	2
+pearson	2
 boxplot	1
+spearman	1

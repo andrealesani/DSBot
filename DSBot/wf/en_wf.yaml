@@ -21,13 +21,13 @@ src_vocab: wf/run/example.vocab.src
 tgt_vocab: wf/run/example.vocab.tgt
 
 # this means embeddings will be used for both encoder and decoder sides
-both_embeddings: ./try_glove_new.txt
+both_embeddings: ./wf/try_glove_new.txt
 # to set src and tgt embeddings separately:
 #src_embeddings: ./wf/try_glove_new.txt
 #tgt_embeddings: ./wf/try_glove_new.txt
 
 # supported types: GloVe, word2vec
-embeddings_type: "GloVe"
+embeddings_type: "word2vec"
 
 # word_vec_size need to match with the pretrained embeddings dimensions
 word_vec_size: 100
