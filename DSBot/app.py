@@ -5,12 +5,14 @@ from flask_restful import reqparse
 import os
 import pandas as pd
 
+import base64
 
 app = Flask(__name__)
 cors = CORS(app)
 app.config['CORS_HEADERS'] = 'application/json'
 
 session_id = 1
+
 
 @app.route('/receiveds', methods=['POST'])
 def receive_ds():
@@ -30,6 +32,9 @@ def receive_ds():
 
     return jsonify({"session_id": session_id})
 
+
+
+
 @app.route('/utterance', methods=['POST'])
 def receive_utterance():
     print('ciaoooooo')
@@ -48,10 +53,9 @@ def receive_utterance():
             wf = f.readlines()
         print(wf)
         return jsonify({"session_id": session_id,
-                        "parsed_requests": [
-                            {"operation_id": 1,
-                             "request": str(wf)}
-                        ]})
+                        "request": "Faccio la regressione lineare su il numero di utenti per a seconda del mese "
+                                    "di nascita"
+                        })
     return jsonify({"message": "Errore"})
 
 
@@ -69,9 +73,18 @@ def execute():
 
 @app.route('/results/<int:received_id>')
 def get_results(received_id):
-    #return jsonify({"ready": False, "session_id": session_id})
-    filename = "assets/prove.jpeg"
-    return send_file(filename, mimetype='image/gif')
+    # TODO: if(not ready)
+    #   return jsonify({"ready": False, "session_id": session_id})
+
+    # recupero il file
+    filename = "assets/pepe.png"
+
+    # codifico il file in bytecode
+    with open(filename, "rb") as img_file:
+        my_string = base64.b64encode(img_file.read())
+        # trasformo il bytecode in stringa
+        base64_string = my_string.decode('utf-8')
+    return jsonify({"ready": True, "session_id": session_id, 'img': str(base64_string)})
 
 
 app.run(port=5000, debug=True)

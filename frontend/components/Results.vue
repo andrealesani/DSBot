@@ -1,7 +1,7 @@
 <template>
   <div>
-    <v-card class="mb-12" height="200px">
-      <div v-if="loading" class="text-center">
+    <v-card class="mb-12" height="500px">
+      <div v-if="!resultsReady" class="text-center">
         <div>
           <v-progress-circular
             indeterminate
@@ -10,23 +10,42 @@
             width="10"
           ></v-progress-circular>
         </div>
-
         We are performing your analysis
-        <v-btn color="primary" @click="loading = false"> Continue </v-btn>
       </div>
+      <img
+        :src="`data:image/png;base64,${imageBase64}`"
+        alt=""
+        v-if="resultsReady"
+      />
     </v-card>
-    <!-- <v-btn color="primary"> Continue </v-btn> -->
-    <!-- <v-btn color="primary" @click="e1 = 2"> Continue </v-btn> -->
   </div>
 </template>
 
 <script>
+import { mapActions, mapState } from 'vuex'
 export default {
   components: {},
   data() {
     return {
-      loading: true,
+      polling: null,
     }
+  },
+  computed: {
+    ...mapState(['resultsReady', 'imageBase64']),
+  },
+  methods: {
+    ...mapActions(['waitForResults']),
+    pollData() {
+      this.polling = setInterval(() => {
+        if (!this.resultsReady) this.waitForResults()
+        else clearInterval(this.polling)
+      }, 3000)
+    },
+  },
+  mounted() {
+    this.pollData()
   },
 }
 </script>
+
+<style scoped></style>

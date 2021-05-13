@@ -1,21 +1,26 @@
 <template>
   <div>
-    <v-card class="mb-12" height="200px">
+    <v-card class="mb-12" height="100px">
       What you want to obtain?
-      <v-textarea></v-textarea>
+      <v-textarea v-model="utterance" height="100px"></v-textarea>
     </v-card>
     <!-- <v-btn color="primary"> Continue </v-btn> -->
-    <!-- <v-btn color="primary" @click="e1 = 2"> Continue </v-btn> -->
+    <v-btn color="primary" @click="sendUtterance(utterance)"> Continue </v-btn>
   </div>
 </template>
 
 <script>
+import { mapActions } from 'vuex'
+
 export default {
   components: {},
   data() {
     return {
-      e1: 1,
+      utterance: '',
     }
+  },
+  methods: {
+    ...mapActions(['sendUtterance']),
   },
 }
 </script>

@@ -2,7 +2,12 @@
   <div>
     <v-card class="mb-12" height="300px">
       Upload your data
-      <v-file-input truncate-length="15" v-model="dataset"></v-file-input>
+      <v-file-input
+        v-model="dataset"
+        truncate-length="15"
+        :error="fileInputError"
+        label="select a CSV"
+      ></v-file-input>
       <v-switch
         v-model="hasIndex"
         flat
@@ -22,47 +27,43 @@
       ></v-select>
     </v-card>
     <!-- <v-btn color="primary"> Continue </v-btn> -->
-    <v-btn color="primary" @click="sendData"> ConAAAtinue </v-btn>
+    <v-btn color="primary" @click="sendData"> Continue </v-btn>
   </div>
 </template>
 
 <script>
+import { mapActions } from 'vuex'
+
 export default {
   components: {},
   data() {
     return {
-      e1: 1,
       hasIndex: true,
       hasColumnNames: true,
       separator_list: [',', ';'],
       separator: ',',
       dataset: null,
+      fileInputError: false,
+      fileInputHint: '',
     }
   },
   methods: {
-    async sendData() {
-      console.log(this.dataset)
-      const formdata = new FormData()
-      formdata.append('has_column_names', this.hasColumnNames)
-      formdata.append('ds', this.dataset)
-      formdata.append('has_index', this.hasIndex)
-      formdata.append('separator', this.separator)
-      formdata.append('format', '.csv')
-
-      const res = await this.$axios
-        .post('/receiveds', formdata, {
-          headers: {
-            'Content-Type': 'multipart/form-data',
-          },
-        })
-        .then(function (response) {
-          console.log(response.data)
-        })
-        .catch(function () {
-          console.log('FAILURE!!')
-        })
-      return res
+    sendData() {
+      if (this.dataset) {
+        this.fileInputError = false
+        this.sendDataStore(
+          this.dataset,
+          this.hasColumnNames,
+          this.hasIndex,
+          this.separcleaeator,
+          '.csv'
+        )
+      } else {
+        this.fileInputError = true
+      }
     },
+    ...mapActions(['setStep', 'sendDataStore']),
   },
+  actions: {},
 }
 </script>
