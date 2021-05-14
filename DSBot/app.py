@@ -25,10 +25,10 @@ def receive_ds():
     if uploaded_file.filename != '':
         print("si salva!")
         #uploaded_file.save(uploaded_file.filename)
-        uploaded_file.save('./temp' + uploaded_file.filename)
+        uploaded_file.save('./temp/' + uploaded_file.filename)
         global dataset
-        dataset = pd.read_csv(str(uploaded_file.filename), header=has_columns_name, index_col=has_index,  sep=sep)
-        dataset.to_csv('./temp' + uploaded_file.filename)
+        dataset = pd.read_csv(str(uploaded_file.filename), header=has_columns_name, index_col=has_index,  sep=sep, engine='python')
+        dataset.to_csv('./temp/' + uploaded_file.filename)
 
     return jsonify({"session_id": session_id})
 
@@ -37,30 +37,29 @@ def receive_ds():
 
 @app.route('/utterance', methods=['POST'])
 def receive_utterance():
-    print('ciaoooooo')
     parser = reqparse.RequestParser()
     parser.add_argument('session_id', required=True, type=int, help='No session provided')
     parser.add_argument('message', required=True)
     args = parser.parse_args()
 
     if (args['session_id'] == session_id):
-        with open('temp/message'+str(session_id)+'.txt', 'w') as f:
+        with open('./temp/message'+str(session_id)+'.txt', 'w') as f:
             f.write(args['message'])
 
-        os.system('onmt_translate -model DSBot/wf/run/model_step_1000.pt -src temp/message'+str(session_id)+'.txt -output temp/pred'+str(session_id)+'.txt -gpu -1 -verbose')
+        os.system('onmt_translate -model wf/run/model_step_1000.pt -src temp/message'+str(session_id)+'.txt -output temp/pred'+str(session_id)+'.txt -gpu -1 -verbose')
 
         with open('temp/pred'+str(session_id)+'.txt', 'r') as f:
-            wf = f.readlines()
+            wf = f.readlines()[0].strip()
         print(wf)
         return jsonify({"session_id": session_id,
-                        "request": "Faccio la regressione lineare su il numero di utenti per a seconda del mese "
-                                    "di nascita"
+                        "request": wf
                         })
     return jsonify({"message": "Errore"})
 
 
 @app.route('/execute', methods=['POST'])
 def execute():
+    print('CIAOOOOOOOO')
     parser = reqparse.RequestParser()
     parser.add_argument('session_id', required=True, type=int, help='No session provided')
     parser.add_argument('operation_id', required=True, type=int)
