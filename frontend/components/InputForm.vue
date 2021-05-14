@@ -51,13 +51,14 @@ export default {
     sendData() {
       if (this.dataset) {
         this.fileInputError = false
-        this.sendDataStore(
-          this.dataset,
-          this.hasColumnNames,
-          this.hasIndex,
-          this.separcleaeator,
-          '.csv'
-        )
+        const inputData = {
+          ds: this.dataset,
+          hasColumnNames: this.hasColumnNames,
+          hasIndex: this.hasIndex,
+          separator: this.separator,
+          format: '.csv',
+        }
+        this.sendDataStore(inputData)
       } else {
         this.fileInputError = true
       }

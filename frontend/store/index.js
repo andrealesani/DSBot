@@ -25,20 +25,19 @@ export const mutations = {
 }
 
 export const actions = {
-  async sendDataStore(
-    context,
-    ds,
-    hasColumnNames,
-    hasIndex,
-    separator,
-    format
-  ) {
+  async sendDataStore(context, inputData) {
+    console.log('AAA', inputData)
     const formdata = new FormData()
-    formdata.append('has_column_names', hasColumnNames)
-    formdata.append('ds', ds)
-    formdata.append('has_index', hasIndex)
-    formdata.append('separator', separator)
-    formdata.append('format', format)
+    formdata.append('has_column_names', inputData.hasColumnNames)
+    formdata.append('ds', inputData.ds)
+    formdata.append('has_index', inputData.hasIndex)
+    formdata.append('separator', inputData.separator)
+    formdata.append('format', inputData.format)
+
+    console.log('FormData')
+    for (const value of formdata.values()) {
+      console.log(value)
+    }
 
     const res = await this.$axios
       .post('/receiveds', formdata, {
