@@ -1,6 +1,6 @@
 <template>
   <div>
-    <v-card class="mb-12" height="500px">
+    <v-card class="mb-12" height="500px" flat>
       <div v-if="!resultsReady" class="text-center">
         <div>
           <v-progress-circular

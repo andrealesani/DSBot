@@ -1,5 +1,5 @@
 export const state = () => ({
-  e1: 1,
+  e1: 3,
   sessionId: 1,
   requestDescription: '',
   resultsReady: false,
@@ -33,6 +33,7 @@ export const actions = {
     formdata.append('has_index', inputData.hasIndex)
     formdata.append('separator', inputData.separator)
     formdata.append('format', inputData.format)
+    formdata.append('label', inputData.label)
 
     console.log('FormData')
     for (const value of formdata.values()) {

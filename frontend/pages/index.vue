@@ -1,6 +1,6 @@
 <template>
   <v-row justify="center" align="center">
-    <v-col cols="12" sm="8" md="9">
+    <v-col cols="12" sm="8" md="8">
       <v-stepper v-model="e1">
         <v-stepper-header>
           <v-stepper-step :complete="e1 > 1" step="1">
@@ -19,17 +19,15 @@
         </v-stepper-header>
 
         <v-stepper-items>
-          <v-stepper-content step="1">
+          <v-stepper-content step="1" class="px-10">
             <input-form></input-form>
           </v-stepper-content>
 
-          <v-stepper-content step="2">
-            <v-card class="mb-12" height="200px">
-              <insert-sentence></insert-sentence>
-            </v-card>
+          <v-stepper-content step="2" class="px-10">
+            <insert-sentence></insert-sentence>
           </v-stepper-content>
 
-          <v-stepper-content step="3">
+          <v-stepper-content step="3" class="px-10">
             <results></results>
 
             <v-btn color="secondary" @click="setStep(1)"> Restart </v-btn>

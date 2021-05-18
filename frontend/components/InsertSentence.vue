@@ -1,6 +1,6 @@
 <template>
   <div>
-    <v-card class="mb-12" height="100px">
+    <v-card class="mb-12" height="100px" flat>
       What you want to obtain?
       <v-textarea v-model="utterance" height="100px"></v-textarea>
     </v-card>
