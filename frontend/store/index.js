@@ -1,5 +1,5 @@
 export const state = () => ({
-  e1: 3,
+  e1: 1,
   sessionId: 1,
   requestDescription: '',
   resultsReady: false,
