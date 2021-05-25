@@ -1,8 +1,11 @@
 <template>
   <div>
-    <v-card class="mb-12" height="100px" flat>
+    <v-card class="mb-12" height="140px" flat>
       What you want to obtain?
-      <v-textarea v-model="utterance" height="100px"></v-textarea>
+      <v-textarea
+        v-model="utterance"
+        background-color="grey lighten-3"
+      ></v-textarea>
     </v-card>
     <!-- <v-btn color="primary"> Continue </v-btn> -->
     <v-btn color="primary" @click="sendUtterance(utterance)"> Continue </v-btn>

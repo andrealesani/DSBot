@@ -1,6 +1,6 @@
 <template>
   <div>
-    <v-card class="mb-12" height="500px" flat>
+    <v-card class="mb-12 mt-3" height="500px" flat>
       <div v-if="!resultsReady" class="text-center">
         <div>
           <v-progress-circular
@@ -12,11 +12,14 @@
         </div>
         We are performing your analysis
       </div>
-      <img
-        :src="`data:image/png;base64,${imageBase64}`"
-        alt=""
-        v-if="resultsReady"
-      />
+      <v-row justify="center">
+        <img
+          :src="`data:image/png;base64,${imageBase64}`"
+          alt=""
+          v-if="resultsReady"
+          height="500"
+        />
+      </v-row>
     </v-card>
   </div>
 </template>
