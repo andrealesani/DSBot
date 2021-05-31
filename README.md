@@ -7,6 +7,8 @@ DSBot elaborates the question to produce and execute a data science analysis to 
 ## Description
 
 ## Installation
+In order to correctly install and run the DSBot, please start by downloading the latest source from this GitHub repository:
+> git clone https://github.com/DEIB-GECO/DSBot.git
 
 ## Train / Import the model
 
