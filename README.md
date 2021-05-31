@@ -10,6 +10,10 @@ DSBot elaborates the question to produce and execute a data science analysis to 
 In order to correctly install and run the DSBot, please start by downloading the latest source from this GitHub repository:
 > git clone https://github.com/DEIB-GECO/DSBot.git
 
+Then _cd_ into the newly created _DSBot_ folder. By convenience we suggest to create a virtual environment. For example using conda:
+> conda create -n dsbot python=3.7
+> pip install -r requirements.txt
+
 ## Train / Import the model
 
 ## How to run
