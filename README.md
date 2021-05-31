@@ -12,7 +12,9 @@ In order to correctly install and run the DSBot, please start by downloading the
 
 Then _cd_ into the newly created _DSBot_ folder. By convenience we suggest to create a virtual environment. For example using conda:
 > conda create -n dsbot python=3.7
-> 
+>
+> conda activate dsbot
+>
 > pip install -r requirements.txt
 
 ## Train / Import the model
