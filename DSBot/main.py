@@ -9,46 +9,49 @@ from sklearn.decomposition import PCA
 
 class Dataset:
     def __init__(self, ds):
-        self.dataset = ds
-        self.missingValues, self.categorical, self.zeroVariance = self.check_ds()
+        self.ds = ds
+        if ds is not None:
+            self.missingValues, self.categorical, self.zeroVariance = self.check_ds()
         self.label = None
+        self.name_plot = None
+
 
     def missing_values(self):
-        return (self.dataset.isnull().sum().sum())>0
+        return (self.ds.isnull().sum().sum())>0
 
     def fill_missing_values(self, col=[]):
         imp = IterativeImputer(max_iter=10, random_state=0)
         if len(col)>1:
-            values_col = self.dataset.columns.difference(col)
-            values_dataset = pd.DataFrame(imp.fit_transform(self.dataset[values_col]))
+            values_col = self.ds.columns.difference(col)
+            values_dataset = pd.DataFrame(imp.fit_transform(self.ds[values_col]))
             values_dataset.columns = values_col
-            values_dataset = pd.concat([self.dataset, values_dataset])
+            values_dataset = pd.concat([self.ds, values_dataset])
         else:
-            values_dataset = pd.DataFrame(imp.fit_transform(self.dataset))
+            values_dataset = pd.DataFrame(imp.fit_transform(self.ds))
         return values_dataset
 
     def fill_missing_cat(self, col):
-        self.dataset = self.dataset.apply(lambda col: col.fillna(col.value_counts().index[0]))
+        self.ds = self.ds.apply(lambda col: col.fillna(col.value_counts().index[0]))
 
     def del_missing_rows(self):
-        self.dataset = self.dataset.dropna()
+        self.ds = self.ds.dropna()
 
     def zero_variance(self):
-        var = self.dataset.std(axis=1)
+        var = self.ds.std(axis=1)
         return (var==0).sum()>0
 
     def categorical_columns(self):
-        cols = self.dataset.columns
-        num_cols = self.dataset._get_numeric_data().columns
+        cols = self.ds.columns
+        num_cols = self.ds._get_numeric_data().columns
         return len(list(set(cols) - set(num_cols))) > 0, list(set(cols) - set(num_cols))
 
     def one_hot_encode(self):
-        cols = self.dataset.columns
-        num_cols = self.dataset._get_numeric_data().columns
-        self.dataset = pd.get_dummies(self.dataset, columns=list(set(cols) - set(num_cols)))
+        cols = self.ds.columns
+        num_cols = self.ds._get_numeric_data().columns
+        self.ds = pd.get_dummies(self.ds, columns=list(set(cols) - set(num_cols)))
 
     def curse_of_dim(self):
-        data = StandardScaler().fit_transform(self.dataset)
+        data = StandardScaler().fit_transform(self.ds)
         eucl = squareform(pdist(data.values))
         max_dist = eucl.max()
         min_dist = eucl[eucl.nonzero()].min()
@@ -56,7 +59,7 @@ class Dataset:
         return res<1
 
     def dim_reduction(self):
-        self.dataset = PCA(len(self.dataset.index)).fit_transform(self.dataset)
+        self.ds = PCA(len(self.ds.index)).fit_transform(self.ds)
 
     def check_ds(self):
         missing_val = self.missing_values()
@@ -67,7 +70,7 @@ class Dataset:
     def filter_kb(self, kb):
         drop = []
         for i in self.__dict__:
-            if (str(i)!='dataset') and (str(i)!='label'):
+            if (str(i)!='ds') and (str(i)!='label'):
                 if getattr(self, i):
                     for j in range(len(kb)):
                         kb_val = [i.strip() for i in kb.values[j,0].split(',')]

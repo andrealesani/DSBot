@@ -9,6 +9,7 @@ import os
 import pandas as pd
 import importlib
 import base64
+import copy
 
 app = Flask(__name__)
 cors = CORS(app)
@@ -17,6 +18,7 @@ app.config['CORS_HEADERS'] = 'application/json'
 session_id = 1
 
 kb = KnowledgeBase()
+dataset = Dataset(None)
 
 @app.route('/receiveds', methods=['POST'])
 def receive_ds():
@@ -36,7 +38,7 @@ def receive_ds():
         #print(dataset)
         dataset.to_csv('./temp/' + uploaded_file.filename)
         dataset = Dataset(dataset)
-        print(dataset.dataset)
+        print(dataset.ds)
         dataset.label = label
         kb.kb = dataset.filter_kb(kb.kb)
     print(kb.kb)
@@ -46,6 +48,9 @@ def receive_ds():
 @app.route('/utterance', methods=['POST'])
 def receive_utterance():
     #print(dataset.dataset)
+
+    global dataset
+    ds = copy.deepcopy(dataset)
     parser = reqparse.RequestParser()
     parser.add_argument('session_id', required=True, type=int, help='No session provided')
     parser.add_argument('message', required=True)
@@ -76,7 +81,8 @@ def receive_utterance():
             print(i)
             logic= getattr(package, i)
             print(logic)
-            dataset.dataset = logic(dataset)
+            dataset = logic(ds)
+
 
 
         return jsonify({"session_id": session_id,
@@ -96,17 +102,25 @@ def execute():
 
 @app.route('/results/<int:received_id>')
 def get_results(received_id):
+    print('HEREEEEE')
     # TODO: if(not ready)
     #   return jsonify({"ready": False, "session_id": session_id})
-
     # recupero il file
-    filename = "assets/pepe.png"
-
+    global dataset
+    filename = dataset.name_plot
+    print(filename)
+    if filename!=None:
     # codifico il file in bytecode
-    with open(filename, "rb") as img_file:
-        my_string = base64.b64encode(img_file.read())
-        # trasformo il bytecode in stringa
-        base64_string = my_string.decode('utf-8')
+        with open(filename, "rb") as img_file:
+            my_string = base64.b64encode(img_file.read())
+            # trasformo il bytecode in stringa
+            base64_string = my_string.decode('utf-8')
+    else:
+        filename='assets/pepe.png'
+        with open(filename, "rb") as img_file:
+            my_string = base64.b64encode(img_file.read())
+            # trasformo il bytecode in stringa
+            base64_string = my_string.decode('utf-8')
     return jsonify({"ready": True, "session_id": session_id, 'img': str(base64_string)})
 
 

@@ -3,17 +3,21 @@ import numpy as np
 from sklearn.decomposition import PCA
 import seaborn as sns
 import matplotlib
+matplotlib.use('agg')
 
-
-def scatterplot(dataset, labels, name):
+def pca2(dataset):
     pca = PCA(2)
-    pca_data = pca.fit_transform(dataset.dataset)
-    u_labels = np.unique(labels)
+    dataset.ds = pca.fit_transform(dataset.ds.values)
+    return dataset
+
+def scatterplot(dataset):
+    u_labels = np.unique(dataset.labels)
     for i in u_labels:
-        plt.scatter(pca_data[labels == i, 0], pca_data[labels == i, 1], label=i)
+        plt.scatter(dataset.ds[dataset.labels == i, 0], dataset.ds[dataset.labels == i, 1], label=i)
     plt.legend()
-    plt.savefig(name)
-    plt.show()
+    dataset.name_plot = 'scatter.png'
+    plt.savefig('scatter.png')
+    #plt.show()
 
 def heatmap(matrix):
     plt.figure(figsize=(16, 16))
@@ -24,7 +28,7 @@ def heatmap(matrix):
 
 class Plot:
     def __init__(self, dataset):
-        self.ds = dataset.dataset
+        self.ds = dataset.ds
 
     def scatterplot(self, labels):
         pca = PCA(2)

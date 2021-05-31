@@ -9,21 +9,24 @@ from sklearn.decomposition import PCA
 def missingValuesFill(dataset, col=[]):
     imp = IterativeImputer(max_iter=10, random_state=0)
     if len(col) > 1:
-        values_col = dataset.dataset.columns.difference(col)
-        values_dataset = pd.DataFrame(imp.fit_transform(dataset.dataset[values_col]))
+        values_col = dataset.ds.columns.difference(col)
+        values_dataset = pd.DataFrame(imp.fit_transform(dataset.ds[values_col]))
         values_dataset.columns = values_col
-        values_dataset = pd.concat([dataset.dataset, values_dataset])
+        values_dataset = pd.concat([dataset.ds, values_dataset])
+
     else:
-        values_dataset = pd.DataFrame(imp.fit_transform(dataset.dataset))
-    return values_dataset
+        values_dataset = pd.DataFrame(imp.fit_transform(dataset.ds))
+
+    dataset.ds = values_dataset
+    return dataset
 
 def missingValuesRemove(dataset):
-    dataset.dataset = dataset.dataset.dropna()
-    return dataset.dataset
+    dataset.ds = dataset.ds.dropna()
+    return dataset
 
 
 def oneHotEncode(dataset):
-    cols = dataset.dataset.columns
-    num_cols = dataset.dataset._get_numeric_data().columns
-    dataset.dataset = pd.get_dummies(dataset.dataset, columns=list(set(cols) - set(num_cols)))
+    cols = dataset.ds.columns
+    num_cols = dataset.ds._get_numeric_data().columns
+    dataset.ds = pd.get_dummies(dataset.ds, columns=list(set(cols) - set(num_cols)))
     return dataset

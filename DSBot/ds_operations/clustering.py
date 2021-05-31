@@ -4,16 +4,16 @@ from sklearn.model_selection import GridSearchCV
 
 def kmeans(dataset):
     def silhouette_score(estimator, X):
-        clusters = estimator.fit_predict(dataset.dataset.values)
-        score = metrics.silhouette_score(dataset.dataset.values, clusters)
+        clusters = estimator.fit_predict(dataset.ds.values)
+        score = metrics.silhouette_score(dataset.ds.values, clusters)
         return score
 
-    param_grid = {"n_clusters": range(2, int(len(dataset.dataset)/2))}
+    param_grid = {"n_clusters": range(2, int(len(dataset.ds)/2))}
     search = GridSearchCV(KMeans(), param_grid=param_grid, scoring=silhouette_score)
-    grid = search.fit(dataset.dataset.values)
+    grid = search.fit(dataset.ds.values)
     kmeans = grid.best_estimator_
-    labels = kmeans.fit_predict(dataset.dataset.values)
-    return labels
+    dataset.labels = kmeans.fit_predict(dataset.ds.values)
+    return dataset
 
 class KMeansRes:
     def __init__(self, dataset, labels):
