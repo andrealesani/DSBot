@@ -20,11 +20,12 @@ Then _cd_ into the newly created _DSBot_ folder. By convenience we suggest to cr
 ## Train / Import the model
 
 ## How to run
-
-cd DSBot
-python app.py 
+> cd DSBot
+> python app.py 
 
 # In another window
-cd frontend
-npm install
-npm run dev
+> cd frontend
+> npm install
+> npm run dev
+
+Go to localhost:3000 to run the application
