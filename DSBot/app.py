@@ -14,11 +14,12 @@ import copy
 from datetime import timedelta
 from flask.sessions import SecureCookieSessionInterface
 app = Flask(__name__)
-cors = CORS(app)
-app.config['CORS_HEADERS'] = 'application/json'
-
-session_id = 1
+cors = CORS(app, supports_credentials=True)
 app.config['SECRET_KEY'] = 'secret!'
+app.config['CORS_HEADERS'] = 'application/json'
+app.config['CORS_SUPPORTS_CREDENTIALS']  = True
+session_id = 1
+
 #app.config['SESSION_TYPE'] = 'filesystem'
 #session config
 #app.config['SESSION_FILE_DIR'] = 'flask_session'
@@ -28,6 +29,8 @@ app.config['SECRET_KEY'] = 'secret!'
 session_serializer = SecureCookieSessionInterface().get_signing_serializer(app)
 kb = KnowledgeBase()
 dataset = Dataset(None)
+
+
 
 @app.route('/receiveds', methods=['POST'])
 def receive_ds():
@@ -146,11 +149,7 @@ def get_results(received_id):
             # trasformo il bytecode in stringa
             base64_string = my_string.decode('utf-8')
     else:
-        filename='assets/pepe.png'
-        with open(filename, "rb") as img_file:
-            my_string = base64.b64encode(img_file.read())
-            # trasformo il bytecode in stringa
-            base64_string = my_string.decode('utf-8')
+        return jsonify({"ready": False, "session_id": session_id, 'img': None})
     return jsonify({"ready": True, "session_id": session_id, 'img': str(base64_string)})
 
 

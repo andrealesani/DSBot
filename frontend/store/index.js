@@ -72,7 +72,9 @@ export const actions = {
   },
 
   async waitForResults(context) {
-    if (!this.state.resultsReady && this.state.el === 3) {
+    console.log('WAIT FOR RESULTS', this.state.e1)
+    if (!this.state.resultsReady && this.state.e1 === 3) {
+      console.log('GET RESULTS CALLED')
       const pollingResponse = await this.$axios
         .get(`/results/${this.state.sessionId}`)
         .then(function (response) {
