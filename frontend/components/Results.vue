@@ -46,6 +46,7 @@ export default {
     },
   },
   mounted() {
+    console.log('Results mounted!')
     this.pollData()
   },
 }
