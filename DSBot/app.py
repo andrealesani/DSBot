@@ -1,8 +1,9 @@
 import flask
-from flask import Flask, jsonify, request, send_file
+from flask import Flask, jsonify, request, send_file, session
 from flask_cors import CORS
 from flask_restful import reqparse
 from main import Dataset
+from flask_session import Session
 from needleman_wunsch import NW
 from kb import KnowledgeBase
 import os
@@ -10,18 +11,28 @@ import pandas as pd
 import importlib
 import base64
 import copy
-
+from datetime import timedelta
+from flask.sessions import SecureCookieSessionInterface
 app = Flask(__name__)
 cors = CORS(app)
 app.config['CORS_HEADERS'] = 'application/json'
 
 session_id = 1
-
+app.config['SECRET_KEY'] = 'secret!'
+#app.config['SESSION_TYPE'] = 'filesystem'
+#session config
+#app.config['SESSION_FILE_DIR'] = 'flask_session'
+# DEFAULT 31 days
+#app.config['PERMANENT_SESSION_LIFETIME'] = timedelta(days=31)
+#Session(app)
+session_serializer = SecureCookieSessionInterface().get_signing_serializer(app)
 kb = KnowledgeBase()
 dataset = Dataset(None)
 
 @app.route('/receiveds', methods=['POST'])
 def receive_ds():
+    global session_id
+    session_id = session_serializer.dumps(dict(session))
     has_index = 0 if request.form['has_index']=='true' else None
     has_columns_name = 0 if request.form['has_column_names']=='true' else None
     sep = request.form['separator']
@@ -54,53 +65,22 @@ def receive_ds():
 @app.route('/utterance', methods=['POST'])
 def receive_utterance():
     #print(dataset.dataset)
-
     global dataset
-    package = importlib.import_module('ds_operations')
 
     #ds = copy.deepcopy(dataset)
     parser = reqparse.RequestParser()
-    parser.add_argument('session_id', required=True, type=int, help='No session provided')
+    parser.add_argument('session_id', required=True, help='No session provided')
     parser.add_argument('message', required=True)
     args = parser.parse_args()
     if (args['session_id'] == session_id):
         with open('./temp/temp_'+str(session_id)+'/message'+str(session_id)+'.txt', 'w') as f:
             f.write(args['message'])
 
-        os.system('onmt_translate -model wf/run/model_step_1000.pt -src temp/message'+str(session_id)+'.txt -output ./temp/temp_'+str(session_id)+'/pred'+str(session_id)+'.txt -gpu -1 -verbose')
+        os.system('onmt_translate -model wf/run/model_step_1000.pt -src temp/temp_'+str(session_id)+'/message'+str(session_id)+'.txt -output ./temp/temp_'+str(session_id)+'/pred'+str(session_id)+'.txt -gpu -1 -verbose')
 
-        with open('./temp/temp_'+str(session_id)+'/pred'+str(session_id)+'.txt', 'r') as f:
+        with open('./temp/temp_' + str(session_id) + '/pred' + str(session_id) + '.txt', 'r') as f:
             wf = f.readlines()[0].strip().split(' ')
         print(wf)
-        scores = {}
-        print(len(kb.kb))
-        print(kb.kb)
-        for i in range(len(kb.kb)):
-            sent = [x for x in kb.kb.values[i,1:] if str(x) != 'nan']
-            print(sent)
-            print(wf)
-            scores[i] = NW(wf,sent,kb.voc)
-            print(scores[i])
-        max_key = max(scores, key=scores.get)
-        max_key = [x for x in kb.kb.values[max_key, 1:] if str(x) != 'nan']
-        print('MAX', max_key)
-        #for i in max_key:
-        #    package = importlib.import_module('ds_operations')
-        #    print(i)
-        #    logic= getattr(package, i)
-        #    print(logic)
-        #    dataset = logic(ds)
-
-        def execute_pipeline(ds, pipeline):
-            if len(pipeline) == 1:
-                print(getattr(package, pipeline[0]))
-                getattr(package, pipeline[0])(ds)
-            else:
-                print(getattr(package, pipeline[0]))
-                execute_pipeline(getattr(package, pipeline[0])(ds), pipeline[1:])
-
-        execute_pipeline(dataset,max_key)
-
         return jsonify({"session_id": session_id,
                         "request": wf
                         })
@@ -119,10 +99,44 @@ def execute():
 @app.route('/results/<int:received_id>')
 def get_results(received_id):
     print('HEREEEEE')
+    global dataset
+    print(session_id)
+    package = importlib.import_module('ds_operations')
+    with open('./temp/temp_' + str(session_id) + '/pred' + str(session_id) + '.txt', 'r') as f:
+        wf = f.readlines()[0].strip().split(' ')
+    scores = {}
+    print(len(kb.kb))
+    print(kb.kb)
+    for i in range(len(kb.kb)):
+        sent = [x for x in kb.kb.values[i, 1:] if str(x) != 'nan']
+        print(sent)
+        print(wf)
+        scores[i] = NW(wf, sent, kb.voc)
+        print(scores[i])
+    max_key = max(scores, key=scores.get)
+    max_key = [x for x in kb.kb.values[max_key, 1:] if str(x) != 'nan']
+    print('MAX', max_key)
+
+    # for i in max_key:
+    #    package = importlib.import_module('ds_operations')
+    #    print(i)
+    #    logic= getattr(package, i)
+    #    print(logic)
+    #    dataset = logic(ds)
+
+    def execute_pipeline(ds, pipeline):
+        if len(pipeline) == 1:
+            print(getattr(package, pipeline[0]))
+            getattr(package, pipeline[0])(ds)
+        else:
+            print(getattr(package, pipeline[0]))
+            execute_pipeline(getattr(package, pipeline[0])(ds), pipeline[1:])
+
+    execute_pipeline(dataset, max_key)
+
     # TODO: if(not ready)
     #   return jsonify({"ready": False, "session_id": session_id})
     # recupero il file
-    global dataset
     filename = dataset.name_plot
     print(filename)
     if filename!=None:
