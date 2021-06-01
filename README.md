@@ -27,7 +27,9 @@ To build the vocabulary:
 To train the model:
 - join the files 'split_glove_**.txt' in a single file 'glove_new.txt'
 > cd wf
+> 
 > cat split_glove/* > glove_new.txt
+> 
 > onmt_train -config wf/en_wf.yaml   
 
 ## How to run
