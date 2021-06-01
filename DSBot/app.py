@@ -32,15 +32,21 @@ def receive_ds():
     if uploaded_file.filename != '':
         print("si salva!")
         #uploaded_file.save(uploaded_file.filename)
-        uploaded_file.save('./temp/' + uploaded_file.filename)
+        try:
+            os.mkdir('./temp/temp_'+str(session_id))
+        except:
+            pass
+        uploaded_file.save('./temp/temp_'+str(session_id)+'/' + uploaded_file.filename)
         global dataset
-        dataset = pd.read_csv('./temp/'+str(uploaded_file.filename), header=has_columns_name, index_col=has_index,  sep=sep, engine='python')
+        dataset = pd.read_csv('./temp/temp_'+str(session_id)+'/'+str(uploaded_file.filename), header=has_columns_name, index_col=has_index,  sep=sep, engine='python')
         #print(dataset)
-        dataset.to_csv('./temp/' + uploaded_file.filename)
+        dataset.to_csv('./temp/temp_'+str(session_id)+'/' + uploaded_file.filename)
         dataset = Dataset(dataset)
         print(dataset.ds)
+        dataset.session = session_id
         dataset.label = label
         kb.kb = dataset.filter_kb(kb.kb)
+
     print(kb.kb)
     return jsonify({"session_id": session_id})
 
@@ -56,12 +62,12 @@ def receive_utterance():
     parser.add_argument('message', required=True)
     args = parser.parse_args()
     if (args['session_id'] == session_id):
-        with open('./temp/message'+str(session_id)+'.txt', 'w') as f:
+        with open('./temp/temp_'+str(session_id)+'/message'+str(session_id)+'.txt', 'w') as f:
             f.write(args['message'])
 
-        os.system('onmt_translate -model wf/run/model_step_1000.pt -src temp/message'+str(session_id)+'.txt -output temp/pred'+str(session_id)+'.txt -gpu -1 -verbose')
+        os.system('onmt_translate -model wf/run/model_step_1000.pt -src temp/message'+str(session_id)+'.txt -output ./temp/temp_'+str(session_id)+'/pred'+str(session_id)+'.txt -gpu -1 -verbose')
 
-        with open('temp/pred'+str(session_id)+'.txt', 'r') as f:
+        with open('./temp/temp_'+str(session_id)+'/pred'+str(session_id)+'.txt', 'r') as f:
             wf = f.readlines()[0].strip().split(' ')
         print(wf)
         scores = {}

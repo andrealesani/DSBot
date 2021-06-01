@@ -70,7 +70,7 @@ class Dataset:
     def filter_kb(self, kb):
         drop = []
         for i in self.__dict__:
-            if (str(i)!='ds') and (str(i)!='label'):
+            if (str(i) in ['missingValues','categorical','zeroVariance']):
                 if getattr(self, i):
                     for j in range(len(kb)):
                         kb_val = [i.strip() for i in kb.values[j,0].split(',')]

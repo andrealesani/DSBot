@@ -15,15 +15,17 @@ def scatterplot(dataset):
     for i in u_labels:
         plt.scatter(dataset.ds[dataset.labels == i, 0], dataset.ds[dataset.labels == i, 1], label=i)
     plt.legend()
-    dataset.name_plot = 'scatter.png'
-    plt.savefig('scatter.png')
+    dataset.name_plot = './temp/temp_'+str(dataset.session)+'/scatter.png'
+    plt.savefig('./temp/temp_'+str(dataset.session)+'/scatter.png')
     #plt.show()
 
-def heatmap(matrix):
+def heatmap(dataset):
     plt.figure(figsize=(16, 16))
-    cg = sns.clustermap(matrix, vmin=0, vmax=1, center=0.5)
+    cg = sns.clustermap(dataset.matrix, vmin=0, vmax=1, center=0.5)
     cg.ax_row_dendrogram.set_visible(False)
     cg.ax_col_dendrogram.set_visible(False)
+    dataset.name_plot = './temp/temp_' + str(dataset.session) + '/heatmap.png'
+    plt.savefig('./temp/temp_' + str(dataset.session) + '/heatmap.png')
     plt.show()
 
 class Plot:
