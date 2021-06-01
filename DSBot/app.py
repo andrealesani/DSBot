@@ -56,7 +56,9 @@ def receive_utterance():
     #print(dataset.dataset)
 
     global dataset
-    ds = copy.deepcopy(dataset)
+    package = importlib.import_module('ds_operations')
+
+    #ds = copy.deepcopy(dataset)
     parser = reqparse.RequestParser()
     parser.add_argument('session_id', required=True, type=int, help='No session provided')
     parser.add_argument('message', required=True)
@@ -82,14 +84,22 @@ def receive_utterance():
         max_key = max(scores, key=scores.get)
         max_key = [x for x in kb.kb.values[max_key, 1:] if str(x) != 'nan']
         print('MAX', max_key)
-        for i in max_key:
-            package = importlib.import_module('ds_operations')
-            print(i)
-            logic= getattr(package, i)
-            print(logic)
-            dataset = logic(ds)
+        #for i in max_key:
+        #    package = importlib.import_module('ds_operations')
+        #    print(i)
+        #    logic= getattr(package, i)
+        #    print(logic)
+        #    dataset = logic(ds)
 
+        def execute_pipeline(ds, pipeline):
+            if len(pipeline) == 1:
+                print(getattr(package, pipeline[0]))
+                getattr(package, pipeline[0])(ds)
+            else:
+                print(getattr(package, pipeline[0]))
+                execute_pipeline(getattr(package, pipeline[0])(ds), pipeline[1:])
 
+        execute_pipeline(dataset,max_key)
 
         return jsonify({"session_id": session_id,
                         "request": wf
