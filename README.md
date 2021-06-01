@@ -21,7 +21,9 @@ Then _cd_ into the newly created _DSBot_ folder. By convenience we suggest to cr
 > cd DSBot
 
 To build the vocabulary:
-- delete the 2 files 'wf/run/example.vocab.src', 'wf/run/example.vocab.tgt'
+
+> rm wf/run/example.vocab.*
+> 
 >  onmt_build_vocab -config wf/en_wf.yaml -n_sample 10000
 
 To train the model:
@@ -29,6 +31,8 @@ To train the model:
 > cd wf
 > 
 > cat split_glove/* > glove_new.txt
+> 
+> cd ..
 > 
 > onmt_train -config wf/en_wf.yaml   
 
