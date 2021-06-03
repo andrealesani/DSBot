@@ -2,6 +2,8 @@ from bs4 import BeautifulSoup
 from fake_useragent import UserAgent
 import requests
 from googlesearch import search
+import re
+from autocorrect import Speller
 
 session = requests.Session()
 response = session.get('https://google.com')
@@ -89,13 +91,28 @@ for query in queries:
                 'label'
                 # there may be more elements you don't want, such as "style", etc.
             ]
+            Apos_dict = {"'s": " is", "n't": " not", "'m": " am", "'ll": " will",
+                         "'d": " would", "'ve": " have", "'re": " are"}
             for t in text:
                 if t.parent.name not in blacklist:
                     #print(t.parent.name)
                     if (t.strip().startswith('<')) and not (t.isascii()):
                         pass
                     else:
-                        outputs.append(''.join(filter(str.isalpha, t)).lower().strip())
+                        # replace the contractions
+                        for key, value in Apos_dict.items():
+                            if key in t:
+                                t = t.replace(key, value)
+                        #split words
+                        t = " ".join([s for s in re.split("([A-Z][a-z]+[^A-Z]*)", t) if s])
+                        # convert lower
+                        t = t.lower().strip()
+
+                        spell = Speller(lang='en')
+                        # spell check
+                        t = spell(t)
+
+                        outputs.append(''.join(filter(str.isalpha, t)))
 
             #print(output)
             sentences = [i for i in outputs if query in i.lower()]
