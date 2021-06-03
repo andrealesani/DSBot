@@ -95,7 +95,7 @@ for query in queries:
                     if (t.strip().startswith('<')) and not (t.isascii()):
                         pass
                     else:
-                        outputs.append(t.lower().strip())
+                        outputs.append(''.join(filter(str.isalpha, t)).lower().strip())
 
             #print(output)
             sentences = [i for i in outputs if query in i.lower()]
