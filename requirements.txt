@@ -63,3 +63,14 @@ urllib3==1.26.4
 waitress==1.4.4
 Werkzeug==1.0.1
 xlrd==2.0.1
+beautifulsoup4==4.9.1
+bot-studio==1.0.8
+bs4==0.0.1
+certifi==2020.6.20
+chardet==3.0.4
+fake-useragent==0.1.11
+googlesearch-python==2020.0.2
+idna==2.10
+lxml==4.6.3
+requests==2.24.0
+soupsieve==2.0.1
