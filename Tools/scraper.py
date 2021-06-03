@@ -42,6 +42,7 @@ queries = [q for q in queries if not q.endswith(".pdf")]
 for query in queries:
     print(query)
     links = search(query, num_results=100, lang="en")
+    links = [q for q in links if not q.endswith(".pdf")]
     for l in links[1:]:
         print(l)
         try:
