@@ -20,7 +20,7 @@ headers = {
 }
 
 #query = input('query >> ')
-queries = ["pearson correlation", 
+queries = [
            "kendall correlation", 
            "kmeans", 
            "random forest", 
@@ -36,13 +36,18 @@ queries = ["pearson correlation",
            "machine learning",
            "logistic regression",
            "linear model",
-           "decision tree"
+           "decision tree",
+            "pearson correlation"
            ]
 queries = [q for q in queries if not q.endswith(".pdf")]
 for query in queries:
     print(query)
     links = search(query, num_results=100, lang="en")
+    print(links)
+    print(len(links))
     links = [q for q in links if not q.endswith(".pdf")]
+    print(links)
+    print(len(links))
     for l in links[1:]:
         print(l)
         try:
@@ -87,11 +92,10 @@ for query in queries:
             for t in text:
                 if t.parent.name not in blacklist:
                     #print(t.parent.name)
-                    if t.strip().startswith('<'):
+                    if (t.strip().startswith('<')) and not (t.isascii()):
                         pass
-                    #output += '{} '.format(t)
                     else:
-                        outputs.append(t.strip())
+                        outputs.append(t.lower().strip())
 
             #print(output)
             sentences = [i for i in outputs if query in i.lower()]
