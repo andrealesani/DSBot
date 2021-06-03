@@ -1,4 +1,15 @@
 import pandas as pd
+
+
+def pearson(dataset):
+    dataset.correlation = dataset.ds.corr()
+    return dataset
+
+def spearman(dataset):
+    dataset.correlation = dataset.ds.corr(method='spearman')
+    return dataset
+
+
 class Correlation:
     def __init__(self, dataset):
         self.ds = dataset

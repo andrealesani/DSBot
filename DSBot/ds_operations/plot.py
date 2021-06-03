@@ -21,7 +21,7 @@ def scatterplot(dataset):
 
 def heatmap(dataset):
     plt.figure(figsize=(16, 16))
-    cg = sns.clustermap(dataset.matrix, vmin=0, vmax=1, center=0.5)
+    cg = sns.clustermap(dataset.correlation, vmin=0, vmax=1, center=0.5)
     cg.ax_row_dendrogram.set_visible(False)
     cg.ax_col_dendrogram.set_visible(False)
     dataset.name_plot = './temp/temp_' + str(dataset.session) + '/heatmap.png'
