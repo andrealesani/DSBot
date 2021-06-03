@@ -19,71 +19,90 @@ headers = {
 'accept-language': 'en-GB,en-US;q=0.9,en;q=0.8',
 }
 
-query = input('query >> ')
+#query = input('query >> ')
+queries = ["pearson correlation", 
+           "kendall correlation", 
+           "kmeans", 
+           "random forest", 
+           "supervised learning", 
+           "unsupervised learning", 
+           "dbscan", 
+           "affinity propagation", 
+           "data clustering", 
+           "pca",
+           "dimensionality reduction",
+           "feature selection",
+           "data science",
+           "machine learning",
+           "logistic regression",
+           "linear model",
+           "decision tree"
+           ]
+queries = [q for q in queries if not q.endswith(".pdf")]
+for query in queries:
+    print(query)
+    links = search(query, num_results=100, lang="en")
+    for l in links[1:]:
+        print(l)
+        try:
+            response = requests.get(l, {"User-Agent": UserAgent().random}, cookies=session.cookies, headers=headers)
+            soup = BeautifulSoup(response.text, "html.parser")
 
-links = search(query, num_results=100)
-print(links)
-for l in links[1:]:
-    print(l)
-    try:
-        response = requests.get(l, {"User-Agent": UserAgent().random}, cookies=session.cookies, headers=headers)
-        soup = BeautifulSoup(response.text, "html.parser")
+            text = soup.find_all(text=True)
 
-        text = soup.find_all(text=True)
+            outputs = []
+            blacklist = [
+                '[document]',
+                'noscript',
+                'header',
+                'html',
+                'meta',
+                'head',
+                'input',
+                'script',
+                'style',
+                'link',
+                'table',
+                'href',
+                'a',
+                'img',
+                'li',
+                'footer',
+                'span',
+                'ul',
+                'picture',
+                'button',
+                'form',
+                'select',
+                'option',
+                'clippath',
+                'svg',
+                'g',
+                'nav',
+                'defs',
+                'label'
+                # there may be more elements you don't want, such as "style", etc.
+            ]
+            for t in text:
+                if t.parent.name not in blacklist:
+                    #print(t.parent.name)
+                    if t.strip().startswith('<'):
+                        pass
+                    #output += '{} '.format(t)
+                    else:
+                        outputs.append(t.strip())
 
-        outputs = []
-        blacklist = [
-            '[document]',
-            'noscript',
-            'header',
-            'html',
-            'meta',
-            'head',
-            'input',
-            'script',
-            'style',
-            'link',
-            'table',
-            'href',
-            'a',
-            'img',
-            'li',
-            'footer',
-            'span',
-            'ul',
-            'picture',
-            'button',
-            'form',
-            'select',
-            'option',
-            'clippath',
-            'svg',
-            'g',
-            'nav',
-            'defs',
-            'label'
-            # there may be more elements you don't want, such as "style", etc.
-        ]
-        for t in text:
-            if t.parent.name not in blacklist:
-                print(t.parent.name)
-                if t.strip().startswith('<'):
-                    pass
-                #output += '{} '.format(t)
-                else:
-                    outputs.append(t.strip())
+            #print(output)
+            sentences = [i for i in outputs if query in i.lower()]
+            #print(sentences)
 
-        #print(output)
-        sentences = [i for i in outputs if query in i.lower()]
-        #print(sentences)
-
-        with open('sentences_scraped_{}.txt'.format(query), 'a') as f:
-            for i in sentences:
-                f.write(i+'\n')
-    except requests.exceptions.Timeout as e:
-        # Maybe set up for a retry
-        print(e)
-    except:
-        # Maybe set up for a retry
-        print('Error link')
+            with open('sentences_scraped.txt'.format(query), 'a') as f:
+                for i in sentences:
+                    f.write(i+'\n')
+        except requests.exceptions.Timeout as e:
+            # Maybe set up for a retry
+            print(e)
+        except:
+            # Maybe set up for a retry
+            print('Error link')
 
