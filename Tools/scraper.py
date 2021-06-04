@@ -96,7 +96,7 @@ for query in queries:
             for t in text:
                 if t.parent.name not in blacklist:
                     #print(t.parent.name)
-                    if (t.strip().startswith('<')) and not (t.isascii()):
+                    if (t.strip().startswith('<')) or not (t.isascii()):
                         pass
                     else:
                         # replace the contractions
