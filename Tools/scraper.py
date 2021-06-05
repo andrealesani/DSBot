@@ -103,17 +103,19 @@ for query in queries:
                         for key, value in Apos_dict.items():
                             if key in t:
                                 t = t.replace(key, value)
+
                         #split words
                         t = " ".join([s for s in re.split("([A-Z][a-z]+[^A-Z]*)", t) if s])
+
                         # convert lower
                         t = t.lower().strip()
-
                         spell = Speller(lang='en')
                         # spell check
                         t = spell(t)
-
-                        outputs.append(''.join(filter(str.isalpha, t)))
-
+                        t = t.split(' ')
+                        t = [''.join(filter(str.isalpha, i)) for i in t]
+                        t = ' '.join(t)
+                        outputs.append(t)
             #print(output)
             sentences = [i for i in outputs if query in i.lower()]
             #print(sentences)
