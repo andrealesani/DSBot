@@ -99,7 +99,7 @@ def execute():
     return jsonify({"message": "ok"})
 
 
-@app.route('/results/<int:received_id>')
+@app.route('/results/<received_id>')
 def get_results(received_id):
     print('HEREEEEE')
     global dataset
