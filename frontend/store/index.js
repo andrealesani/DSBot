@@ -79,8 +79,12 @@ export const actions = {
         .get(`/results/${this.state.sessionId}`)
         .then(function (response) {
           console.log(response)
-          context.commit('setImage', response.data.img)
-          context.commit('setResultsReady', response.data.ready)
+          if (response.data.ready) {
+            context.commit('setImage', response.data.img)
+            context.commit('setResultsReady', response.data.ready)
+          } else {
+            console.log('Non faccio niente')
+          }
         })
       return pollingResponse
     }
