@@ -3,7 +3,7 @@ from flask import Flask, jsonify, request, send_file, session
 from flask_cors import CORS
 from flask_restful import reqparse
 from main import Dataset
-from flask_session import Session
+#from flask_session import Session
 from needleman_wunsch import NW
 from kb import KnowledgeBase
 import os
