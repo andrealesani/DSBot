@@ -61,7 +61,7 @@ class KMeans(Clustering):
         self.max_n_clusters = 5
 
     def run(self, dataset):
-
+        pass
 class IR:
     def __init__(self, pipeline):
         self.pipeline = self.create_IR(pipeline)
