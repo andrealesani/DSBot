@@ -11,3 +11,6 @@ Display me the data that has been divided into categories.
 visualize the performances of the classification
 see the groups
 apply kmeans with 5 clusters
+cluster data using kmeans and see the scatterplot of the results
+display the clusters after kmeans
+show the results of clustering

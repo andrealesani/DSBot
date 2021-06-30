@@ -15,26 +15,9 @@ class Dataset:
         self.label = None
         self.name_plot = None
 
-
     def missing_values(self):
         return (self.ds.isnull().sum().sum())>0
 
-    def fill_missing_values(self, col=[]):
-        imp = IterativeImputer(max_iter=10, random_state=0)
-        if len(col)>1:
-            values_col = self.ds.columns.difference(col)
-            values_dataset = pd.DataFrame(imp.fit_transform(self.ds[values_col]))
-            values_dataset.columns = values_col
-            values_dataset = pd.concat([self.ds, values_dataset])
-        else:
-            values_dataset = pd.DataFrame(imp.fit_transform(self.ds))
-        return values_dataset
-
-    def fill_missing_cat(self, col):
-        self.ds = self.ds.apply(lambda col: col.fillna(col.value_counts().index[0]))
-
-    def del_missing_rows(self):
-        self.ds = self.ds.dropna()
 
     def zero_variance(self):
         var = self.ds.std(axis=1)
@@ -45,10 +28,6 @@ class Dataset:
         num_cols = self.ds._get_numeric_data().columns
         return len(list(set(cols) - set(num_cols))) > 0, list(set(cols) - set(num_cols))
 
-    def one_hot_encode(self):
-        cols = self.ds.columns
-        num_cols = self.ds._get_numeric_data().columns
-        self.ds = pd.get_dummies(self.ds, columns=list(set(cols) - set(num_cols)))
 
     def curse_of_dim(self):
         data = StandardScaler().fit_transform(self.ds)
