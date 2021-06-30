@@ -1,15 +1,19 @@
+import threading
+
 import flask
 from flask import Flask, jsonify, request, send_file, session
 from flask_cors import CORS
 from flask_restful import reqparse
 from main import Dataset
-from flask_session import Session
+#from flask_session import Session
 from needleman_wunsch import NW
 from kb import KnowledgeBase
 import os
 import pandas as pd
 import importlib
 import base64
+from threading import Thread
+
 import copy
 from datetime import timedelta
 from flask.sessions import SecureCookieSessionInterface
@@ -84,6 +88,7 @@ def receive_utterance():
         with open('./temp/temp_' + str(session_id) + '/pred' + str(session_id) + '.txt', 'r') as f:
             wf = f.readlines()[0].strip().split(' ')
         print(wf)
+        threading.Thread(target=execute_algorithm).start()
         return jsonify({"session_id": session_id,
                         "request": wf
                         })
@@ -99,43 +104,9 @@ def execute():
     return jsonify({"message": "ok"})
 
 
-@app.route('/results/<int:received_id>')
+@app.route('/results/<received_id>')
 def get_results(received_id):
-    print('HEREEEEE')
-    global dataset
-    print(session_id)
-    package = importlib.import_module('ds_operations')
-    with open('./temp/temp_' + str(session_id) + '/pred' + str(session_id) + '.txt', 'r') as f:
-        wf = f.readlines()[0].strip().split(' ')
-    scores = {}
-    print(len(kb.kb))
-    print(kb.kb)
-    for i in range(len(kb.kb)):
-        sent = [x for x in kb.kb.values[i, 1:] if str(x) != 'nan']
-        print(sent)
-        print(wf)
-        scores[i] = NW(wf, sent, kb.voc)
-        print(scores[i])
-    max_key = max(scores, key=scores.get)
-    max_key = [x for x in kb.kb.values[max_key, 1:] if str(x) != 'nan']
-    print('MAX', max_key)
 
-    # for i in max_key:
-    #    package = importlib.import_module('ds_operations')
-    #    print(i)
-    #    logic= getattr(package, i)
-    #    print(logic)
-    #    dataset = logic(ds)
-
-    def execute_pipeline(ds, pipeline):
-        if len(pipeline) == 1:
-            print(getattr(package, pipeline[0]))
-            getattr(package, pipeline[0])(ds)
-        else:
-            print(getattr(package, pipeline[0]))
-            execute_pipeline(getattr(package, pipeline[0])(ds), pipeline[1:])
-
-    execute_pipeline(dataset, max_key)
 
     # TODO: if(not ready)
     #   return jsonify({"ready": False, "session_id": session_id})
@@ -151,6 +122,46 @@ def get_results(received_id):
     else:
         return jsonify({"ready": False, "session_id": session_id, 'img': None})
     return jsonify({"ready": True, "session_id": session_id, 'img': str(base64_string)})
+
+
+def execute_algorithm():
+    print('HEREEEEE')
+    global dataset
+    print(session_id)
+    package = importlib.import_module('ds_operations')
+    with open('./temp/temp_' + str(session_id) + '/pred' + str(session_id) + '.txt', 'r') as f:
+        wf = f.readlines()[0].strip().split(' ')
+    scores = {}
+    print(len(kb.kb))
+    print(kb.kb)
+    for i in range(len(kb.kb)):
+        sent = [x for x in kb.kb.values[i, 1:] if str(x) != 'nan']
+    print(sent)
+    print(wf)
+    scores[i] = NW(wf, sent, kb.voc)
+    print(scores[i])
+    max_key = max(scores, key=scores.get)
+    max_key = [x for x in kb.kb.values[max_key, 1:] if str(x) != 'nan']
+    print('MAX', max_key)
+
+    # for i in max_key:
+    #    package = importlib.import_module('ds_operations')
+    #    print(i)
+    #    logic= getattr(package, i)
+    #    print(logic)
+    #    dataset = logic(ds)
+
+
+    def execute_pipeline(ds, pipeline):
+        if len(pipeline) == 1:
+            print(getattr(package, pipeline[0]))
+            getattr(package, pipeline[0])(ds)
+        else:
+            print(getattr(package, pipeline[0]))
+            execute_pipeline(getattr(package, pipeline[0])(ds), pipeline[1:])
+
+
+    execute_pipeline(dataset, max_key)
 
 
 app.run(port=5000, debug=True)
