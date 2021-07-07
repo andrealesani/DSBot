@@ -15,10 +15,11 @@ class IRCorrelation(IROp):
         return self.correlation
 
     #TDB cosa deve restituire questa funzione?
-    def run(self, dataset):
+    def run(self, result):
+        dataset = result['original_dataset']
         self.correlation = dataset.ds.corr(method=self._model)
-        dataset.correlation = self.correlation
-        return dataset
+        result['correlation'] = self.correlation
+        return result
 
 class IRPearson(IRCorrelation):
     def __init__(self):

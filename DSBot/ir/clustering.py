@@ -21,7 +21,8 @@ class IRClustering(IROp):
     def parameter_tune(self, dataset):
         pass
 
-    def set_model(self, dataset):
+    def set_model(self, result):
+        dataset = result['original_dataset']
         self.parameter_tune(dataset)
         for p,v in self.parameters.items():
             self._model.__setattr__(p,v.value)
@@ -33,7 +34,8 @@ class IRClustering(IROp):
         return self.labels
 
     #TDB cosa deve restituire questa funzione?
-    def run(self, dataset):
+    def run(self, result):
+        dataset = result['original_dataset']
         if not self._param_setted:
             self.set_model(dataset)
         try:
@@ -41,8 +43,8 @@ class IRClustering(IROp):
         except:
             self._model.fit_predict(dataset)
         self.labels = self._model.labels_
-        dataset.labels = self.labels
-        return dataset
+        result['labels'] = self.labels
+        return result
 
 class IRKMeans(IRClustering):
     def __init__(self):

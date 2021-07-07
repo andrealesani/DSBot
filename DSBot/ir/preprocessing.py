@@ -6,7 +6,6 @@ from sklearn.impute import IterativeImputer
 from ir.ir_models import IRMod
 from ir.ir_operations import IROp, IROpOptions
 
-
 class IRPreprocessing(IROp):
     def __init__(self, name, parameters=None, model = None):
         super(IRPreprocessing, self).__init__(name, parameters)
@@ -17,7 +16,8 @@ class IRPreprocessing(IROp):
     def parameter_tune(self, dataset):
         pass
 
-    def set_model(self, dataset):
+    def set_model(self, result):
+        dataset = result['original_dataset']
         if self.parameter == None:
             self.parameter_tune(dataset)
         #for p,v in self.parameters.items():
@@ -25,21 +25,22 @@ class IRPreprocessing(IROp):
         self._param_setted = True
 
     #TDB cosa deve restituire questa funzione?
-    def run(self, dataset):
+    def run(self, result):
         pass
 
-class IRMissingValuesRemove(IROp):
+class IRMissingValuesRemove(IRPreprocessing):
     def __init__(self):
         super(IRMissingValuesRemove, self).__init__("missingValuesRemove", None)
 
-    def run(self, dataset):
+    def run(self, result):
+        dataset = result['original_dataset']
         dataset = dataset.ds.dropna()
-        return dataset
+        result['new_dataset'] = dataset
+        return result
 
-class IRMissingValuesFill(IROp):
+class IRMissingValuesFill(IRPreprocessing):
     def __init__(self, parameter):
         super(IRMissingValuesFill, self).__init__("missingValuesRemove", parameter)
-
 
     def parameter_tune(self, dataset):
         imp = IterativeImputer(max_iter=10, random_state=0)
@@ -51,20 +52,20 @@ class IRMissingValuesFill(IROp):
             values_dataset = pd.concat([dataset.ds, values_dataset])
         else:
             values_dataset = pd.DataFrame(imp.fit_transform(dataset.ds))
-
         return values_dataset
 
-    def run(self, dataset):
+    def run(self, result):
+        dataset = result['original_dataset']
         if not self._param_setted:
             self.parameter_tune(dataset)
         else:
             dataset.ds = dataset.ds.apply(lambda col: col.fillna(self.parameter))
-        return dataset
+        result['new_dataset'] = dataset
+        return result
 
-def IROneHotEncode(IROp):
+def IROneHotEncode(IRPreprocessing):
     def __init__(self, parameter):
         super(IROneHotEncode, self).__init__("oneHotEncoder", parameter)
-
 
 class IRGenericPreprocessing(IROpOptions):
     def __init__(self):

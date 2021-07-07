@@ -6,3 +6,6 @@ class CorrelationNotAvailable(Exception):
 
 class UnknownParameter(Exception):
     pass
+
+class PCADataNotAvailable(Exception):
+    pass
