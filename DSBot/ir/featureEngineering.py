@@ -48,8 +48,8 @@ class IRFeatureEngineering(IROp):
 class IRPCA(IRFeatureEngineering):
     def __init__(self):
         super(IRPCA, self).__init__("pca",
-                                       {"n_components" : IRPar("n_components",2,"number of components")},
-                                       PCA)
+                                    {"n_components" : IRPar("n_components", 2)},
+                                    PCA)
 
     def parameter_tune(self, dataset):
         pass

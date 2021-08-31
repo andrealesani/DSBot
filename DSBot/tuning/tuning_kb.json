@@ -1,0 +1,53 @@
+{
+  "kmeans": {
+    "name": "kmeans clustering",
+    "params": {
+      "n_clusters": {
+        "name": "number of clusters",
+        "desc": "controls the number of groups that the algorithm is trying to find"
+      }
+    }
+  },
+  "dbscan": {
+    "name": "density based clustering",
+    "params": {
+      "eps": {
+        "name": "epsilon",
+        "desc": "The maximum distance between two samples"
+      }
+    }
+  },
+  "pearson": {
+    "name": "pearson correlation",
+    "params": {}
+  },
+  "spearman": {
+    "name": "spearman correlation",
+    "params": {}
+  },
+  "pca": {
+    "name": "pca",
+    "params": {
+      "n_components": {
+        "name": "number of components",
+        "desc": "The algorithm selects the number of components such that the amount of variance that needs to be explained is greater than the percentage specified by n_components"
+      }
+    }
+  },
+  "scatterplot": {
+    "name": "scatterplot",
+    "params": {}
+  },
+  "clustermap": {
+    "name": "clustermap",
+    "params": {}
+  },
+  "missingValuesRemove": {
+    "name": "missing values removal",
+    "params": {}
+  },
+  "missingValuesFill": {
+    "name": "missing values fill",
+    "params": {}
+  }
+}

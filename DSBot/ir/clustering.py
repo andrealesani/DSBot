@@ -49,7 +49,7 @@ class IRClustering(IROp):
 class IRKMeans(IRClustering):
     def __init__(self):
         super(IRKMeans, self).__init__("kmeans",
-                                       {"n_clusters" : IRPar("n_clusters",8,"number of clusters")},
+                                       {"n_clusters" : IRPar("n_clusters", 8)},
                                        KMeans)
 
     def parameter_tune(self, dataset):
@@ -72,7 +72,7 @@ class IRKMeans(IRClustering):
 class IRDBSCAN(IRClustering):
     def __init__(self):
         super(IRDBSCAN, self).__init__("dbscan",
-                                       {"eps" : IRPar("eps", 0.1, "maximum distance between two samples")},
+                                       {"eps" : IRPar("eps", 0.1)},
                                        DBSCAN)
 
     def parameter_tune(self, dataset):

@@ -1,20 +1,16 @@
 from abc import ABC
 
 from ir.ir_exceptions import UnknownParameter
+from tuning.tuning_mixins import TuningOpMixin, TuningOpOptionsMixin
 
 
-class IROp(ABC):
+class IROp(TuningOpMixin, ABC):
     def __init__(self, name, parameters):
         self.name = name
         self.parameters = parameters
-        self._param_setted = False
 
     def get_parameters_list(self):
         return self.parameters.keys()
-
-    def set_param(self, name, value):
-        self.parameters[name].value = value
-        self._param_setted = True
 
     def get_param(self, name):
         try:
@@ -25,7 +21,8 @@ class IROp(ABC):
     def run(self):
         pass
 
-class IROpOptions():
+
+class IROpOptions(TuningOpOptionsMixin):
     def __init__(self, models, default):
         self.models = models
         self.default = default
@@ -42,4 +39,3 @@ class IROpOptions():
             return object.__getattribute__(self, item)
         else:
             return self.actual_model.model.__getattribute__(item)
-
