@@ -153,13 +153,16 @@ def execute_algorithm():
 
 
     def execute_pipeline(ds, pipeline):
-        if len(pipeline) == 1:
-            print(getattr(package, pipeline[0]))
-            getattr(package, pipeline[0])(ds)
-        else:
-            print(getattr(package, pipeline[0]))
-            execute_pipeline(getattr(package, pipeline[0])(ds), pipeline[1:])
-
+        try:
+            if len(pipeline) == 1:
+                print(getattr(package, pipeline[0]))
+                getattr(package, pipeline[0])(ds)
+            else:
+                print(getattr(package, pipeline[0]))
+                execute_pipeline(getattr(package, pipeline[0])(ds), pipeline[1:])
+        except AttributeError:
+            print(f"ERROR: could not find attribute/method: {pipeline[0]}")
+            execute_pipeline(ds, pipeline[1:])
 
     execute_pipeline(dataset, max_key)
 
