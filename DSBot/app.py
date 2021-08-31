@@ -51,7 +51,7 @@ def receive_ds():
         print("si salva!")
         #uploaded_file.save(uploaded_file.filename)
         try:
-            os.mkdir('./temp/temp_'+str(session_id))
+            os.makedirs('./temp/temp_'+str(session_id))
         except:
             pass
         uploaded_file.save('./temp/temp_'+str(session_id)+'/' + uploaded_file.filename)
