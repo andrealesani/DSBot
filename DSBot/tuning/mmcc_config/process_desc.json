@@ -1,0 +1,25 @@
+{
+  "activities": [
+    {
+      "my_id": "start",
+      "next_id": "choose_problem",
+      "my_type": "START"
+    },
+    {
+      "my_id": "choose_problem",
+      "next_id": "edit_param",
+      "my_type": "TASK"
+    },
+    {
+      "my_id": "edit_param",
+      "next_id": "end",
+      "my_type": "TASK"
+    },
+    {
+      "my_id": "end",
+      "next_id": null,
+      "my_type": "END"
+    }
+  ],
+  "first_activity_id": "start"
+}

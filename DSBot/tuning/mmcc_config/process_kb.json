@@ -1,0 +1,8 @@
+{
+  "choose_problem": "In this page you can see the results of your operation. If the results do not satisfy you, please describe the issue you are experiencing below.",
+  "problem_err": "I am sorry, I cannot understand what you mean. Explain what the problem is, or, in alternative, you can skip this step.",
+  "edit_param_sentence": "When you are ready you can run the pipeline again.",
+  "no_highlights_sentence": "Here you can edit the pipeline that was used. When you are done, you can run it again.",
+  "values_updated": "I have updated the value as requested. What else do you wish to change?",
+  "end": "I am running the pipeline again."
+}

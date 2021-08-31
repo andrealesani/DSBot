@@ -26,6 +26,7 @@ Markdown==3.3.4
 MarkupSafe==1.1.1
 matplotlib==3.4.1
 mlxtend==0.18.0
+mmcc-framework==0.3.2
 nltk==3.6.2
 numpy==1.20.2
 oauthlib==3.1.0
