@@ -4,7 +4,7 @@ from typing import Union, List, Set
 import pandas as pd
 
 
-class ProblemError(Exception):
+class MissingSolutionError(Exception):
     """Raised when the queried problem and pipeline do not have a solution."""
 
     def __init__(self, problem, pipeline):
@@ -47,7 +47,7 @@ def get_data(problem: Problem, pipeline: Pipeline, df=None) -> SolutionDetails:
     :param problem: the problem keyword or a list or set of problem keywords
     :param pipeline: the pipeline used
     :param df: the problem table kb, do not change this, used for testing
-    :raise ProblemError: if the queried problem and pipeline do not have a solution
+    :raise MissingSolutionError: if the queried problem and pipeline do not have a solution
     """
 
     # Uniform params types
@@ -66,6 +66,6 @@ def get_data(problem: Problem, pipeline: Pipeline, df=None) -> SolutionDetails:
             return SolutionDetails(problem, pipeline, r['param'].split(), r['sentence'].strip())
 
     # No results: raise
-    error = ProblemError(problem, pipeline)
+    error = MissingSolutionError(problem, pipeline)
     logging.getLogger(__name__).error(error)
     raise error
