@@ -1,0 +1,14 @@
+{
+  "mod1": {
+    "name": "Module 1",
+    "params": {
+      "param1.1": {
+        "name": "Param 1.1",
+        "desc": "Parameter 1 of module 1"
+      }
+    }
+  },
+  "mod2": {
+    "name": "Module 2"
+  }
+}
