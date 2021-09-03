@@ -51,6 +51,12 @@ class TestGetData(TestCase):
         self.assertEqual(set(res.relevant_params), par)
         self.assertEqual(res.sentence, utt)
 
+    def test_get_data_no_solution(self):
+        prb = {'missing'}
+        mdl = make_irop({'mb1'})
+        with self.assertRaises(tuning.MissingSolutionError):
+            tuning.get_data(prb, mdl, self.test_df)
+
 
 def make_irop(names):
     return {ir.IROp(n, {}) for n in names}
