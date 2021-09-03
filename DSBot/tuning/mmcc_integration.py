@@ -1,14 +1,18 @@
 import json
+import logging
+from pathlib import Path
 
 from mmcc_framework import DictCallback, Framework, NoNluAdapter
 
-from tuning.mmcc_config.callbacks import my_callbacks
+from DSBot.tuning.mmcc_config.callbacks import my_callbacks
 
 # Load the process description and kb from file.
-with open("mmcc_config/process_desc.json", "r") as process_file:
+with open(Path(__file__).parent / 'mmcc_config/process_desc.json', "r") as process_file:
     proc = json.loads(process_file.read())
-with open("mmcc_config/process_kb.json", "r") as process_file:
+    logging.getLogger(__name__).debug('Reading process_desc file')
+with open(Path(__file__).parent / 'mmcc_config/process_kb.json', "r") as process_file:
     kb = json.loads(process_file.read())
+    logging.getLogger(__name__).debug('Reading process_kb file')
 
 
 def get_framework() -> Framework:
