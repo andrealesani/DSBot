@@ -4,5 +4,9 @@
   "edit_param_sentence": "When you are ready you can run the pipeline again.",
   "no_highlights_sentence": "Here you can edit the pipeline that was used. When you are done, you can run it again.",
   "values_updated": "I have updated the value as requested. What else do you wish to change?",
+  "values_intent_err": "I am sorry, I cannot understand what you mean. If you want to edit a parameter, specify its name and module and the new value.",
+  "no_module_err": "I couldn't find any module with the name ",
+  "no_param_err": "I couldn't find any parameter in this module with the name ",
+  "value_err": "The value you choose can not be applied.",
   "end": "I am running the pipeline again."
 }
