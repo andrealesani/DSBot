@@ -1,7 +1,9 @@
 import logging
-from typing import Union, List, Set
+from typing import List, Set
 
 import pandas as pd
+
+from DSBot.tuning.types import Problem, Pipeline
 
 
 class MissingSolutionError(Exception):
@@ -26,13 +28,6 @@ class SolutionDetails:
         self.pipeline = pipeline
         self.relevant_params = relevant_params
         self.sentence = sentence
-
-
-Problem = Union[str, Set[str], List[str]]
-"""A type representing a string or a list or set of strings."""
-
-Pipeline = Union[List[Union['IROp', 'IROpOptions']], Set[Union['IROp', 'IROpOptions']]]
-"""A type representing a list or set of IROp or IROpOptions objects."""
 
 
 def get_data(problem: Problem, pipeline: Pipeline, df=None) -> SolutionDetails:
