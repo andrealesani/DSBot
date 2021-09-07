@@ -1,4 +1,7 @@
-from tuning.tuning_mixins import TuningParMixin
+import logging
+
+from DSBot.tuning import TuningParMixin
+from ir.ir_exceptions import IncorrectValue
 
 
 def par_helper(par_list: list, module_name: str) -> dict:
@@ -25,7 +28,6 @@ class IRPar(TuningParMixin):
         self.min_v = min_v
         self.max_v = max_v
         self._actual_value = None
-        self.module = None
 
     @property
     def value(self):
@@ -37,13 +39,11 @@ class IRPar(TuningParMixin):
     def value(self, new_value):
         """Do not use this method during tuning (use tune_value)."""
         if self._actual_value is not None:
-            print("WARNING: automatic parameter set was ignored because a custom value is defined")
-            # TODO(giubots): make raise or log
+            logging.getLogger(__name__).debug('Parameter set was ignored because a custom value was defined')
             return
 
         if not self.is_range_valid(new_value):
-            print("ERROR: automatic parameter out of range")
-            # TODO(giubots): make raise or log
+            logging.getLogger(__name__).error('Out of range parameter: %s; module: %s', self.name, self.module)
             return
 
         self.default_value = new_value
@@ -59,9 +59,7 @@ class IRPar(TuningParMixin):
     def tune_value(self, new_value):
         """Do not use this method from within the pipeline, use the value setter."""
         if not self.is_range_valid(new_value):
-            print("ERROR: tuning parameter out of range")
-            # TODO(giubots): make raise or log
-            return
+            raise IncorrectValue()
 
         self._actual_value = new_value
 
