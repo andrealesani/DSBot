@@ -10,9 +10,9 @@ import logging
 
 from mmcc_framework import Response
 
+import DSBot.ir.ir_exceptions
 from DSBot.tuning.problem_helper import get_data, MissingSolutionError
 from DSBot.tuning.tuning_mixins import update_pipeline
-from ir.ir_exceptions import UnknownParameter, IncorrectValue
 
 
 def start(_, kb, context, __):
@@ -85,9 +85,9 @@ def edit_param(data, kb, context, _):
         logging.getLogger(__name__).error(msg)
     except StopIteration:
         msg = kb['no_module_err'] + data['module']
-    except UnknownParameter:
+    except DSBot.ir.ir_exceptions.UnknownParameter:
         msg = kb['no_param_err'] + data['parameter']
-    except IncorrectValue:
+    except DSBot.ir.ir_exceptions.IncorrectValue:
         msg = kb['value_err']
 
     return Response(kb, context, False, utterance=msg)
