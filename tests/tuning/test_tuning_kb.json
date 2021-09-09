@@ -19,5 +19,56 @@
         "desc": "Parameter 1 of module 4"
       }
     }
+  },
+  "m1": {
+    "name": "This is module 1",
+    "params": {
+      "p1": {
+        "name": "Param 1",
+        "desc": "This is param 1 of module 1"
+      },
+      "p2": {
+        "name": "Param 2",
+        "desc": "This is param 2 of module 1"
+      },
+      "p3": {
+        "name": "Param 3",
+        "desc": "This is param 3 of module 1"
+      }
+    }
+  },
+  "m2": {
+    "name": "This is module 2",
+    "params": {
+      "p1": {
+        "name": "Param 1",
+        "desc": "This is param 1 of module 2"
+      },
+      "p2": {
+        "name": "Param 2",
+        "desc": "This is param 2 of module 2"
+      },
+      "p3": {
+        "name": "Param 3",
+        "desc": "This is param 3 of module 2"
+      }
+    }
+  },
+  "m3": {
+    "name": "This is module 3",
+    "params": {
+      "p1": {
+        "name": "Param 1",
+        "desc": "This is param 1 of module 3"
+      },
+      "p2": {
+        "name": "Param 2",
+        "desc": "This is param 2 of module 3"
+      },
+      "p3": {
+        "name": "Param 3",
+        "desc": "This is param 3 of module 3"
+      }
+    }
   }
 }

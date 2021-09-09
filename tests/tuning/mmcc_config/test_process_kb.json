@@ -1,0 +1,12 @@
+{
+  "choose_problem": "choose_problem sentence",
+  "problem_err": "problem_err sentence",
+  "edit_param_sentence": "edit_param_sentence sentence",
+  "no_highlights_sentence": "no_highlights_sentence sentence",
+  "values_updated": "values_updated sentence",
+  "values_intent_err": "values_intent_err sentence",
+  "no_module_err": "no_module_err sentence ",
+  "no_param_err": "no_param_err sentence ",
+  "value_err": "value_err sentence",
+  "end": "end sentence"
+}

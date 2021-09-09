@@ -40,7 +40,7 @@ def choose_problem(data, kb, context, _):
             }
             return Response(kb, context, True, utterance=kb['no_highlights_sentence'], payload=payload)
 
-        solution = get_data(intent, context['pipeline'])
+        solution = get_data(intent, context['pipeline'], data.get('test_p', None))
         utterance = solution.sentence + ' ' + kb['edit_param_sentence']
         context['pipeline'] = update_pipeline(context['pipeline'], solution.relevant_params)
         payload = {
@@ -81,7 +81,7 @@ def edit_param(data, kb, context, _):
         msg = kb['values_intent_err']
 
     except KeyError:
-        msg = f'Received data without intent: {str(data)}'
+        msg = f'Received data with missing intent or entities: {str(data)}'
         logging.getLogger(__name__).error(msg)
     except StopIteration:
         msg = kb['no_module_err'] + data['module']
