@@ -1,4 +1,9 @@
 import importlib
+import inspect
+import pkgutil
+
+import DSBot.ir.impl
+from DSBot.ir.ir_operations import IROpOptions
 
 
 def run(ir, results):  # TODO: consider returning results to the caller
@@ -10,7 +15,21 @@ def run(ir, results):  # TODO: consider returning results to the caller
 
 def create_IR(pipeline):
     dict_pipeline = []
-    package = importlib.import_module('ir')  # TODO: must add imports to __init__.py
-    for i in pipeline:
-        dict_pipeline.append(getattr(package, i))  # FIXME: this probably gets IROp instead of IROpOptions
+    for item in pipeline:
+        module = modules[item]()
+        module.set_model(item)
+        dict_pipeline.append(module)
     return dict_pipeline
+
+
+def is_generic(value):
+    return inspect.isclass(value) and 'DSBot.ir.impl.' in value.__module__ and issubclass(value, IROpOptions)
+
+
+modules = []
+for loader, module_name, is_pkg in pkgutil.walk_packages(DSBot.ir.impl.__path__, DSBot.ir.impl.__name__ + '.'):
+    generic_classes = inspect.getmembers(importlib.import_module(module_name), is_generic)
+    modules.extend(generic_classes)
+    # _module = loader.find_module(module_name).load_module(module_name)  # TODO(giubots): remove
+    # globals()[module_name] = _module
+modules = {m: r[1] for r in modules for m in r[1]().get_models()}

@@ -5,9 +5,9 @@ from sklearn import metrics
 from sklearn.cluster import KMeans, DBSCAN
 from sklearn.model_selection import GridSearchCV
 
-from ir.ir_exceptions import LabelsNotAvailable
-from ir.ir_operations import IROp, IROpOptions
-from ir.ir_parameters import IRPar
+from DSBot.ir.ir_exceptions import LabelsNotAvailable
+from DSBot.ir.ir_operations import IROp, IROpOptions
+from DSBot.ir.ir_parameters import IRPar
 
 
 class IRClustering(IROp):

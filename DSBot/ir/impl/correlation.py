@@ -1,10 +1,10 @@
-from ir.ir_exceptions import CorrelationNotAvailable
-from ir.ir_operations import IROp, IROpOptions
+from DSBot.ir.ir_exceptions import CorrelationNotAvailable
+from DSBot.ir.ir_operations import IROp, IROpOptions
 
 
 class IRCorrelation(IROp):
     def __init__(self, name, model = None):
-        super(IRCorrelation, self).__init__(name, model)  # FIXME: model is passed to IROp.parameters. Change to []?
+        super(IRCorrelation, self).__init__(name, [])  # TODO: before, model was passed to IROp.parameters. is this correct?
         self._model = model
         self.correlation = None
 

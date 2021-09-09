@@ -1,15 +1,15 @@
 from abc import abstractmethod
 
 import pandas as pd
-from sklearn.impute import IterativeImputer
+from sklearn.impute._iterative import IterativeImputer
 
-from ir.ir_operations import IROp, IROpOptions
+from DSBot.ir.ir_operations import IROp, IROpOptions
 
 
 class IRPreprocessing(IROp):
     def __init__(self, name, parameters=None, model = None):
         super(IRPreprocessing, self).__init__(name, parameters if parameters is not None else [])
-        self.parameter = parameters['value']  # FIXME: use self.get_param('value'), but it will raise UnknownParameter
+        #self.parameter = parameters['value']  # FIXME: use self.get_param('value'), but it will raise UnknownParameter
         self.labels = None
 
     @abstractmethod
@@ -29,6 +29,10 @@ class IRPreprocessing(IROp):
         pass
 
 class IRMissingValuesRemove(IRPreprocessing):
+    def parameter_tune(self, dataset):
+        # TODO: implement
+        pass
+
     def __init__(self):
         super(IRMissingValuesRemove, self).__init__("missingValuesRemove")
 

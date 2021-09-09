@@ -8,9 +8,9 @@ import seaborn as sns
 from seaborn import scatterplot, clustermap
 from matplotlib.pyplot import scatter
 
-from ir.ir_exceptions import LabelsNotAvailable, PCADataNotAvailable
-from ir.ir_operations import IROp, IROpOptions
-from ir.ir_parameters import IRPar
+from DSBot.ir.ir_exceptions import LabelsNotAvailable, PCADataNotAvailable
+from DSBot.ir.ir_operations import IROp, IROpOptions
+from DSBot.ir.ir_parameters import IRPar
 
 
 class IRPlot(IROp):
@@ -104,6 +104,7 @@ class IRClustermap(IRPlot):
 
         return  result
 
-class IRGenericPlot(IROpOptions):
-    def __init__(self):
-        super(IRGenericPlot, self).__init__([IRScatterplot(), IRClustermap()], "scatterplot")
+# FIXME: this class was commented out because the implementation raises errors
+# class IRGenericPlot(IROpOptions):
+#     def __init__(self):
+#         super(IRGenericPlot, self).__init__([IRScatterplot(), IRClustermap()], "scatterplot")
