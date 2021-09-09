@@ -3,7 +3,7 @@ from pathlib import Path
 from unittest import TestCase
 
 import DSBot.tuning.tuning_mixins as mixins
-from DSBot.ir.ir_operations import IROp
+from DSBot.ir.ir_operations import IROp, IROpOptions
 from DSBot.ir.ir_parameters import IRPar
 
 
@@ -43,6 +43,27 @@ class TestTuningOpMixin(TestCase):
     def test_is_highlighted_not_set(self):
         mod = IROpImpl('mod', {})
         self.assertFalse(mod.is_highlighted)
+
+    def test_tojson(self):
+        mod = IROpImpl('mod4', [IRPar('param4.1', 0, 'float', 0, 1)])
+        self.assertDictEqual(mod.to_json(), {
+            'name': 'mod4',
+            'pretty_name': 'Module 4',
+            'parameters': {
+                'param4.1': {
+                    'name': 'param4.1',
+                    'pretty_name': 'Param 4.1',
+                    'value': 0,
+                    'min': 0,
+                    'max': 1,
+                    'default': 0,
+                    'description': 'Parameter 1 of module 4',
+                    'is_highlighted': False,
+                    'type': 'float'
+                },
+            },
+            'is_highlighted': False
+        })
 
 
 # noinspection PyStatementEffect
@@ -123,3 +144,48 @@ class TestTuningParMixin(TestCase):
     def test_is_highlighted_not_set(self):
         par = IRPar('param3', 0, 'float', 0, 1)
         self.assertFalse(par.is_highlighted)
+
+    def test_tojson(self):
+        par = IRPar('param4.1', 0, 'float', 0, 1)
+        par.module = 'mod4'
+        self.assertDictEqual(par.to_json(), {
+            'name': 'param4.1',
+            'pretty_name': 'Param 4.1',
+            'value': 0,
+            'min': 0,
+            'max': 1,
+            'default': 0,
+            'description': 'Parameter 1 of module 4',
+            'is_highlighted': False,
+            'type': 'float'
+        })
+
+
+class TestTuningOpOptionsMixin(TestCase):
+    @classmethod
+    def setUpClass(cls) -> None:
+        super().setUpClass()
+        change_file()
+
+    def test_tojson(self):
+        opt = IROpOptions([IROpImpl('mod4', [IRPar('param4.1', 0, 'float', 0, 1)])], 'mod4')
+        res = {
+            'name': 'mod4',
+            'pretty_name': 'Module 4',
+            'parameters': {
+                'param4.1': {
+                    'name': 'param4.1',
+                    'pretty_name': 'Param 4.1',
+                    'value': 0,
+                    'min': 0,
+                    'max': 1,
+                    'default': 0,
+                    'description': 'Parameter 1 of module 4',
+                    'is_highlighted': False,
+                    'type': 'float'
+                },
+            },
+            'is_highlighted': False
+        }
+        res['models'] = {'mod4': res.copy()}
+        self.assertDictEqual(opt.to_json(), res)

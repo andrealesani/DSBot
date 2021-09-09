@@ -10,5 +10,14 @@
   },
   "mod2": {
     "name": "Module 2"
+  },
+  "mod4": {
+    "name": "Module 4",
+    "params": {
+      "param4.1": {
+        "name": "Param 4.1",
+        "desc": "Parameter 1 of module 4"
+      }
+    }
   }
 }
