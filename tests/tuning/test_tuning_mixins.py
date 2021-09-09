@@ -189,3 +189,38 @@ class TestTuningOpOptionsMixin(TestCase):
         }
         res['models'] = {'mod4': res.copy()}
         self.assertDictEqual(opt.to_json(), res)
+
+
+class TestUpdatePipeline(TestCase):
+
+    def setUp(self) -> None:
+        super().setUp()
+        pipeline = [
+            IROpImpl('m1', [IRPar('p1', 0, '', 0, 1), IRPar('p2', 0, '', 0, 1), IRPar('p3', 0, '', 0, 1)]),
+            IROpImpl('m2', [IRPar('p1', 0, '', 0, 1), IRPar('p2', 0, '', 0, 1), IRPar('p3', 0, '', 0, 1)]),
+            IROpImpl('m3', [IRPar('p1', 0, '', 0, 1), IRPar('p2', 0, '', 0, 1), IRPar('p3', 0, '', 0, 1)]),
+        ]
+        relevant = ['m1.p1', 'm1.p2', 'm3.p1', 'm3.p3']
+        self.pipeline = mixins.update_pipeline(pipeline, relevant)
+
+    def test_update_pipeline_params(self):
+        result = {}
+        for m in self.pipeline:
+            result[m.name] = {}
+            for k, v in m.parameters.items():
+                result[m.name][k] = v.is_highlighted
+        expected = {
+            'm1': {'p1': True, 'p2': True, 'p3': False},
+            'm2': {'p1': False, 'p2': False, 'p3': False},
+            'm3': {'p1': True, 'p2': False, 'p3': True}
+        }
+        self.assertDictEqual(result, expected)
+
+    def test_update_pipeline_modules(self):
+        result = {m.name: m.is_highlighted for m in self.pipeline}
+        expected = {
+            'm1': True,
+            'm2': False,
+            'm3': True
+        }
+        self.assertDictEqual(result, expected)

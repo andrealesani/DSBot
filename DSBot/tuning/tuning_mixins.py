@@ -175,14 +175,16 @@ def update_pipeline(pipeline: Pipeline, relevant_params: List[str]) -> Pipeline:
         param = p.split(sep='.')
         if param[0] in data:
             data[param[0]].append(param[1])
-        data[param[0]] = [param[1]]
+        else:
+            data[param[0]] = [param[1]]
 
     for module in pipeline:
         if module.name in data:
-            module.highlighted = True
+            module.is_highlighted = True
             for p_key in module.get_parameters_list():
                 param = module.get_param(p_key)
-                param.highlighted = (param.name in data[module.name])
-        module.highlighted = False
+                param.is_highlighted = (param.name in data[module.name])
+        else:
+            module.is_highlighted = False
 
     return pipeline
