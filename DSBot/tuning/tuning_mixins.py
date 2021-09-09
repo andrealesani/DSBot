@@ -73,6 +73,9 @@ class TuningOpMixin:
             'is_highlighted': self.is_highlighted
         }
 
+    def __repr__(self) -> str:
+        return str(self.to_json())
+
 
 class TuningOpOptionsMixin:
     """Adds tuning functionalities to a IROpOptions class."""
@@ -83,6 +86,9 @@ class TuningOpOptionsMixin:
         actual = self.actual_model.to_json()
         actual['models'] = {k: v.to_json() for k, v in self.models.items()}
         return actual
+
+    def __repr__(self) -> str:
+        return str(self.to_json())
 
 
 class TuningParMixin:
@@ -166,6 +172,9 @@ class TuningParMixin:
             'is_highlighted': self.is_highlighted,
             'type': self.v_type
         }
+
+    def __repr__(self) -> str:
+        return str(self.to_json())
 
 
 def update_pipeline(pipeline: Pipeline, relevant_params: List[str]) -> Pipeline:
