@@ -22,9 +22,9 @@ def get_framework(pipeline: Pipeline, result: str, start_work: PipelineCallback)
     The framework will have no NLU and the kb will not be saved at the end of execution.
     The context will contain the dataset and the pipeline.
 
-    :ivar pipeline: the pipeline used in the last analysis
-    :ivar result: base64 string representation of the previous analysis result
-    :ivar start_work: callback that takes the pipeline and starts the execution in another thread
+    :param pipeline: the pipeline used in the last analysis
+    :param result: base64 string representation of the previous analysis result
+    :param start_work: callback that takes the pipeline and starts the execution in another thread
     """
     return Framework(process=proc,
                      kb=kb,
