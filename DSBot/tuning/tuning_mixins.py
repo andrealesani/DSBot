@@ -69,7 +69,7 @@ class TuningOpMixin:
         return {
             'name': self.name,
             'pretty_name': self.pretty_name,
-            'parameters': {k: v.to_json() for k, v in self.parameters},
+            'parameters': {k: v.to_json() for k, v in self.parameters.items()},
             'is_highlighted': self.is_highlighted
         }
 
@@ -81,7 +81,7 @@ class TuningOpOptionsMixin:
 
     def to_json(self):
         actual = self.actual_model.to_json()
-        actual['models'] = {k: v.to_json() for k, v in self.models}
+        actual['models'] = {k: v.to_json() for k, v in self.models.items()}
         return actual
 
 
