@@ -4,7 +4,6 @@ import numpy as np
 from sklearn.decomposition import PCA
 
 from ir.ir_exceptions import LabelsNotAvailable
-from ir.ir_models import IRMod
 from ir.ir_operations import IROp, IROpOptions
 from ir.ir_parameters import IRPar
 
@@ -12,7 +11,7 @@ from ir.ir_parameters import IRPar
 class IRFeatureEngineering(IROp):
     def __init__(self, name, parameters, model = None):
         super(IRFeatureEngineering, self).__init__(name,parameters)
-        self._model = model(**{k:v.value for k,v in parameters.items()})
+        self._model = model(**{v.name: v.value for v in parameters})
         self.labels = None
 
     @abstractmethod
@@ -48,14 +47,13 @@ class IRFeatureEngineering(IROp):
 class IRPCA(IRFeatureEngineering):
     def __init__(self):
         super(IRPCA, self).__init__("pca",
-                                    {"n_components" : IRPar("n_components", 2)},
+                                    [IRPar("n_components", 2, "float", 0, 1)],  # TODO: what are minimum and maximum?
                                     PCA)
 
     def parameter_tune(self, dataset):
         pass
 
 
-class IRGenericClusterig(IROpOptions):
+class IRGenericFeatureEngineering(IROpOptions):
     def __init__(self):
-        super(IRGenericClusterig, self).__init__({"pca":IRMod("pca", IRPCA(), "pca")},
-                                                 "pca")
+        super(IRGenericFeatureEngineering, self).__init__([IRPCA()], "pca")

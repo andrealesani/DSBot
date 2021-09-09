@@ -3,13 +3,13 @@ from abc import abstractmethod
 import pandas as pd
 from sklearn.impute import IterativeImputer
 
-from ir.ir_models import IRMod
 from ir.ir_operations import IROp, IROpOptions
+
 
 class IRPreprocessing(IROp):
     def __init__(self, name, parameters=None, model = None):
-        super(IRPreprocessing, self).__init__(name, parameters)
-        self.parameter = parameters['value']
+        super(IRPreprocessing, self).__init__(name, parameters if parameters is not None else [])
+        self.parameter = parameters['value']  # FIXME: use self.get_param('value'), but it will raise UnknownParameter
         self.labels = None
 
     @abstractmethod
@@ -30,7 +30,7 @@ class IRPreprocessing(IROp):
 
 class IRMissingValuesRemove(IRPreprocessing):
     def __init__(self):
-        super(IRMissingValuesRemove, self).__init__("missingValuesRemove", None)
+        super(IRMissingValuesRemove, self).__init__("missingValuesRemove")
 
     def run(self, result):
         dataset = result['original_dataset']
@@ -40,7 +40,7 @@ class IRMissingValuesRemove(IRPreprocessing):
 
 class IRMissingValuesFill(IRPreprocessing):
     def __init__(self, parameter):
-        super(IRMissingValuesFill, self).__init__("missingValuesRemove", parameter)
+        super(IRMissingValuesFill, self).__init__("missingValuesFill", parameter)
 
     def parameter_tune(self, dataset):
         imp = IterativeImputer(max_iter=10, random_state=0)
@@ -69,6 +69,5 @@ def IROneHotEncode(IRPreprocessing):
 
 class IRGenericPreprocessing(IROpOptions):
     def __init__(self):
-        super(IRGenericPreprocessing, self).__init__({"missingValuesRemove":IRMod("missingValuesRemove", IRMissingValuesRemove(), "missing values removal"),
-                                                  "missingValuesFill":IRMod("missingValuesFill", IRMissingValuesFill(), "missing values fill")},
-                                                 "missingValuesRemove")
+        super(IRGenericPreprocessing, self).__init__([IRMissingValuesRemove(), IRMissingValuesFill([])],
+                                                     "missingValuesRemove")

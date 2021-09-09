@@ -6,7 +6,6 @@ from sklearn.cluster import KMeans, DBSCAN
 from sklearn.model_selection import GridSearchCV
 
 from ir.ir_exceptions import LabelsNotAvailable
-from ir.ir_models import IRMod
 from ir.ir_operations import IROp, IROpOptions
 from ir.ir_parameters import IRPar
 
@@ -14,7 +13,7 @@ from ir.ir_parameters import IRPar
 class IRClustering(IROp):
     def __init__(self, name, parameters, model = None):
         super(IRClustering, self).__init__(name,parameters)
-        self._model = model(**{k:v.value for k,v in parameters.items()})
+        self._model = model(**{v.name: v.value for v in parameters})
         self.labels = None
 
     @abstractmethod
@@ -49,7 +48,7 @@ class IRClustering(IROp):
 class IRKMeans(IRClustering):
     def __init__(self):
         super(IRKMeans, self).__init__("kmeans",
-                                       {"n_clusters" : IRPar("n_clusters", 8)},
+                                       [IRPar("n_clusters", 8, "int", 1, 10)],  # TODO: what is the maximum?
                                        KMeans)
 
     def parameter_tune(self, dataset):
@@ -72,7 +71,7 @@ class IRKMeans(IRClustering):
 class IRDBSCAN(IRClustering):
     def __init__(self):
         super(IRDBSCAN, self).__init__("dbscan",
-                                       {"eps" : IRPar("eps", 0.1)},
+                                       [IRPar("eps", 0.1, "float", 0, 1)],  # TODO: what is the maximum?
                                        DBSCAN)
 
     def parameter_tune(self, dataset):
@@ -96,8 +95,6 @@ class IRDBSCAN(IRClustering):
         return self.parameters
 
 
-class IRGenericClusterig(IROpOptions):
+class IRGenericClustering(IROpOptions):
     def __init__(self):
-        super(IRGenericClusterig, self).__init__({"kmeans":IRMod("kmeans", IRKMeans(), "kmeans clustering"),
-                                                  "dbscan":IRMod("dbscan", IRDBSCAN(), "density based clustering")},
-                                                 "kmeans")
+        super(IRGenericClustering, self).__init__([IRKMeans(), IRDBSCAN()], "kmeans")

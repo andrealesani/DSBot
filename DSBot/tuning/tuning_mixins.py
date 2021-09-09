@@ -93,6 +93,7 @@ class TuningParMixin:
     default_value: Any
     min_v: Any
     max_v: Any
+    v_type: str
     _highlighted: bool
 
     @property
@@ -163,6 +164,7 @@ class TuningParMixin:
             'default': self.default_value,
             'description': self.description,
             'is_highlighted': self.is_highlighted,
+            'type': self.v_type
         }
 
 

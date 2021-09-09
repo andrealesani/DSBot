@@ -3,7 +3,7 @@ from unittest import TestCase
 
 import pandas as pd
 
-import DSBot.ir.ir_operations as ir
+import DSBot.ir.ir_operations
 import DSBot.tuning.problem_helper as tuning
 
 
@@ -58,5 +58,10 @@ class TestGetData(TestCase):
             tuning.get_data(prb, mdl, self.test_df)
 
 
+class IROpImpl(DSBot.ir.ir_operations.IROp):
+    def run(self):
+        print('Implemented')
+
+
 def make_irop(names):
-    return {ir.IROp(n, {}) for n in names}
+    return {IROpImpl(n, {}) for n in names}

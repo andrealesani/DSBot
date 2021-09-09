@@ -9,7 +9,6 @@ from seaborn import scatterplot, clustermap
 from matplotlib.pyplot import scatter
 
 from ir.ir_exceptions import LabelsNotAvailable, PCADataNotAvailable
-from ir.ir_models import IRMod
 from ir.ir_operations import IROp, IROpOptions
 from ir.ir_parameters import IRPar
 
@@ -17,7 +16,7 @@ from ir.ir_parameters import IRPar
 class IRPlot(IROp):
     def __init__(self, name, parameters, model = None):
         super(IRPlot, self).__init__(name,parameters)
-        self._model = model(**{k:v.value for k,v in parameters.items()})
+        self._model = model(**{v.name: v.value for v in parameters})
         self.labels = None
 
     @abstractmethod
@@ -52,8 +51,8 @@ class IRPlot(IROp):
 class IRScatterplot(IRPlot):
     def __init__(self):
         super(IRScatterplot, self).__init__("scatterplot",
-                                       {},
-                                       scatter)
+                                            [],
+                                            scatter)
 
     def parameter_tune(self, dataset):
         pass
@@ -81,8 +80,8 @@ class IRScatterplot(IRPlot):
 class IRClustermap(IRPlot):
     def __init__(self):
         super(IRClustermap, self).__init__("clustermap",
-                                       {},
-                                       clustermap)
+                                           [],
+                                           clustermap)
 
     def parameter_tune(self, dataset):
         pass
@@ -107,6 +106,4 @@ class IRClustermap(IRPlot):
 
 class IRGenericPlot(IROpOptions):
     def __init__(self):
-        super(IRGenericPlot, self).__init__({"scatterplot":IRMod("scatterplot", IRScatterplot(), "scatterplot"),
-                                                  "clustermap":IRMod("clustermap", IRClustermap(), "clustermap")},
-                                                 "scatterplot")
+        super(IRGenericPlot, self).__init__([IRScatterplot(), IRClustermap()], "scatterplot")
