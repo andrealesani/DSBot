@@ -1,5 +1,6 @@
 import importlib
 import inspect
+import logging
 import pkgutil
 
 import DSBot.ir.impl
@@ -16,9 +17,12 @@ def run(ir, results):  # TODO: consider returning results to the caller
 def create_IR(pipeline):
     dict_pipeline = []
     for item in pipeline:
-        module = modules[item]()
-        module.set_model(item)
-        dict_pipeline.append(module)
+        try:
+            module = modules[item]()
+            module.set_model(item)
+            dict_pipeline.append(module)
+        except KeyError:
+            logging.getLogger(__name__).error('Missing module implementation for: %s', item)
     return dict_pipeline
 
 
