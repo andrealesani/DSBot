@@ -1,9 +1,11 @@
+/* eslint-disable prettier/prettier */
 export const state = () => ({
   e1: 1,
   sessionId: 1,
   requestDescription: '',
   resultsReady: false,
   imageBase64: null,
+  tuning: null,
 })
 
 export const mutations = {
@@ -22,6 +24,9 @@ export const mutations = {
   setImage(state, image) {
     state.imageBase64 = image
   },
+  setTuning(state, tuning) {
+    state.tuning = tuning
+  }
 }
 
 export const actions = {
@@ -82,6 +87,7 @@ export const actions = {
           if (response.data.ready) {
             context.commit('setImage', response.data.img)
             context.commit('setResultsReady', response.data.ready)
+            context.commit('setTuning', response.data.tuning)
           } else {
             console.log('Non faccio niente')
           }
@@ -90,5 +96,31 @@ export const actions = {
     }
 
     return null
+  },
+
+  async toFramework(context, isUtterance, data) {
+    console.log('SENDING DATA', isUtterance, data)
+    let bodyRequest
+    if (isUtterance) {
+      bodyRequest = {
+        session_id: this.state.sessionId,
+        type: 'utternace',
+        utterance: data,
+      }
+    } else {
+      bodyRequest = {
+        session_id: this.state.sessionId,
+        type: 'payload',
+        payload: data,
+      }
+    }
+    console.log(bodyRequest)
+    const res = await this.$axios
+      .post('/tuning', bodyRequest)
+      .then(function (response) {
+        context.commit('setTuning', response.data.tuning)
+        console.log('RECEIVED TUNING', response.data.tuning)
+      })
+    return res
   },
 }
