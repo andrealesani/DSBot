@@ -58,7 +58,7 @@ class IROpOptions(TuningOpOptionsMixin, object):
         if item in ["__init__", "get_models", "set_model", "actual_model", "default", "models", "to_json", "__repr__"]:
             return object.__getattribute__(self, item)
         else:
-            return self.actual_model.model.__getattribute__(item)
+            return self.actual_model.__getattribute__(item)
 
 
 def par_helper(parameters: Iterable[IRPar], module_name: str) -> Dict[str, IRPar]:
