@@ -2,16 +2,27 @@ import importlib
 import inspect
 import logging
 import pkgutil
+from pathlib import Path
 
 import DSBot.ir.impl
 from DSBot.ir.ir_operations import IROpOptions
 
 
-def run(ir, results):  # TODO: consider returning results to the caller
-    if len(ir) == 1:
-        ir[0].run(results)
+def run(ir, dataset):  # TODO: consider returning results to the caller
+    # if len(ir) == 1:
+    #     ir[0].run(results)
+    # else:
+    #     run(ir[1:], ir[0].run(results))
+    # TODO(giubots): remove test code below
+    if len(ir) == 0:
+        logging.getLogger(__name__).warning('Empty pipeline')
+        dataset.name_plot = Path(__file__).parent.parent / 'assets' / 'pepe.png'
+    elif len(ir) == 1:
+        logging.getLogger(__name__).info('Completed running %s', ir[0].name)
+        dataset.name_plot = Path(__file__).parent.parent / 'assets' / 'pepe.png'
     else:
-        run(ir[1:], ir[0].run(results))
+        logging.getLogger(__name__).info('Running %s', ir[0].name)
+        run(ir[1:], dataset)
 
 
 def create_IR(pipeline):
