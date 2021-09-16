@@ -1,4 +1,5 @@
 import logging
+from pathlib import Path
 from typing import List, Set
 
 import pandas as pd
@@ -53,7 +54,7 @@ def get_data(problem: Problem, pipeline: Pipeline, df=None) -> SolutionDetails:
     pipeline = [o.name for o in pipeline]
     pipeline_s = set(pipeline)
     if df is None:
-        df = pd.read_csv('problem_kb.csv', sep=';')
+        df = pd.read_csv(Path(__file__).parent / 'problem_kb.csv', sep=';')
 
     # Scan table and return first result
     for i, r in df.iterrows():
