@@ -1,11 +1,11 @@
-/* eslint-disable prettier/prettier */
 export const state = () => ({
   e1: 1,
   sessionId: 1,
   requestDescription: '',
   resultsReady: false,
   imageBase64: null,
-  tuning: null,
+  tuningChat: [],
+  tuningPipeline: {},
 })
 
 export const mutations = {
@@ -24,9 +24,12 @@ export const mutations = {
   setImage(state, image) {
     state.imageBase64 = image
   },
-  setTuning(state, tuning) {
-    state.tuning = tuning
-  }
+  setTuningChat(state, message) {
+    state.tuningChat = state.tuningChat.push(message)
+  },
+  setTuningPipeline(state, pipeline) {
+    state.tuningPipeline = pipeline
+  },
 }
 
 export const actions = {
@@ -87,7 +90,7 @@ export const actions = {
           if (response.data.ready) {
             context.commit('setImage', response.data.img)
             context.commit('setResultsReady', response.data.ready)
-            context.commit('setTuning', response.data.tuning)
+            context.commit('setTuningChat', response.data.tuning.utterance)
           } else {
             console.log('Non faccio niente')
           }
@@ -102,6 +105,7 @@ export const actions = {
     console.log('SENDING DATA', isUtterance, data)
     let bodyRequest
     if (isUtterance) {
+      context.commit('setTuningChat', data)
       bodyRequest = {
         session_id: this.state.sessionId,
         type: 'utternace',
@@ -118,8 +122,29 @@ export const actions = {
     const res = await this.$axios
       .post('/tuning', bodyRequest)
       .then(function (response) {
-        context.commit('setTuning', response.data.tuning)
         console.log('RECEIVED TUNING', response.data.tuning)
+        if ('utterance' in response.data.tuning) {
+          console.log(response.data.tuning.utterance)
+          context.commit('setTuningChat', response.data.tuning.utterance)
+        }
+        if ('payload' in response.data.tuning) {
+          if (response.data.tuning.payload.status === 'choose_problem') {
+            context.commit('setImage', response.data.tuning.payload.result)
+          } else if (response.data.tuning.payload.status === 'edit_param') {
+            context.commit(
+              'setTuningPipeline',
+              response.data.tuning.payload.pipeline
+            )
+          } else if (response.data.tuning.payload.status === 'end') {
+            context.commit('setResultsReady', false)
+            // TODO: call polldata
+          } else {
+            console.log(
+              'Unknown tuning status:',
+              response.data.tuning.payload.status
+            )
+          }
+        }
       })
     return res
   },

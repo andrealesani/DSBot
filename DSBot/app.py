@@ -72,6 +72,7 @@ def receive_ds():
         kb.kb = dataset.filter_kb(kb.kb)
 
     print(kb.kb)
+    print("SESSION ID", session_id)
     return jsonify({"session_id": session_id})
 
 
@@ -109,6 +110,7 @@ def receive_utterance():
         max_key = [x for x in kb.kb.values[max_key, 1:] if str(x) != 'nan']
         print('MAX', max_key)
 
+        global ir_tuning
         ir_tuning = create_IR(max_key)
         threading.Thread(target=execute_algorithm, kwargs={'ir': ir_tuning}).start()
         return jsonify({"session_id": session_id,
@@ -133,7 +135,7 @@ def get_results(received_id):
 
     framework = get_framework(pipeline=ir_tuning,
                               result=base64_string,
-                              start_work=lambda p: threading.Thread(target=execute_algorithm, kwargs={'ir': p}).start())
+                              start_work=re_execute_algorithm)
 
     mmcc_instances[session_id] = framework
     tuning_data = framework.handle_data_input({})
@@ -160,6 +162,12 @@ def execute_algorithm(ir):
     results = {'original_dataset': dataset.ds, 'labels':dataset.label}
     run(ir, results)
     app.logger.info('Exiting execute_algorithm function')
+
+
+def re_execute_algorithm(ir):
+    global dataset
+    dataset.name_plot = None
+    threading.Thread(target=execute_algorithm, kwargs={'ir': ir}).start()
 
 
 app.run(host='0.0.0.0', port=5000, debug=True)

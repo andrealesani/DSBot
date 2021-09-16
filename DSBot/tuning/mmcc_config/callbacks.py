@@ -36,7 +36,7 @@ def choose_problem(data, kb, context, _):
             context['solution'] = None
             payload = {
                 'status': 'edit_param',
-                'pipeline': context['pipeline'],
+                'pipeline': [e.to_json() for e in context['pipeline']],
             }
             return Response(kb, context, True, utterance=kb['no_highlights_sentence'], payload=payload)
 
@@ -45,7 +45,7 @@ def choose_problem(data, kb, context, _):
         context['pipeline'] = update_pipeline(context['pipeline'], solution.relevant_params)
         payload = {
             'status': 'edit_param',
-            'pipeline': context['pipeline'],
+            'pipeline': [e.to_json() for e in context['pipeline']],
         }
         return Response(kb, context, True, utterance=utterance, payload=payload)
 
@@ -75,7 +75,7 @@ def edit_param(data, kb, context, _):
             module = next(m for m in context['pipeline'] if m.name == data['module'])
             parameter = module.get_param(data['parameter'])
             parameter.tune_value(data['value'])
-            payload = {'pipeline': context['pipeline']}
+            payload = {'status': 'edit_param', 'pipeline': [e.to_json() for e in context['pipeline']]}
             return Response(kb, context, False, payload=payload, utterance=kb['values_updated'])
 
         msg = kb['values_intent_err']
