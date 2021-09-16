@@ -4,8 +4,8 @@ from pathlib import Path
 
 from mmcc_framework import DictCallback, Framework, NoNluAdapter
 
-from DSBot.tuning.mmcc_config.callbacks import my_callbacks
-from DSBot.tuning.types import Pipeline, PipelineCallback
+from tuning.mmcc_config.callbacks import my_callbacks
+from tuning.types import Pipeline, PipelineCallback
 
 # Load the process description and kb from file.
 with open(Path(__file__).parent / 'mmcc_config/process_desc.json', "r") as process_file:

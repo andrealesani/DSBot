@@ -2,3 +2,8 @@
 overfitting underfitting clustering;kmeans;kmeans.n_clusters;If you can’t see a clear distinction between the clusters, you can try to change the number of clusters.
 overfitting underfitting clustering;dbscan;dbscan.eps;"If you can’t see a clear distinction between the clusters, you can try to change the value of epsilon. If epsilon is chosen too small, a large part of the data will not be clustered; whereas for a too high value of epsilon, clusters will merge and the majority of objects will be in the same cluster."
 overfitting underfitting clustering;pca;pca.n_components;If you can’t see a clear distinction between the clusters, you can try to change the number of components.
+low_silhouette ;kmeans;kmeans.n_clusters;
+outliers;"";;
+classification;;;
+low_variance;pca;;
+performance;;;

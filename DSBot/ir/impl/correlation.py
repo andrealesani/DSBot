@@ -1,5 +1,5 @@
-from DSBot.ir.ir_exceptions import CorrelationNotAvailable
-from DSBot.ir.ir_operations import IROp, IROpOptions
+from ir.ir_exceptions import CorrelationNotAvailable
+from ir.ir_operations import IROp, IROpOptions
 
 
 class IRCorrelation(IROp):
@@ -15,7 +15,10 @@ class IRCorrelation(IROp):
 
     #TDB cosa deve restituire questa funzione?
     def run(self, result):
-        dataset = result['original_dataset']
+        if 'new_dataset' in result:
+            dataset = result['new_dataset']
+        else:
+            dataset = result['original_dataset']
         self.correlation = dataset.ds.corr(method=self._model)
         result['correlation'] = self.correlation
         return result

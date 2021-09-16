@@ -1,9 +1,9 @@
 from abc import ABC, abstractmethod
 from typing import Iterable, Dict
 
-from DSBot.ir.ir_exceptions import UnknownParameter
-from DSBot.ir.ir_parameters import IRPar
-from DSBot.tuning import TuningOpMixin, TuningOpOptionsMixin
+from ir.ir_exceptions import UnknownParameter
+from ir.ir_parameters import IRPar
+from tuning import TuningOpMixin, TuningOpOptionsMixin
 
 
 class IROp(TuningOpMixin, ABC):
@@ -18,6 +18,7 @@ class IROp(TuningOpMixin, ABC):
     def __init__(self, name: str, parameters: Iterable[IRPar]):
         self.name = name
         self.parameters = par_helper(parameters, name)
+        self._param_setted = False
 
     def get_parameters_list(self):
         return self.parameters.keys()

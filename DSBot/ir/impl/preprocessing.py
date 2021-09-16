@@ -3,7 +3,7 @@ from abc import abstractmethod
 import pandas as pd
 from sklearn.impute._iterative import IterativeImputer
 
-from DSBot.ir.ir_operations import IROp, IROpOptions
+from ir.ir_operations import IROp, IROpOptions
 
 
 class IRPreprocessing(IROp):
@@ -17,7 +17,10 @@ class IRPreprocessing(IROp):
         pass
 
     def set_model(self, result):
-        dataset = result['original_dataset']
+        if 'new_dataset' in result:
+            dataset = result['new_dataset']
+        else:
+            dataset = result['original_dataset']
         if self.parameter == None:
             self.parameter_tune(dataset)
         #for p,v in self.parameters.items():
@@ -29,17 +32,24 @@ class IRPreprocessing(IROp):
         pass
 
 class IRMissingValuesRemove(IRPreprocessing):
+    def __init__(self):
+        super(IRMissingValuesRemove, self).__init__("missingValuesRemove")
+
+
     def parameter_tune(self, dataset):
         # TODO: implement
         pass
 
-    def __init__(self):
-        super(IRMissingValuesRemove, self).__init__("missingValuesRemove")
-
     def run(self, result):
-        dataset = result['original_dataset']
-        dataset = dataset.ds.dropna()
+        if 'new_dataset' in result:
+            dataset = result['new_dataset']
+        else:
+            dataset = result['original_dataset']
+
+        dataset = dataset.dropna()
         result['new_dataset'] = dataset
+        print('missingvalremove')
+        print(dataset)
         return result
 
 class IRMissingValuesFill(IRPreprocessing):
@@ -49,29 +59,72 @@ class IRMissingValuesFill(IRPreprocessing):
     def parameter_tune(self, dataset):
         imp = IterativeImputer(max_iter=10, random_state=0)
         if len(dataset.col) > 0:
-            values_col = dataset.ds.columns.difference(dataset.col)
-            values_dataset = pd.DataFrame(imp.fit_transform(dataset.ds[values_col]))
+            values_col = dataset.columns.difference(dataset.col)
+            values_dataset = pd.DataFrame(imp.fit_transform(dataset[values_col]))
             values_dataset.columns = values_col
-            dataset.ds = dataset.ds.apply(lambda col: col.fillna(col.value_counts().index[0]))
-            values_dataset = pd.concat([dataset.ds, values_dataset])
+            dataset = dataset.apply(lambda col: col.fillna(col.value_counts().index[0]))
+            values_dataset = pd.concat([dataset, values_dataset])
         else:
-            values_dataset = pd.DataFrame(imp.fit_transform(dataset.ds))
+            values_dataset = pd.DataFrame(imp.fit_transform(dataset))
         return values_dataset
 
     def run(self, result):
-        dataset = result['original_dataset']
+        if 'new_dataset' in result:
+            dataset = result['new_dataset']
+        else:
+            dataset = result['original_dataset']
         if not self._param_setted:
             self.parameter_tune(dataset)
         else:
-            dataset.ds = dataset.ds.apply(lambda col: col.fillna(self.parameter))
+            dataset = dataset.apply(lambda col: col.fillna(self.parameter))
         result['new_dataset'] = dataset
+        print('missingvalfill')
+        print(dataset)
+
         return result
 
-def IROneHotEncode(IRPreprocessing):
-    def __init__(self, parameter):
-        super(IROneHotEncode, self).__init__("oneHotEncoder", parameter)
+class IROneHotEncode(IRPreprocessing):
+    def __init__(self):
+        super(IROneHotEncode, self).__init__("oneHotEncode")
+
+    def parameter_tune(self, dataset):
+        # TODO: implement
+        pass
+
+    def run(self, result):
+        if 'new_dataset' in result:
+            dataset = result['new_dataset']
+        else:
+            dataset = result['original_dataset']
+        cols = dataset.columns
+        num_cols = dataset._get_numeric_data().columns
+        dataset = pd.get_dummies(dataset, columns=list(set(cols) - set(num_cols)))
+        result['new_dataset'] = dataset
+        print('onehotencode')
+        print(dataset)
+        return result
+
+
+class IRLabelRemove(IRPreprocessing):
+
+    def __init__(self):
+        super(IRLabelRemove, self).__init__("labelRemove")
+
+    def parameter_tune(self, dataset):
+        # TODO: implement
+        pass
+
+    def run(self, result):
+        if 'new_dataset' in result:
+            dataset = result['new_dataset']
+        else:
+            dataset = result['original_dataset']
+        label = result['labels']
+        columns=list(set(dataset.columns) - set(label))
+        result['new_dataset'] = dataset[columns]
+        return result
 
 class IRGenericPreprocessing(IROpOptions):
     def __init__(self):
-        super(IRGenericPreprocessing, self).__init__([IRMissingValuesRemove(), IRMissingValuesFill([])],
+        super(IRGenericPreprocessing, self).__init__([IRMissingValuesRemove(), IRMissingValuesFill([]), IRLabelRemove(), IROneHotEncode()],
                                                      "missingValuesRemove")

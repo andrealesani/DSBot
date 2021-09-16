@@ -18,7 +18,7 @@ import logging
 from pathlib import Path
 from typing import Any, List
 
-from DSBot.tuning.types import Pipeline
+from tuning.types import Pipeline
 
 # Load the tuning kb data from file.
 with open(Path(__file__).parent / 'tuning_kb.json', 'r') as tuning_kb_file:

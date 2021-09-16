@@ -3,9 +3,9 @@ from abc import abstractmethod
 import numpy as np
 from sklearn.decomposition import PCA
 
-from DSBot.ir.ir_exceptions import LabelsNotAvailable
-from DSBot.ir.ir_operations import IROp, IROpOptions
-from DSBot.ir.ir_parameters import IRPar
+from ir.ir_exceptions import LabelsNotAvailable
+from ir.ir_operations import IROp, IROpOptions
+from ir.ir_parameters import IRPar
 
 
 class IRFeatureEngineering(IROp):
@@ -19,7 +19,10 @@ class IRFeatureEngineering(IROp):
         pass
 
     def set_model(self, result):
-        dataset = result['original_dataset']
+        if 'new_dataset' in result:
+            dataset = result['new_dataset']
+        else:
+            dataset = result['original_dataset']
         self.parameter_tune(dataset)
         for p,v in self.parameters.items():
             self._model.__setattr__(p,v.value)
@@ -32,7 +35,11 @@ class IRFeatureEngineering(IROp):
 
     #TDB cosa deve restituire questa funzione?
     def run(self, result):
-        dataset = result['original_dataset']
+        print('pca', result['original_dataset'])
+        if 'new_dataset' in result:
+            dataset = result['new_dataset']
+        else:
+            dataset = result['original_dataset']
         if not self._param_setted:
             self.set_model(dataset)
         try:
@@ -47,13 +54,21 @@ class IRFeatureEngineering(IROp):
 class IRPCA(IRFeatureEngineering):
     def __init__(self):
         super(IRPCA, self).__init__("pca",
-                                    [IRPar("n_components", 2, "float", 0, 1)],  # TODO: what are minimum and maximum?
+                                    [IRPar("n_components", 2, "float", 0, 1, 0.1)],  # TODO: what are minimum and maximum?
                                     PCA)
 
     def parameter_tune(self, dataset):
         pass
 
+class IRPCA2(IRFeatureEngineering):
+    def __init__(self):
+        super(IRPCA2, self).__init__("pca2",
+                                    [IRPar("n_components", 2, "float", 0, 1, 0.1)],  # TODO: what are minimum and maximum?
+                                    PCA)
+
+    def parameter_tune(self, dataset):
+        pass
 
 class IRGenericFeatureEngineering(IROpOptions):
     def __init__(self):
-        super(IRGenericFeatureEngineering, self).__init__([IRPCA()], "pca")
+        super(IRGenericFeatureEngineering, self).__init__([IRPCA(), IRPCA2()], "pca")

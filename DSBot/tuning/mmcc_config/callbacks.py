@@ -10,9 +10,9 @@ import logging
 
 from mmcc_framework import Response
 
-import DSBot.ir.ir_exceptions
-from DSBot.tuning.problem_helper import get_data, MissingSolutionError
-from DSBot.tuning.tuning_mixins import update_pipeline
+import ir.ir_exceptions
+from tuning.problem_helper import get_data, MissingSolutionError
+from tuning.tuning_mixins import update_pipeline
 
 
 def start(_, kb, context, __):

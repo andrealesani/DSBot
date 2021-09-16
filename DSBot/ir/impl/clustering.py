@@ -2,12 +2,12 @@ from abc import abstractmethod
 
 import numpy as np
 from sklearn import metrics
-from sklearn.cluster import KMeans, DBSCAN
+from sklearn.cluster import KMeans, AgglomerativeClustering, DBSCAN
 from sklearn.model_selection import GridSearchCV
 
-from DSBot.ir.ir_exceptions import LabelsNotAvailable
-from DSBot.ir.ir_operations import IROp, IROpOptions
-from DSBot.ir.ir_parameters import IRPar
+from ir.ir_exceptions import LabelsNotAvailable
+from ir.ir_operations import IROp, IROpOptions
+from ir.ir_parameters import IRPar
 
 
 class IRClustering(IROp):
@@ -20,35 +20,39 @@ class IRClustering(IROp):
     def parameter_tune(self, dataset):
         pass
 
-    def set_model(self, result):
-        dataset = result['original_dataset']
+    def set_model(self, dataset):
+        print(dataset)
+        #dataset = result['original_dataset']
         self.parameter_tune(dataset)
         for p,v in self.parameters.items():
             self._model.__setattr__(p,v.value)
         self._param_setted = True
 
-    def get_labels(self):
-        if self.labels is None:
-            raise LabelsNotAvailable
-        return self.labels
+        #if self.labels is None:
+        #    raise LabelsNotAvailable
+        #return self.labels
 
     #TDB cosa deve restituire questa funzione?
     def run(self, result):
-        dataset = result['original_dataset']
+        if 'new_dataset' in result:
+            dataset = result['new_dataset']
+        else:
+            dataset = result['original_dataset']
         if not self._param_setted:
             self.set_model(dataset)
         try:
-            self._model.fit_predict(dataset.ds.values)
+            self._model.fit_predict(dataset.values)
         except:
             self._model.fit_predict(dataset)
         self.labels = self._model.labels_
         result['labels'] = self.labels
+        print(result['labels'])
         return result
 
 class IRKMeans(IRClustering):
     def __init__(self):
         super(IRKMeans, self).__init__("kmeans",
-                                       [IRPar("n_clusters", 8, "int", 1, 10)],  # TODO: what is the maximum?
+                                       [IRPar("n_clusters", 8, "int", 1, 10, 1)],  # TODO: what is the maximum?
                                        KMeans)
 
     def parameter_tune(self, dataset):
@@ -60,25 +64,49 @@ class IRKMeans(IRClustering):
                 score = np.nan
             return score
 
-        optimizer = GridSearchCV(KMeans(),
-                                 param_grid={"n_clusters": np.arange(2, dataset.ds.shape[0]//2, 1)},
+        optimizer = GridSearchCV(AgglomerativeClustering(),
+                                 param_grid={"n_clusters": np.arange(2, dataset.shape[0]//2, 1)},
                                  scoring=silhouette_score)
-        grid = optimizer.fit(dataset.ds)
+        grid = optimizer.fit(dataset)
         self.parameters['n_clusters'].value = grid.best_estimator_.n_clusters
+        return self.parameters
+
+class IRAgglomerativeClustering(IRClustering):
+    def __init__(self):
+        super(IRAgglomerativeClustering, self).__init__("agglomerativeClustering",
+                                       [IRPar("n_clusters", 8, "int", 1, 10, 1)],  # TODO: what is the maximum?
+                                       AgglomerativeClustering)
+
+
+    def parameter_tune(self, dataset):
+        def silhouette_score(estimator, X):
+            try:
+                clusters = estimator.fit_predict(X)
+                score = metrics.silhouette_score(X, clusters)
+            except:
+                score = np.nan
+            return score
+
+        optimizer = GridSearchCV(KMeans(),
+                                 param_grid={"n_clusters": np.arange(2, dataset.shape[0]//2, 1)},
+                                 scoring=silhouette_score)
+        grid = optimizer.fit(dataset)
+        self.parameters['n_clusters'].value = grid.best_estimator_.n_clusters
+        print(self.parameters)
         return self.parameters
 
 
 class IRDBSCAN(IRClustering):
     def __init__(self):
         super(IRDBSCAN, self).__init__("dbscan",
-                                       [IRPar("eps", 0.1, "float", 0, 1)],  # TODO: what is the maximum?
+                                       [IRPar("eps", 0.1, "float", 0, 1, 0.1)],  # TODO: what is the maximum?
                                        DBSCAN)
 
     def parameter_tune(self, dataset):
         from sklearn.neighbors import NearestNeighbors
         neigh = NearestNeighbors(n_neighbors=2)
-        nbrs = neigh.fit(dataset.ds)
-        distances, indices = nbrs.kneighbors(dataset.ds)
+        nbrs = neigh.fit(dataset)
+        distances, indices = nbrs.kneighbors(dataset)
         sorted_dist = sorted([x[1] for x in distances if x[1]>0])
         try:
             pos = 0
@@ -97,4 +125,4 @@ class IRDBSCAN(IRClustering):
 
 class IRGenericClustering(IROpOptions):
     def __init__(self):
-        super(IRGenericClustering, self).__init__([IRKMeans(), IRDBSCAN()], "kmeans")
+        super(IRGenericClustering, self).__init__([IRKMeans(), IRDBSCAN(), IRAgglomerativeClustering()], "kmeans")

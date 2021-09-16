@@ -99,8 +99,6 @@ def receive_utterance():
         with open('./temp/temp_' + str(session_id) + '/pred' + str(session_id) + '.txt', 'r') as f:
             wf = f.readlines()[0].strip().split(' ')
         scores = {}
-        print(len(kb.kb))
-        print(kb.kb)
         for i in range(len(kb.kb)):
             sent = [x for x in kb.kb.values[i, 1:] if str(x) != 'nan']
         print(sent)
@@ -159,7 +157,8 @@ def tuning():
 def execute_algorithm(ir):
     app.logger.debug('Entering execute_algorithm function')
     global dataset
-    run(ir, dataset)
+    results = {'original_dataset': dataset.ds, 'labels':dataset.label}
+    run(ir, results)
     app.logger.info('Exiting execute_algorithm function')
 
 

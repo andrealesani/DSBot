@@ -3,7 +3,7 @@ from typing import List, Set
 
 import pandas as pd
 
-from DSBot.tuning.types import Problem, Pipeline
+from tuning.types import Problem, Pipeline
 
 
 class MissingSolutionError(Exception):

@@ -8,9 +8,9 @@ import seaborn as sns
 from seaborn import scatterplot, clustermap
 from matplotlib.pyplot import scatter
 
-from DSBot.ir.ir_exceptions import LabelsNotAvailable, PCADataNotAvailable
-from DSBot.ir.ir_operations import IROp, IROpOptions
-from DSBot.ir.ir_parameters import IRPar
+from ir.ir_exceptions import LabelsNotAvailable, PCADataNotAvailable
+from ir.ir_operations import IROp, IROpOptions
+from ir.ir_parameters import IRPar
 
 
 class IRPlot(IROp):
@@ -24,7 +24,10 @@ class IRPlot(IROp):
         pass
 
     def set_model(self, result):
-        dataset = result['original_dataset']
+        if 'new_dataset' in result:
+            dataset = result['new_dataset']
+        else:
+            dataset = result['original_dataset']
         self.parameter_tune(dataset)
         for p,v in self.parameters.items():
             self._model.__setattr__(p,v.value)
@@ -37,7 +40,10 @@ class IRPlot(IROp):
 
     #TDB cosa deve restituire questa funzione?
     def run(self, result):
-        dataset = result['original_dataset']
+        if 'new_dataset' in result:
+            dataset = result['new_dataset']
+        else:
+            dataset = result['original_dataset']
         if not self._param_setted:
             self.set_model(dataset)
         try:

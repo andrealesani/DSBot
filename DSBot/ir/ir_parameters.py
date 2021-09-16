@@ -1,7 +1,7 @@
 import logging
 
-from DSBot.ir.ir_exceptions import IncorrectValue
-from DSBot.tuning import TuningParMixin
+from ir.ir_exceptions import IncorrectValue
+from tuning import TuningParMixin
 
 
 class IRPar(TuningParMixin, object):
@@ -14,13 +14,14 @@ class IRPar(TuningParMixin, object):
     :ivar max_v: the maximum value that can be set
     """
 
-    def __init__(self, name: str, value: float, v_type: str, min_v: float, max_v: float):
+    def __init__(self, name: str, value: float, v_type: str, min_v: float, max_v: float, step: float):
         self.name = name
         self.default_value = value
         self.v_type = v_type
         self.min_v = min_v
         self.max_v = max_v
         self._actual_value = None
+        self.step = step
 
     @property
     def value(self):
