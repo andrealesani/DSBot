@@ -12,10 +12,12 @@ from needleman_wunsch import NW
 from kb import KnowledgeBase
 import os
 import pandas as pd
+import numpy as np
 import importlib
 import base64
 from threading import Thread
-
+import matplotlib.pyplot as plt
+import seaborn as sns
 import copy
 from datetime import timedelta
 from flask.sessions import SecureCookieSessionInterface
@@ -68,7 +70,9 @@ def receive_ds():
         dataset = Dataset(dataset)
         print(dataset.ds)
         dataset.session = session_id
-        dataset.label = label
+        if label!=None:
+            dataset.label = label
+            dataset.hasLabel = True
         kb.kb = dataset.filter_kb(kb.kb)
 
     print(kb.kb)
@@ -160,7 +164,13 @@ def execute_algorithm(ir):
     app.logger.debug('Entering execute_algorithm function')
     global dataset
     results = {'original_dataset': dataset.ds, 'labels':dataset.label}
-    run(ir, results)
+    result = run(ir, results)
+    print(result)
+    fig = exec(result['plot'][-1])
+
+    plt.savefig('./temp/temp_' + str(session_id)+'scatter.png')
+    #plt.show()
+    dataset.name_plot = './temp/temp_' + str(session_id)+'scatter.png'
     app.logger.info('Exiting execute_algorithm function')
 
 

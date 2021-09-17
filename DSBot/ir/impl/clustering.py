@@ -21,7 +21,7 @@ class IRClustering(IROp):
         pass
 
     def set_model(self, dataset):
-        print(dataset)
+        #print(dataset)
         #dataset = result['original_dataset']
         self.parameter_tune(dataset)
         for p,v in self.parameters.items():
@@ -34,6 +34,7 @@ class IRClustering(IROp):
 
     #TDB cosa deve restituire questa funzione?
     def run(self, result):
+        print('clustering')
         if 'new_dataset' in result:
             dataset = result['new_dataset']
         else:
@@ -46,7 +47,7 @@ class IRClustering(IROp):
             self._model.fit_predict(dataset)
         self.labels = self._model.labels_
         result['labels'] = self.labels
-        print(result['labels'])
+        print('labels', result['labels'])
         return result
 
 class IRKMeans(IRClustering):
@@ -88,11 +89,11 @@ class IRAgglomerativeClustering(IRClustering):
             return score
 
         optimizer = GridSearchCV(KMeans(),
-                                 param_grid={"n_clusters": np.arange(2, dataset.shape[0]//2, 1)},
+                                 param_grid={"n_clusters": np.arange(2, 5, 1)},
                                  scoring=silhouette_score)
         grid = optimizer.fit(dataset)
         self.parameters['n_clusters'].value = grid.best_estimator_.n_clusters
-        print(self.parameters)
+        print('parameters', self.parameters)
         return self.parameters
 
 

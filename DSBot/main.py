@@ -13,6 +13,7 @@ class Dataset:
         if ds is not None:
             self.missingValues, self.categorical, self.zeroVariance = self.check_ds()
         self.label = None
+        self.hasLabel = False
         self.name_plot = None
 
     def missing_values(self):
@@ -49,7 +50,7 @@ class Dataset:
     def filter_kb(self, kb):
         drop = []
         for i in self.__dict__:
-            if (str(i) in ['missingValues','categorical','zeroVariance']):
+            if (str(i) in ['missingValues','categorical','zeroVariance','hasLabel']):
                 if getattr(self, i):
                     for j in range(len(kb)):
                         kb_val = [i.strip() for i in kb.values[j,0].split(',')]

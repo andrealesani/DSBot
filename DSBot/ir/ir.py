@@ -12,7 +12,7 @@ def run(ir, dataset):  # TODO: consider returning results to the caller
     if len(ir) == 1:
          return ir[0].run(dataset)
     else:
-         run(ir[1:], ir[0].run(dataset))
+         return run(ir[1:], ir[0].run(dataset))
 
     # TODO(giubots): remove test code below
     # if len(ir) == 0:
@@ -33,12 +33,7 @@ def create_IR(pipeline):
         try:
 
             module = modules[item]()
-            if item == 'pca2':
-                print('mod1', module)
             module.set_model(item)
-            if item == 'pca2':
-                print('mod2',module)
-
             dict_pipeline.append(module)
         except KeyError:
             logging.getLogger(__name__).error('Missing module implementation for: %s', item)

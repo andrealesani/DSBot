@@ -68,3 +68,5 @@ print('MAX', max_key)
 #
 ir_tuning = create_IR(max_key)
 print('IRTUNING', [i for i in ir_tuning])
+results = {'original_dataset': dataset.ds, 'labels':dataset.label}
+res = run(ir_tuning, results)

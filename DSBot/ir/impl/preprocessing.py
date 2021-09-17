@@ -49,7 +49,6 @@ class IRMissingValuesRemove(IRPreprocessing):
         dataset = dataset.dropna()
         result['new_dataset'] = dataset
         print('missingvalremove')
-        print(dataset)
         return result
 
 class IRMissingValuesFill(IRPreprocessing):
@@ -79,7 +78,6 @@ class IRMissingValuesFill(IRPreprocessing):
             dataset = dataset.apply(lambda col: col.fillna(self.parameter))
         result['new_dataset'] = dataset
         print('missingvalfill')
-        print(dataset)
 
         return result
 
@@ -101,7 +99,6 @@ class IROneHotEncode(IRPreprocessing):
         dataset = pd.get_dummies(dataset, columns=list(set(cols) - set(num_cols)))
         result['new_dataset'] = dataset
         print('onehotencode')
-        print(dataset)
         return result
 
 

@@ -16,7 +16,7 @@ from ir.ir_parameters import IRPar
 class IRPlot(IROp):
     def __init__(self, name, parameters, model = None):
         super(IRPlot, self).__init__(name,parameters)
-        self._model = model(**{v.name: v.value for v in parameters})
+        self._model = model
         self.labels = None
 
     @abstractmethod
@@ -74,12 +74,13 @@ class IRScatterplot(IRPlot):
         else:
             transformed_ds = result['transformed_ds']
 
-        for i in u_labels:
-            ax = scatter(transformed_ds[result['labels'] == i, 0], transformed_ds[result['labels'] == i, 1], label=i)
+        #for i in u_labels:
+        #    ax = scatter(transformed_ds[result['labels'] == i, 0], transformed_ds[result['labels'] == i, 1], label=i)
 
         if 'plot' not in result:
-            result['plot'] = ax
-
+            result['plot'] = ["u_labels = np.unique(result['labels'])\nfor i in u_labels:\n\tax = plt.scatter(result['transformed_ds'][result['labels'] == i, 0], result['transformed_ds'][result['labels'] == i, 1], label=i)"]
+        else:
+            result['plot'].append("u_labels = np.unique(result['labels'])\nfor i in u_labels:\n\tax = plt.scatter(result['transformed_ds'][result['labels'] == i, 0], result['transformed_ds'][result['labels'] == i, 1], label=i)")
         return  result
 
 
@@ -111,6 +112,6 @@ class IRClustermap(IRPlot):
         return  result
 
 # FIXME: this class was commented out because the implementation raises errors
-# class IRGenericPlot(IROpOptions):
-#     def __init__(self):
-#         super(IRGenericPlot, self).__init__([IRScatterplot(), IRClustermap()], "scatterplot")
+class IRGenericPlot(IROpOptions):
+     def __init__(self):
+         super(IRGenericPlot, self).__init__([IRScatterplot(), IRClustermap()], "scatterplot")

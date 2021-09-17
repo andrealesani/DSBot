@@ -19,11 +19,7 @@ class IRFeatureEngineering(IROp):
         pass
 
     def set_model(self, result):
-        if 'new_dataset' in result:
-            dataset = result['new_dataset']
-        else:
-            dataset = result['original_dataset']
-        self.parameter_tune(dataset)
+        self.parameter_tune(result)
         for p,v in self.parameters.items():
             self._model.__setattr__(p,v.value)
         self._param_setted = True
@@ -43,9 +39,9 @@ class IRFeatureEngineering(IROp):
         if not self._param_setted:
             self.set_model(dataset)
         try:
-            transformed_ds = self._model.fit_transform(dataset.ds.values)
+            transformed_ds = self._model.fit_transform(dataset.values)
         except:
-            transformed_ds = self._model.fit_transform(dataset.ds.values)
+            transformed_ds = self._model.fit_transform(dataset.values)
         self.transformed_ds = transformed_ds
         if 'transformed_ds' not in result:
             result['transformed_ds'] = self.transformed_ds
