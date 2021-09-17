@@ -140,9 +140,9 @@ class TuningParMixin:
                 if 'params' in tuning_kb[self.module]:
                     if self.name in tuning_kb[self.module]['params']:
                         return tuning_kb[self.module]['params'][self.name]
-                    raise IncorrectKbError(f'Missing param data for param: {self.name}; module: {self.module}')
-                raise IncorrectKbError(f'Missing params for module: {self.module}')
-            raise IncorrectKbError(f'Missing module: {self.module}')
+                    raise IncorrectKbError(f'Missing param tuning data for param: {self.name}; module: {self.module}')
+                raise IncorrectKbError(f'Missing params tuning data for module: {self.module}')
+            raise IncorrectKbError(f'Missing module tuning data: {self.module}')
 
         except AttributeError:
             error = MissingModuleNameError(self.name)
