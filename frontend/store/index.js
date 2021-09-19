@@ -25,7 +25,7 @@ export const mutations = {
     state.imageBase64 = image
   },
   setTuningChat(state, message) {
-    state.tuningChat = state.tuningChat.push(message)
+    state.tuningChat.push(message)
   },
   setTuningPipeline(state, pipeline) {
     state.tuningPipeline = pipeline
