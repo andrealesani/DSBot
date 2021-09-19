@@ -129,15 +129,17 @@ export const actions = {
         }
         if ('payload' in response.data.tuning) {
           if (response.data.tuning.payload.status === 'choose_problem') {
+            // context.commit('setStep', 3) // Assume already in step 3 and can't come back from 4
             context.commit('setImage', response.data.tuning.payload.result)
           } else if (response.data.tuning.payload.status === 'edit_param') {
+            context.commit('setStep', 4)
             context.commit(
               'setTuningPipeline',
               response.data.tuning.payload.pipeline
             )
           } else if (response.data.tuning.payload.status === 'end') {
             context.commit('setResultsReady', false)
-            // TODO: call polldata
+            context.commit('setStep', 3)
           } else {
             console.log(
               'Unknown tuning status:',
