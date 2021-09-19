@@ -36,6 +36,8 @@ class IRPar(TuningParMixin, object):
             logging.getLogger(__name__).debug('Parameter set was ignored because a custom value was defined')
             return
 
+        new_value = self.uniform_type(new_value)
+
         if not self.is_range_valid(new_value):
             logging.getLogger(__name__).error('Out of range parameter: %s; module: %s', self.name, self.module)
             return
@@ -53,6 +55,8 @@ class IRPar(TuningParMixin, object):
 
     def tune_value(self, new_value):
         """Do not use this method from within the pipeline, use the value setter."""
+        new_value = self.uniform_type(new_value)
+
         if not self.is_range_valid(new_value):
             raise IncorrectValue()
 
@@ -60,6 +64,22 @@ class IRPar(TuningParMixin, object):
 
     def is_range_valid(self, new_value):
         return self.max_v >= new_value >= self.min_v
+
+    def uniform_type(self, new_value):
+        if self.v_type == 'int':
+            if type(new_value) != int:
+                logging.getLogger(__name__).warning('Explicit int cast of param: %s; module: %s',
+                                                    self.name, self.module)
+                new_value = int(new_value)
+        elif self.v_type == 'float':
+            if type(new_value) != float:
+                logging.getLogger(__name__).warning('Explicit float cast of param: %s; module: %s',
+                                                    self.name, self.module)
+                new_value = float(new_value)
+        else:
+            logging.getLogger(__name__).critical('Unexpected type: %s; param: %s; module: %s',
+                                                 self.v_type, self.name, self.module)
+        return new_value
 
     def __str__(self):
         return f'{self.name} = {self.value}'
