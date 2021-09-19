@@ -1,7 +1,8 @@
 <template>
   <div>
-    HELLO2
-    <v-card class="mb-12" height="100px" flat> </v-card>
+    <v-card class="mb-12" height="25px">
+      MODULE: {{ module.pretty_name }}
+    </v-card>
   </div>
 </template>
 
