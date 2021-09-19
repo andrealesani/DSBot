@@ -15,7 +15,7 @@
 
           <v-divider></v-divider>
 
-          <v-stepper-step step="3"> Results</v-stepper-step>
+          <v-stepper-step :complete="e1 > 3" step="3"> Results</v-stepper-step>
 
           <v-divider></v-divider>
 
@@ -44,6 +44,9 @@
             <tuning></tuning>
 
             <v-btn color="secondary" @click="setStep(1)"> Restart </v-btn>
+            <v-btn color="secondary" @click="toFramework({ intent: 'run' })">
+              Run again
+            </v-btn>
           </v-stepper-content>
         </v-stepper-items>
       </v-stepper>
