@@ -35,6 +35,9 @@
             <results></results>
 
             <v-btn color="secondary" @click="setStep(1)"> Restart </v-btn>
+            <v-btn color="secondary" @click="toFramework({ intent: 'skip' })">
+              Skip
+            </v-btn>
           </v-stepper-content>
 
           <v-stepper-content step="4" class="px-10">
@@ -49,7 +52,7 @@
 </template>
 
 <script>
-import { mapState, mapMutations } from 'vuex'
+import { mapState, mapMutations, mapActions } from 'vuex'
 
 import InputForm from '~/components/InputForm'
 import InsertSentence from '~/components/InsertSentence'
@@ -70,6 +73,7 @@ export default {
   },
   methods: {
     ...mapMutations(['setStep']),
+    ...mapActions(['toFramework']),
   },
   computed: {
     ...mapState(['e1']),

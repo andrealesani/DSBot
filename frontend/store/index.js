@@ -101,14 +101,15 @@ export const actions = {
     return null
   },
 
-  async toFramework(context, isUtterance, data) {
+  async toFramework(context, data) {
+    const isUtterance = typeof data === 'string' || data instanceof String
     console.log('SENDING DATA', isUtterance, data)
     let bodyRequest
     if (isUtterance) {
       context.commit('setTuningChat', data)
       bodyRequest = {
         session_id: this.state.sessionId,
-        type: 'utternace',
+        type: 'utterance',
         utterance: data,
       }
     } else {

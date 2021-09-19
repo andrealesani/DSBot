@@ -1,14 +1,23 @@
 <template>
   <div>
-    <v-card class="mb-12 mt-3" height="500px" flat>
+    <v-card class="mr-10" width="400px" flat>
       Chat
-      <div v-for="item in tuningChat" :key="item">{{ item }}</div>
-      <v-textarea
-        v-model="utterance"
-        background-color="grey lighten-3"
-      ></v-textarea>
+      <div v-for="(item, index) in tuningChat" :key="index" class="pa-2">
+        <v-card>
+          {{ item }}
+        </v-card>
+      </div>
+      <div>
+        <v-row align="center">
+          <v-text-field
+            v-model="utterance"
+            background-color="grey lighten-3"
+          ></v-text-field>
+          <v-spacer />
+          <v-btn color="primary" @click="toFramework(utterance)"> Send </v-btn>
+        </v-row>
+      </div>
     </v-card>
-    <v-btn color="primary" @click="toFramework(true, utterance)"> Send </v-btn>
   </div>
 </template>
 
