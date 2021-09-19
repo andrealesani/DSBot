@@ -152,7 +152,6 @@ def tuning():
     if json_data['type'] == 'utterance':
         response = mmcc_instances[session_id].handle_text_input(json_data['utterance'])
     else:
-        print(json_data['payload'])
         response = mmcc_instances[session_id].handle_data_input(json_data['payload'])
     return jsonify({'tuning': response})
 
