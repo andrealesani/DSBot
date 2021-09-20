@@ -6,23 +6,15 @@
       </v-card-title>
       <component
         v-for="parameter in module.parameters"
-        :is="parameter.type === 'float' ? 'v-slider' : 'v-radio'"
-        :min="parameter.min"
-        :max="parameter.max"
+        :is="
+          parameter.type === 'float' || parameter.type === 'int'
+            ? 'tuning-slider'
+            : 'tuning-radio'
+        "
         :key="parameter.name"
-        v-model="sliderValue"
-      >
-        <template v-slot:append>
-          <v-text-field
-            v-model="sliderValue"
-            class="mt-0 pt-0"
-            hide-details
-            single-line
-            type="number"
-            style="width: 60px"
-          ></v-text-field>
-        </template>
-      </component>
+        :param="parameter"
+        :module="module.name"
+      ></component>
     </v-card>
   </div>
 </template>
@@ -30,14 +22,6 @@
 <script>
 export default {
   props: ['module'],
-  data() {
-    return {
-      sliderValue: 0,
-    }
-  },
-  mounted() {
-    console.log('MOUNED', this.module)
-  },
 }
 </script>
 

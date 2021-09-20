@@ -8,17 +8,17 @@ export const state = () => ({
   tuningPipeline: [
     {
       name: 'pca2',
-      pretty_name: 'pca2',
+      pretty_name: 'PCA 2',
       is_highlighted: false,
       parameters: [
         {
           name: 'n_components',
-          pretty_name: 'n_components',
-          value: 2,
+          pretty_name: 'Number of components',
+          value: 8,
           min: 0,
           max: 10,
           default: 2,
-          description: '',
+          description: 'Defines the number of components to keep.',
           is_highlighted: false,
           type: 'float',
         },
@@ -47,6 +47,7 @@ export const mutations = {
     state.tuningChat.push(message)
   },
   setTuningPipeline(state, pipeline) {
+    console.log('PIPELINE SETTED')
     state.tuningPipeline = pipeline
   },
 }

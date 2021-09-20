@@ -17,11 +17,12 @@
         </v-col>
       </v-row>
     </v-card>
+    <button @click="setP">Button!</button>
   </div>
 </template>
 
 <script>
-import { mapState } from 'vuex'
+import { mapState, mapMutations } from 'vuex'
 export default {
   data() {
     return {}
@@ -29,7 +30,31 @@ export default {
   computed: {
     ...mapState(['imageBase64', 'tuningPipeline']),
   },
-  methods: {},
+  methods: {
+    setP() {
+      this.setTuningPipeline([
+        {
+          name: 'pca2',
+          pretty_name: 'PCA 2',
+          is_highlighted: false,
+          parameters: [
+            {
+              name: 'n_components',
+              pretty_name: 'Number of components',
+              value: 0,
+              min: 0,
+              max: 10,
+              default: 2,
+              description: 'Defines the number of components to keep.',
+              is_highlighted: false,
+              type: 'float',
+            },
+          ],
+        },
+      ])
+    },
+    ...mapMutations(['setTuningPipeline']),
+  },
   mounted() {
     console.log('MOUNED', this.tuningPipeline)
   },
