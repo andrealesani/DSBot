@@ -1,6 +1,6 @@
 <template>
   <div>
-    <v-card class="mb-12 mt-3" flat>
+    <v-card class="mb-12 mt-5" flat id="vcard">
       <v-row justify="center">
         <img
           :src="`data:image/png;base64,${imageBase64}`"
@@ -30,7 +30,9 @@ export default {
     ...mapState(['imageBase64', 'tuningPipeline']),
   },
   methods: {},
+  mounted() {
+    console.log('MOUNED', this.tuningPipeline)
+  },
 }
 </script>
-
 <style scoped></style>
