@@ -1,26 +1,28 @@
 <template>
   <div>
-    <v-card class="mb-12" height="250px" width="300px">
+    <v-card
+      class="mb-12"
+      height="250px"
+      width="300px"
+      :color="module.is_highlighted ? '#f9c74f' : '#FFF'"
+    >
       <v-card-title>
         <h2>{{ module.pretty_name }}</h2>
       </v-card-title>
-      <component
+      <tuning-parameter
         v-for="parameter in module.parameters"
-        :is="
-          parameter.type === 'float' || parameter.type === 'int'
-            ? 'tuning-slider'
-            : 'tuning-radio'
-        "
         :key="parameter.name"
         :param="parameter"
         :module="module.name"
-      ></component>
+      ></tuning-parameter>
     </v-card>
   </div>
 </template>
 
 <script>
+import TuningParameter from './TuningParameter.vue'
 export default {
+  components: { TuningParameter },
   props: ['module'],
 }
 </script>

@@ -32,7 +32,7 @@ export default {
   },
   methods: {
     setP() {
-      this.setTuningPipeline([
+      this.$store.commit('setTuningPipeline', [
         {
           name: 'pca2',
           pretty_name: 'PCA 2',
