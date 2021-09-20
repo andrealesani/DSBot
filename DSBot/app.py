@@ -109,7 +109,6 @@ def receive_utterance():
         print(sent)
         print(wf)
         scores[i] = NW(wf, sent, kb.voc)
-        print(scores[i])
         max_key = max(scores, key=scores.get)
         max_key = [x for x in kb.kb.values[max_key, 1:] if str(x) != 'nan']
         print('MAX', max_key)
@@ -127,7 +126,6 @@ def receive_utterance():
 def get_results(received_id):
     # recupero il file
     filename = dataset.name_plot
-    print(filename)
     if filename is None:
         return jsonify({"ready": False, "session_id": session_id, 'img': None, 'tuning': None})
 
@@ -163,14 +161,9 @@ def tuning():
 def execute_algorithm(ir):
     app.logger.debug('Entering execute_algorithm function')
     global dataset
-    results = {'original_dataset': dataset.ds, 'labels':dataset.label}
-    result = run(ir, results)
-    print(result)
-    fig = exec(result['plot'][-1])
+    results = {'original_dataset': dataset, 'labels':dataset.label}
+    result = run(ir, results, session_id)
 
-    plt.savefig('./temp/temp_' + str(session_id)+'scatter.png')
-    #plt.show()
-    dataset.name_plot = './temp/temp_' + str(session_id)+'scatter.png'
     app.logger.info('Exiting execute_algorithm function')
 
 

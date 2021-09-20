@@ -30,7 +30,7 @@ class IROp(TuningOpMixin, ABC):
             raise UnknownParameter()
 
     @abstractmethod
-    def run(self, result):
+    def run(self, result, session_id):
         pass
 
 

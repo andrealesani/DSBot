@@ -33,12 +33,12 @@ class IRClustering(IROp):
         #return self.labels
 
     #TDB cosa deve restituire questa funzione?
-    def run(self, result):
+    def run(self, result, session_id):
         print('clustering')
         if 'new_dataset' in result:
             dataset = result['new_dataset']
         else:
-            dataset = result['original_dataset']
+            dataset = result['original_dataset'].ds
         if not self._param_setted:
             self.set_model(dataset)
         try:
