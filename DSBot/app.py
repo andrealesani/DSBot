@@ -156,6 +156,7 @@ def tuning():
 
 def execute_algorithm(ir):
     app.logger.debug('Entering execute_algorithm function')
+    app.logger.info('Executing pipeline: %s', [i.to_json() for i in ir])
     global dataset
     results = {'original_dataset': dataset, 'labels':dataset.label}
     result = run(ir, results, session_id)
