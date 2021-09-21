@@ -5,7 +5,7 @@ export const state = () => ({
   resultsReady: false,
   imageBase64: null,
   tuningChat: [],
-  tuningPipeline: {},
+  tuningPipeline: [],
 })
 
 export const mutations = {
@@ -24,8 +24,11 @@ export const mutations = {
   setImage(state, image) {
     state.imageBase64 = image
   },
-  setTuningChat(state, message) {
-    state.tuningChat = state.tuningChat.push(message)
+  sendChat(state, msg) {
+    state.tuningChat.push({ isBot: false, message: msg })
+  },
+  receiveChat(state, msg) {
+    state.tuningChat.push({ isBot: true, message: msg })
   },
   setTuningPipeline(state, pipeline) {
     state.tuningPipeline = pipeline
@@ -90,7 +93,7 @@ export const actions = {
           if (response.data.ready) {
             context.commit('setImage', response.data.img)
             context.commit('setResultsReady', response.data.ready)
-            context.commit('setTuningChat', response.data.tuning.utterance)
+            context.commit('receiveChat', response.data.tuning.utterance)
           } else {
             console.log('Non faccio niente')
           }
@@ -101,14 +104,15 @@ export const actions = {
     return null
   },
 
-  async toFramework(context, isUtterance, data) {
+  async toFramework(context, data) {
+    const isUtterance = typeof data === 'string' || data instanceof String
     console.log('SENDING DATA', isUtterance, data)
     let bodyRequest
     if (isUtterance) {
-      context.commit('setTuningChat', data)
+      context.commit('sendChat', data)
       bodyRequest = {
         session_id: this.state.sessionId,
-        type: 'utternace',
+        type: 'utterance',
         utterance: data,
       }
     } else {
@@ -125,19 +129,21 @@ export const actions = {
         console.log('RECEIVED TUNING', response.data.tuning)
         if ('utterance' in response.data.tuning) {
           console.log(response.data.tuning.utterance)
-          context.commit('setTuningChat', response.data.tuning.utterance)
+          context.commit('receiveChat', response.data.tuning.utterance)
         }
         if ('payload' in response.data.tuning) {
           if (response.data.tuning.payload.status === 'choose_problem') {
+            // context.commit('setStep', 3) // Assume already in step 3 and can't come back from 4
             context.commit('setImage', response.data.tuning.payload.result)
           } else if (response.data.tuning.payload.status === 'edit_param') {
+            context.commit('setStep', 4)
             context.commit(
               'setTuningPipeline',
               response.data.tuning.payload.pipeline
             )
           } else if (response.data.tuning.payload.status === 'end') {
             context.commit('setResultsReady', false)
-            // TODO: call polldata
+            context.commit('setStep', 3)
           } else {
             console.log(
               'Unknown tuning status:',
