@@ -13,13 +13,17 @@
         We are performing your analysis
       </div>
       <v-row v-if="resultsReady" justify="center">
-        <img
-          :src="`data:image/png;base64,${imageBase64}`"
-          alt=""
-          v-if="resultsReady"
-          height="500"
-        />
-        <tuning-chat />
+        <v-col :cols="imgWidth">
+          <img
+            v-if="resultsReady"
+            :src="`data:image/png;base64,${imageBase64}`"
+            alt=""
+            height="500"
+          />
+        </v-col>
+        <v-col :cols="12 - imgWidth">
+          <tuning-chat />
+        </v-col>
       </v-row>
     </v-card>
   </div>
@@ -32,6 +36,7 @@ export default {
   data() {
     return {
       polling: null,
+      imgWidth: 8,
     }
   },
   computed: {

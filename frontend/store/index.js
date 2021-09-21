@@ -1,10 +1,29 @@
 export const state = () => ({
-  e1: 4,
+  e1: 3,
   sessionId: 1,
   requestDescription: '',
-  resultsReady: false,
+  resultsReady: true,
   imageBase64: null,
-  tuningChat: [],
+  tuningChat: [
+    { isBot: true, message: 'ciao prova bla bla bla' },
+    {
+      isBot: false,
+      message:
+        'm4essaggio moooooooolto lunngooooo con parole luuuuuuuuunghissime',
+    },
+    { isBot: true, message: 'ciao prova bla bla bla' },
+    {
+      isBot: false,
+      message:
+        'm4essaggio moooooooolto lunngooooo con parole luuuuuuuuunghissime',
+    },
+    { isBot: true, message: 'ciao prova bla bla bla' },
+    {
+      isBot: false,
+      message:
+        'm4essaggio moooooooolto lunngooooo con parole luuuuuuuuunghissime',
+    },
+  ],
   tuningPipeline: [
     {
       name: 'pca2',
