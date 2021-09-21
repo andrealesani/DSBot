@@ -1,21 +1,21 @@
 <template>
   <div>
-    <v-card class="mb-12 mt-3" height="500px" flat>
+    <v-card height="500px" flat>
       <div v-if="!resultsReady" class="text-center">
         <div>
           <v-progress-circular
             indeterminate
-            color="green"
+            color="success"
             size="100"
             width="10"
-          ></v-progress-circular>
+          />
         </div>
         We are performing your analysis
+        <v-btn color="warning" @click="pollData"> Manual poll </v-btn>
       </div>
       <v-row v-if="resultsReady" justify="center">
         <v-col :cols="imgWidth">
           <img
-            v-if="resultsReady"
             :src="`data:image/png;base64,${imageBase64}`"
             alt=""
             height="500"
@@ -42,6 +42,10 @@ export default {
   computed: {
     ...mapState(['resultsReady', 'imageBase64']),
   },
+  mounted() {
+    console.log('Results mounted!') // TODO: how to call it a second time?
+    this.pollData()
+  },
   methods: {
     ...mapActions(['waitForResults']),
     pollData() {
@@ -50,10 +54,6 @@ export default {
         else clearInterval(this.polling)
       }, 3000)
     },
-  },
-  mounted() {
-    console.log('Results mounted!')
-    this.pollData()
   },
 }
 </script>

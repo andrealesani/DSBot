@@ -1,89 +1,11 @@
 export const state = () => ({
-  e1: 3,
+  e1: 1,
   sessionId: 1,
   requestDescription: '',
-  resultsReady: true,
+  resultsReady: false,
   imageBase64: null,
-  tuningChat: [
-    { isBot: true, message: 'ciao prova bla bla bla' },
-    {
-      isBot: false,
-      message:
-        'm4essaggio moooooooolto lunngooooo con parole luuuuuuuuunghissime',
-    },
-    { isBot: true, message: 'ciao prova bla bla bla' },
-    {
-      isBot: false,
-      message:
-        'm4essaggio moooooooolto lunngooooo con parole luuuuuuuuunghissime',
-    },
-    { isBot: true, message: 'ciao prova bla bla bla' },
-    {
-      isBot: false,
-      message:
-        'm4essaggio moooooooolto lunngooooo con parole luuuuuuuuunghissime',
-    },
-  ],
-  tuningPipeline: [
-    {
-      name: 'pca2',
-      pretty_name: 'PCA 2',
-      is_highlighted: true,
-      parameters: [
-        {
-          name: 'n_components',
-          pretty_name: 'Number of components',
-          value: 8,
-          min: 0,
-          max: 10,
-          default: 2,
-          description: 'Defines the number of components to keep.',
-          is_highlighted: true,
-          type: 'float',
-        },
-        {
-          name: 'n_components2',
-          pretty_name: 'Number of components 2',
-          value: 8,
-          min: 0,
-          max: 10,
-          default: 2,
-          description: 'Defines the number of components to keep.',
-          is_highlighted: false,
-          type: 'float',
-        },
-      ],
-    },
-    {
-      name: 'pca3',
-      pretty_name: 'PCA 3',
-      is_highlighted: false,
-      parameters: [
-        {
-          name: 'n_components',
-          pretty_name: 'Number of components',
-          value: 8,
-          min: 0,
-          max: 10,
-          default: 2,
-          description: 'Defines the number of components to keep.',
-          is_highlighted: false,
-          type: 'float',
-        },
-        {
-          name: 'n_components2',
-          pretty_name: 'Number of components 2',
-          value: 8,
-          min: 0,
-          max: 10,
-          default: 2,
-          description: 'Defines the number of components to keep.',
-          is_highlighted: false,
-          type: 'float',
-        },
-      ],
-    },
-  ],
+  tuningChat: [],
+  tuningPipeline: [],
 })
 
 export const mutations = {
@@ -102,11 +24,13 @@ export const mutations = {
   setImage(state, image) {
     state.imageBase64 = image
   },
-  setTuningChat(state, message) {
-    state.tuningChat.push(message)
+  sendChat(state, msg) {
+    state.tuningChat.push({ isBot: false, message: msg })
+  },
+  receiveChat(state, msg) {
+    state.tuningChat.push({ isBot: true, message: msg })
   },
   setTuningPipeline(state, pipeline) {
-    console.log('PIPELINE SETTED', pipeline)
     state.tuningPipeline = pipeline
   },
 }
@@ -169,7 +93,7 @@ export const actions = {
           if (response.data.ready) {
             context.commit('setImage', response.data.img)
             context.commit('setResultsReady', response.data.ready)
-            context.commit('setTuningChat', response.data.tuning.utterance)
+            context.commit('receiveChat', response.data.tuning.utterance)
           } else {
             console.log('Non faccio niente')
           }
@@ -185,7 +109,7 @@ export const actions = {
     console.log('SENDING DATA', isUtterance, data)
     let bodyRequest
     if (isUtterance) {
-      context.commit('setTuningChat', data)
+      context.commit('sendChat', data)
       bodyRequest = {
         session_id: this.state.sessionId,
         type: 'utterance',
@@ -205,7 +129,7 @@ export const actions = {
         console.log('RECEIVED TUNING', response.data.tuning)
         if ('utterance' in response.data.tuning) {
           console.log(response.data.tuning.utterance)
-          context.commit('setTuningChat', response.data.tuning.utterance)
+          context.commit('receiveChat', response.data.tuning.utterance)
         }
         if ('payload' in response.data.tuning) {
           if (response.data.tuning.payload.status === 'choose_problem') {

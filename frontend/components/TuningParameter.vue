@@ -1,7 +1,7 @@
 <template>
   <div>
     <v-col>
-      <v-tooltip right>
+      <v-tooltip bottom>
         <template #activator="{ on, attrs }">
           <span v-bind="attrs" v-on="on">{{ param.pretty_name }}</span>
         </template>
@@ -13,18 +13,13 @@
           v-model="localValue"
           :min="param.min"
           :max="param.max"
-          :color="param.is_highlighted ? 'red' : '#1875D1'"
-          :track-color="'#434343'"
+          :color="param.is_highlighted ? 'primary' : 'secondary'"
+          :track-color="'secondary'"
+          :thumb-label="true"
+          :step="param.type === 'int' ? '1' : '0.1'"
         >
           <template #append>
-            <v-text-field
-              v-model="localValue"
-              class="mt-0 pt-0"
-              hide-details
-              single-line
-              type="number"
-              style="width: 60px"
-            ></v-text-field>
+            {{ localValue }}
           </template>
         </v-slider>
       </div>
@@ -33,15 +28,14 @@
 </template>
 
 <script>
+import { mapActions } from 'vuex'
 export default {
-  // parameter.type === 'float' || parameter.type === 'int'
-
   props: ['param', 'module'],
   data() {
     return {
-      sliderValue: this.param.value,
+      cooldown: null,
+      coolingdown: false,
       isSlider: this.param.type === 'float' || this.param.type === 'int',
-      color: 'red',
     }
   },
   computed: {
@@ -49,13 +43,23 @@ export default {
       get() {
         return this.param.value
       },
-      set(value) {
-        // TODO: Mandarlo al backend
+      set(val) {
+        if (this.coolingdown) clearTimeout(this.cooldown)
+        this.coolingdown = true
+        this.cooldown = setTimeout(() => {
+          this.coolingDown = false
+          this.toFramework({
+            intent: 'set',
+            module: this.module,
+            parameter: this.param.name,
+            value: val,
+          })
+        }, 2000)
       },
     },
   },
-  mounted() {
-    console.log('MOUNED', this.module)
+  methods: {
+    ...mapActions(['toFramework']),
   },
 }
 </script>

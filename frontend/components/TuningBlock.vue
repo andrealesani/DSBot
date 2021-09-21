@@ -1,28 +1,26 @@
 <template>
   <div>
-    <v-card
-      class="mb-12"
-      height="250px"
-      width="300px"
-      :color="module.is_highlighted ? '#f9c74f' : '#FFF'"
-    >
+    <v-card class="pb-5" :color="module.is_highlighted ? '#FFF9BF' : 'white'">
       <v-card-title>
-        <h2>{{ module.pretty_name }}</h2>
+        {{ module.pretty_name }}
       </v-card-title>
+
+      <p v-if="module.parameters.length === 0" class="px-3">
+        This operation doesn't contain any parameter
+      </p>
+
       <tuning-parameter
         v-for="parameter in module.parameters"
         :key="parameter.name"
         :param="parameter"
         :module="module.name"
-      ></tuning-parameter>
+      />
     </v-card>
   </div>
 </template>
 
 <script>
-import TuningParameter from './TuningParameter.vue'
 export default {
-  components: { TuningParameter },
   props: ['module'],
 }
 </script>

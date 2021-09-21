@@ -1,38 +1,48 @@
 <template>
   <div>
-    <v-card width="100%" height="500px" class="mb-12 mt-3">
-      <div class="chat-container">
-        <v-row
-          v-for="(item, index) in tuningChat"
-          :key="index"
-          class="pa-2"
-          :class="{ 'flex-row-reverse': !item.isBot }"
-        >
-          <v-col :cols="3"> A </v-col>
-          <v-col :cols="8">
-            <v-card :color="item.isBot ? 'blue' : 'red'">
-              <div class="text--primary">
-                {{ item.message }}
-              </div>
-            </v-card>
-          </v-col>
-        </v-row>
-      </div>
+    <div class="chat-container">
+      <v-row
+        v-for="(item, index) in tuningChat"
+        :key="index"
+        :class="{ 'flex-row-reverse': !item.isBot }"
+      >
+        <v-col :cols="3">
+          <!--  TODO: make icon -->
+          A
+        </v-col>
+        <v-col :cols="8">
+          <v-card :color="item.isBot ? 'white' : 'accent'">
+            <div class="text--primary">
+              {{ item.message }}
+            </div>
+          </v-card>
+        </v-col>
+      </v-row>
+    </div>
 
-      <v-row align="center" class="align-self-end chat-interface">
-        <v-col :cols="7">
+    <div>
+      <v-row align="center">
+        <v-col :cols="9">
           <v-text-field
             v-model="utterance"
+            height="35"
+            :rounded="true"
             background-color="grey lighten-3"
-          ></v-text-field>
+          />
         </v-col>
-        <v-col :cols="2"
-          ><v-btn color="primary" @click="toFramework(utterance)">
-            Send
-          </v-btn></v-col
-        >
+        <v-col :cols="1">
+          <v-btn
+            color="primary"
+            :rounded="true"
+            :depressed="true"
+            @click="sendText"
+          >
+            <!--  TODO: make icon -->
+            ➤
+          </v-btn>
+        </v-col>
       </v-row>
-    </v-card>
+    </div>
   </div>
 </template>
 
@@ -50,19 +60,18 @@ export default {
   },
   methods: {
     ...mapActions(['toFramework']),
+    sendText() {
+      this.toFramework(this.utterance)
+      this.utterance = ''
+    },
   },
 }
 </script>
 
 <style scoped>
-.chat-interface {
-  position: absolute;
-  bottom: 0;
-}
-
 .chat-container {
-  height: 450px;
-  overflow-y: auto;
+  height: 450px; /* This component is 450px tall. Deal with it. */
+  overflow-y: auto; /*TODO: keep scroll to bottom */
   overflow-x: hidden;
 }
 </style>
