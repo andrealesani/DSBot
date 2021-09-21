@@ -15,6 +15,7 @@ class IRPar(TuningParMixin, object):
     """
 
     def __init__(self, name: str, value: float, v_type: str, min_v: float, max_v: float, step: float):
+        assert min_v <= value <= max_v, 'The value must be inside the min_v max_v range'
         self.name = name
         self.default_value = value
         self.v_type = v_type
