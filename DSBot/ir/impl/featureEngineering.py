@@ -50,7 +50,7 @@ class IRFeatureEngineering(IROp):
 class IRPCA(IRFeatureEngineering):
     def __init__(self):
         super(IRPCA, self).__init__("pca",
-                                    [IRPar("n_components", 2, "float", 0, 1, 0.1)],  # TODO: what are minimum and maximum?
+                                    [IRPar("n_components", 2, "float", 0, 10, 0.1)],  # TODO: what are minimum and maximum?
                                     PCA)
 
     def parameter_tune(self, dataset):
@@ -59,7 +59,7 @@ class IRPCA(IRFeatureEngineering):
 class IRPCA2(IRFeatureEngineering):
     def __init__(self):
         super(IRPCA2, self).__init__("pca2",
-                                    [IRPar("n_components", 2, "float", 0, 1, 0.1)],  # TODO: what are minimum and maximum?
+                                    [IRPar("n_components", 2, "float", 0, 10, 0.1)],  # TODO: what are minimum and maximum?
                                     PCA)
 
     def parameter_tune(self, dataset):
