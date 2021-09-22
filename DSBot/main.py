@@ -12,8 +12,8 @@ class Dataset:
         self.ds = ds
         if ds is not None:
             self.missingValues, self.categorical, self.zeroVariance = self.check_ds()
-        self.hasLabel = False
         self.name_plot = None
+        self.hasLabel = False
 
     def set_label(self, label):
         self.label = self.ds[label].astype('category')#.values
@@ -60,6 +60,12 @@ class Dataset:
                         kb_val = [i.strip() for i in kb.values[j,0].split(',')]
                         if not i in kb_val:
                             drop.append(j)
+                else:
+                    for j in range(len(kb)):
+                        kb_val = [i.strip() for i in kb.values[j,0].split(',')]
+                        if i in kb_val:
+                            drop.append(j)
+
         kb = kb.drop(drop)
         return kb
 

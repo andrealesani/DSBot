@@ -56,7 +56,6 @@ def receive_ds():
     #print('sep', sep)
     uploaded_file = request.files['ds']
     if uploaded_file.filename != '':
-        print("si salva!")
         #uploaded_file.save(uploaded_file.filename)
         try:
             os.makedirs('./temp/temp_'+str(session_id))
@@ -68,9 +67,8 @@ def receive_ds():
         #print(dataset)
         dataset.to_csv('./temp/temp_'+str(session_id)+'/' + uploaded_file.filename)
         dataset = Dataset(dataset)
-        print(dataset.ds)
         dataset.session = session_id
-        if label!=None:
+        if label!='':
             dataset.label = label
             dataset.hasLabel = True
         kb.kb = dataset.filter_kb(kb.kb)
@@ -158,7 +156,10 @@ def execute_algorithm(ir):
     app.logger.debug('Entering execute_algorithm function')
     app.logger.info('Executing pipeline: %s', [i.to_json() for i in ir])
     global dataset
-    results = {'original_dataset': dataset, 'labels':dataset.label}
+    if hasattr(dataset, 'label'):
+        results = {'original_dataset': dataset, 'labels':dataset.label}
+    else:
+        results = {'original_dataset': dataset}
     result = run(ir, results, session_id)
 
     app.logger.info('Exiting execute_algorithm function')

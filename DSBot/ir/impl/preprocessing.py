@@ -125,9 +125,9 @@ class IRLabelRemove(IRPreprocessing):
 
         #if not is_numeric_dtype(label):
         #    label = pd.get_dummies(label)
-        label = label.dropna()
+        #label = label.dropna()
 
-        result['new_dataset'] = dataset.T[set(label.index.values)].T
+        #result['new_dataset'] = dataset.T[set(label.index.values)].T
         result['labels']=label
 
 
