@@ -146,20 +146,17 @@ def get_results(received_id):
 
 @app.route('/tuning', methods=['POST'])
 def tuning():
-    parser = reqparse.RequestParser()
-    parser.add_argument('type', required=True)
-    parser.add_argument('utterance')
-    parser.add_argument('payload')
-    args = parser.parse_args()
-    if args['type'] == 'utterance':
-        response = mmcc_instances[session_id].handle_text_input(args['utterance'])
+    json_data = request.get_json(force=True)
+    if json_data['type'] == 'utterance':
+        response = mmcc_instances[session_id].handle_text_input(json_data['utterance'])
     else:
-        response = mmcc_instances[session_id].handle_data_input(args['payload'])
+        response = mmcc_instances[session_id].handle_data_input(json_data['payload'])
     return jsonify({'tuning': response})
 
 
 def execute_algorithm(ir):
     app.logger.debug('Entering execute_algorithm function')
+    app.logger.info('Executing pipeline: %s', [i.to_json() for i in ir])
     global dataset
     results = {'original_dataset': dataset, 'labels':dataset.label}
     result = run(ir, results, session_id)

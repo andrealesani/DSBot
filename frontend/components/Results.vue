@@ -1,48 +1,50 @@
 <template>
   <div>
-    <v-col>
-      <v-row>
-        <v-card class="mb-12 mt-3" height="500px" flat>
-          <div v-if="!resultsReady" class="text-center">
-            <div>
-              <v-progress-circular
-                indeterminate
-                color="green"
-                size="100"
-                width="10"
-              ></v-progress-circular>
-            </div>
-            We are performing your analysis
-          </div>
-          <v-row justify="center">
-            <img
-              :src="`data:image/png;base64,${imageBase64}`"
-              alt=""
-              v-if="resultsReady"
-              height="500"
-            />
-          </v-row>
-        </v-card>
-        <tuning-chat v-if="resultsReady" />
+    <v-card height="500px" flat>
+      <div v-if="!resultsReady" class="text-center">
+        <div>
+          <v-progress-circular
+            indeterminate
+            color="success"
+            size="100"
+            width="10"
+          />
+        </div>
+        We are performing your analysis
+        <v-btn color="warning" @click="pollData"> Manual poll </v-btn>
+      </div>
+      <v-row v-if="resultsReady" justify="center">
+        <v-col :cols="imgWidth">
+          <img
+            :src="`data:image/png;base64,${imageBase64}`"
+            alt=""
+            height="500"
+          />
+        </v-col>
+        <v-col :cols="12 - imgWidth">
+          <tuning-chat />
+        </v-col>
       </v-row>
-      <Tuning v-if="resultsReady" />
-    </v-col>
+    </v-card>
   </div>
 </template>
 
 <script>
 import { mapActions, mapState } from 'vuex'
-import TuningChat from './TuningChat.vue'
-import Tuning from './Tuning.vue'
 export default {
-  components: { TuningChat, Tuning },
+  components: {},
   data() {
     return {
       polling: null,
+      imgWidth: 8,
     }
   },
   computed: {
-    ...mapState(['resultsReady', 'imageBase64', 'tuningChat']),
+    ...mapState(['resultsReady', 'imageBase64']),
+  },
+  mounted() {
+    console.log('Results mounted!') // TODO: how to call it a second time?
+    this.pollData()
   },
   methods: {
     ...mapActions(['waitForResults']),
@@ -52,10 +54,6 @@ export default {
         else clearInterval(this.polling)
       }, 3000)
     },
-  },
-  mounted() {
-    console.log('Results mounted!')
-    this.pollData()
   },
 }
 </script>

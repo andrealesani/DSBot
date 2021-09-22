@@ -15,22 +15,42 @@
 
           <v-divider></v-divider>
 
-          <v-stepper-step step="3"> Results</v-stepper-step>
+          <v-stepper-step :complete="e1 > 3" step="3">
+            View your results
+          </v-stepper-step>
+
+          <v-divider></v-divider>
+
+          <v-stepper-step :complete="e1 > 4" step="4">
+            Tune your pipeline
+          </v-stepper-step>
         </v-stepper-header>
 
         <v-stepper-items>
-          <v-stepper-content step="1" class="px-10">
+          <v-stepper-content step="1" class="px-10 pb-8">
             <input-form></input-form>
           </v-stepper-content>
 
-          <v-stepper-content step="2" class="px-10">
+          <v-stepper-content step="2" class="px-10 pb-8">
             <insert-sentence></insert-sentence>
           </v-stepper-content>
 
-          <v-stepper-content step="3" class="px-10">
+          <v-stepper-content step="3" class="px-10 pb-8">
             <results></results>
 
             <v-btn color="secondary" @click="setStep(1)"> Restart </v-btn>
+            <v-btn color="secondary" @click="toFramework({ intent: 'skip' })">
+              Continue without choosing a problem
+            </v-btn>
+          </v-stepper-content>
+
+          <v-stepper-content step="4" class="px-10 pb-8">
+            <tuning></tuning>
+
+            <v-btn color="secondary" @click="setStep(1)"> Restart </v-btn>
+            <v-btn color="secondary" @click="toFramework({ intent: 'run' })">
+              Run again
+            </v-btn>
           </v-stepper-content>
         </v-stepper-items>
       </v-stepper>
@@ -39,28 +59,15 @@
 </template>
 
 <script>
-import { mapState, mapMutations } from 'vuex'
-
-import InputForm from '~/components/InputForm'
-import InsertSentence from '~/components/InsertSentence'
-import Results from '~/components/Results'
+import { mapState, mapMutations, mapActions } from 'vuex'
 
 export default {
-  components: {
-    InputForm,
-    InsertSentence,
-    Results,
-  },
-  data() {
-    return {
-      // e1: 1,
-    }
+  computed: {
+    ...mapState(['e1']),
   },
   methods: {
     ...mapMutations(['setStep']),
-  },
-  computed: {
-    ...mapState(['e1']),
+    ...mapActions(['toFramework']),
   },
 }
 </script>

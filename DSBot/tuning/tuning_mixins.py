@@ -69,7 +69,7 @@ class TuningOpMixin:
         return {
             'name': self.name,
             'pretty_name': self.pretty_name,
-            'parameters': {k: v.to_json() for k, v in self.parameters.items()},
+            'parameters': [v.to_json() for v in self.parameters.values()],
             'is_highlighted': self.is_highlighted
         }
 
