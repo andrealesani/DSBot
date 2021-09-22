@@ -20,7 +20,7 @@ class IRPreprocessing(IROp):
         if 'new_dataset' in result:
             dataset = result['new_dataset']
         else:
-            dataset = result['original_dataset']
+            dataset = result['original_dataset'].ds
         if self.parameter == None:
             self.parameter_tune(dataset)
         #for p,v in self.parameters.items():
@@ -28,7 +28,7 @@ class IRPreprocessing(IROp):
         self._param_setted = True
 
     #TDB cosa deve restituire questa funzione?
-    def run(self, result):
+    def run(self, result, session_id):
         pass
 
 class IRMissingValuesRemove(IRPreprocessing):
@@ -40,11 +40,11 @@ class IRMissingValuesRemove(IRPreprocessing):
         # TODO: implement
         pass
 
-    def run(self, result):
+    def run(self, result, session_id):
         if 'new_dataset' in result:
             dataset = result['new_dataset']
         else:
-            dataset = result['original_dataset']
+            dataset = result['original_dataset'].ds
 
         dataset = dataset.dropna()
         result['new_dataset'] = dataset
@@ -67,11 +67,11 @@ class IRMissingValuesFill(IRPreprocessing):
             values_dataset = pd.DataFrame(imp.fit_transform(dataset))
         return values_dataset
 
-    def run(self, result):
+    def run(self, result, session_id):
         if 'new_dataset' in result:
             dataset = result['new_dataset']
         else:
-            dataset = result['original_dataset']
+            dataset = result['original_dataset'].ds
         if not self._param_setted:
             self.parameter_tune(dataset)
         else:
@@ -89,11 +89,11 @@ class IROneHotEncode(IRPreprocessing):
         # TODO: implement
         pass
 
-    def run(self, result):
+    def run(self, result, session_id):
         if 'new_dataset' in result:
             dataset = result['new_dataset']
         else:
-            dataset = result['original_dataset']
+            dataset = result['original_dataset'].ds
         cols = dataset.columns
         num_cols = dataset._get_numeric_data().columns
         dataset = pd.get_dummies(dataset, columns=list(set(cols) - set(num_cols)))
@@ -111,11 +111,11 @@ class IRLabelRemove(IRPreprocessing):
         # TODO: implement
         pass
 
-    def run(self, result):
+    def run(self, result, session_id):
         if 'new_dataset' in result:
             dataset = result['new_dataset']
         else:
-            dataset = result['original_dataset']
+            dataset = result['original_dataset'].ds
         label = result['labels']
         columns=list(set(dataset.columns) - set(label))
         result['new_dataset'] = dataset[columns]

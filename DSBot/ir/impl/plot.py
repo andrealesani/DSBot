@@ -4,6 +4,7 @@ import numpy as np
 import pandas as pd
 import matplotlib.pyplot as plt
 import matplotlib
+matplotlib.use('Agg')
 import seaborn as sns
 from seaborn import scatterplot, clustermap
 from matplotlib.pyplot import scatter
@@ -27,7 +28,7 @@ class IRPlot(IROp):
         if 'new_dataset' in result:
             dataset = result['new_dataset']
         else:
-            dataset = result['original_dataset']
+            dataset = result['original_dataset'].ds
         self.parameter_tune(dataset)
         for p,v in self.parameters.items():
             self._model.__setattr__(p,v.value)
@@ -39,11 +40,11 @@ class IRPlot(IROp):
         return self.labels
 
     #TDB cosa deve restituire questa funzione?
-    def run(self, result):
+    def run(self, result, session_id):
         if 'new_dataset' in result:
             dataset = result['new_dataset']
         else:
-            dataset = result['original_dataset']
+            dataset = result['original_dataset'].ds
         if not self._param_setted:
             self.set_model(dataset)
         try:
@@ -63,7 +64,7 @@ class IRScatterplot(IRPlot):
     def parameter_tune(self, dataset):
         pass
 
-    def run(self, result):
+    def run(self, result, session_id):
         if 'labels' not in result:
             raise LabelsNotAvailable
         else:
@@ -74,13 +75,20 @@ class IRScatterplot(IRPlot):
         else:
             transformed_ds = result['transformed_ds']
 
-        #for i in u_labels:
-        #    ax = scatter(transformed_ds[result['labels'] == i, 0], transformed_ds[result['labels'] == i, 1], label=i)
-
+        fig = plt.figure()
+        for i in u_labels:
+            ax = scatter(transformed_ds[result['labels'] == i, 0], transformed_ds[result['labels'] == i, 1], label=i)
+        plt.savefig('./temp/temp_' + str(session_id) + '/scatter.png')
         if 'plot' not in result:
-            result['plot'] = ["u_labels = np.unique(result['labels'])\nfor i in u_labels:\n\tax = plt.scatter(result['transformed_ds'][result['labels'] == i, 0], result['transformed_ds'][result['labels'] == i, 1], label=i)"]
+            result['plot'] = ['./temp/temp_' + str(session_id) + '/scatter.png']
+            #result['plot'] = ["u_labels = np.unique(result['labels'])\nfor i in u_labels:\n\tax = plt.scatter(result['transformed_ds'][result['labels'] == i, 0], result['transformed_ds'][result['labels'] == i, 1], label=i)"]
         else:
-            result['plot'].append("u_labels = np.unique(result['labels'])\nfor i in u_labels:\n\tax = plt.scatter(result['transformed_ds'][result['labels'] == i, 0], result['transformed_ds'][result['labels'] == i, 1], label=i)")
+            result['plot'].append('./temp/temp_' + str(session_id) + '/scatter.png')
+            #result['plot'].append("u_labels = np.unique(result['labels'])\nfor i in u_labels:\n\tax = plt.scatter(result['transformed_ds'][result['labels'] == i, 0], result['transformed_ds'][result['labels'] == i, 1], label=i)")
+
+        result['original_dataset'].name_plot = './temp/temp_' + str(session_id) + '/scatter.png'
+
+        # plt.show()
         return  result
 
 

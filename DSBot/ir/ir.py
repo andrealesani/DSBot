@@ -8,11 +8,11 @@ import ir.impl
 from ir.ir_operations import IROpOptions
 
 
-def run(ir, dataset):  # TODO: consider returning results to the caller
+def run(ir, dataset, session_id):  # TODO: consider returning results to the caller
     if len(ir) == 1:
-         return ir[0].run(dataset)
+         return ir[0].run(dataset, session_id)
     else:
-         return run(ir[1:], ir[0].run(dataset))
+         return run(ir[1:], ir[0].run(dataset, session_id), session_id)
 
     # TODO(giubots): remove test code below
     # if len(ir) == 0:

@@ -14,11 +14,11 @@ class IRCorrelation(IROp):
         return self.correlation
 
     #TDB cosa deve restituire questa funzione?
-    def run(self, result):
+    def run(self, result, session_id):
         if 'new_dataset' in result:
             dataset = result['new_dataset']
         else:
-            dataset = result['original_dataset']
+            dataset = result['original_dataset'].ds
         self.correlation = dataset.ds.corr(method=self._model)
         result['correlation'] = self.correlation
         return result

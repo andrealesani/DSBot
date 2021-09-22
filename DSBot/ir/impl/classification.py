@@ -40,11 +40,11 @@ class IRClassification(IROp):
         return self.labels
 
     #TDB cosa deve restituire questa funzione?
-    def run(self, result):
+    def run(self, result, session_id):
         if 'new_dataset' in result:
             dataset = result['new_dataset']
         else:
-            dataset = result['original_dataset']
+            dataset = result['original_dataset'].ds
         labels = result['labels']
         self.train_features, self.test_features, self.train_labels, self.test_labels = self.train_test(dataset, labels)
         if not self._param_setted:
