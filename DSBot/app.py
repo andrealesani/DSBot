@@ -1,4 +1,5 @@
 import threading
+from functools import partial
 
 import flask
 from flask import Flask, jsonify, request, send_file, session
@@ -29,7 +30,6 @@ cors = CORS(app, supports_credentials=True)
 app.config['SECRET_KEY'] = 'secret!'
 app.config['CORS_HEADERS'] = 'application/json'
 app.config['CORS_SUPPORTS_CREDENTIALS']  = True
-session_id = 1
 
 #app.config['SESSION_TYPE'] = 'filesystem'
 #session config
@@ -38,16 +38,13 @@ session_id = 1
 #app.config['PERMANENT_SESSION_LIFETIME'] = timedelta(days=31)
 #Session(app)
 session_serializer = SecureCookieSessionInterface().get_signing_serializer(app)
-kb = KnowledgeBase()
-dataset = Dataset(None)
-ir_tuning = None
-mmcc_instances = {}
+data = {}
 
 
 @app.route('/receiveds', methods=['POST'])
 def receive_ds():
-    global session_id
     session_id = session_serializer.dumps(dict(session))
+    data[session_id] = {}
     has_index = 0 if request.form['has_index']=='true' else None
     has_columns_name = 0 if request.form['has_column_names']=='true' else None
     sep = request.form['separator']
@@ -63,7 +60,6 @@ def receive_ds():
         except:
             pass
         uploaded_file.save('./temp/temp_'+str(session_id)+'/' + uploaded_file.filename)
-        global dataset
         dataset = pd.read_csv('./temp/temp_'+str(session_id)+'/'+str(uploaded_file.filename), header=has_columns_name, index_col=has_index,  sep=sep, engine='python')
         #print(dataset)
         dataset.to_csv('./temp/temp_'+str(session_id)+'/' + uploaded_file.filename)
@@ -73,7 +69,10 @@ def receive_ds():
         if label!=None:
             dataset.label = label
             dataset.hasLabel = True
+        kb = KnowledgeBase()
         kb.kb = dataset.filter_kb(kb.kb)
+        data[session_id]['kb'] = kb
+        data[session_id]['dataset'] = dataset
 
     print(kb.kb)
     print("SESSION ID", session_id)
@@ -83,14 +82,14 @@ def receive_ds():
 @app.route('/utterance', methods=['POST'])
 def receive_utterance():
     #print(dataset.dataset)
-    global dataset
 
     #ds = copy.deepcopy(dataset)
     parser = reqparse.RequestParser()
     parser.add_argument('session_id', required=True, help='No session provided')
     parser.add_argument('message', required=True)
     args = parser.parse_args()
-    if (args['session_id'] == session_id):
+    session_id = args['session_id']
+    if session_id in data:
         with open('./temp/temp_'+str(session_id)+'/message'+str(session_id)+'.txt', 'w') as f:
             f.write(args['message'])
 
@@ -104,6 +103,8 @@ def receive_utterance():
         with open('./temp/temp_' + str(session_id) + '/pred' + str(session_id) + '.txt', 'r') as f:
             wf = f.readlines()[0].strip().split(' ')
         scores = {}
+
+        kb = data[session_id]['kb']
         for i in range(len(kb.kb)):
             sent = [x for x in kb.kb.values[i, 1:] if str(x) != 'nan']
         print(sent)
@@ -114,9 +115,9 @@ def receive_utterance():
         max_key = [x for x in kb.kb.values[max_key, 1:] if str(x) != 'nan']
         print('MAX', max_key)
 
-        global ir_tuning
         ir_tuning = create_IR(max_key)
-        threading.Thread(target=execute_algorithm, kwargs={'ir': ir_tuning}).start()
+        data[session_id]['ir_tuning'] = ir_tuning
+        threading.Thread(target=execute_algorithm, kwargs={'ir': ir_tuning, 'session_id':session_id}).start()
         return jsonify({"session_id": session_id,
                         "request": wf
                         })
@@ -125,8 +126,11 @@ def receive_utterance():
 
 @app.route('/results/<received_id>')
 def get_results(received_id):
+    session_id = received_id
+    app.logger.info('Polling results for session: %s', session_id)
+
     # recupero il file
-    filename = dataset.name_plot
+    filename = data[session_id]['dataset'].name_plot
     print(filename)
     if filename is None:
         return jsonify({"ready": False, "session_id": session_id, 'img': None, 'tuning': None})
@@ -137,11 +141,11 @@ def get_results(received_id):
         # trasformo il bytecode in stringa
         base64_string = my_string.decode('utf-8')
 
-    framework = get_framework(pipeline=ir_tuning,
+    framework = get_framework(pipeline=data[session_id]['ir_tuning'],
                               result=base64_string,
-                              start_work=re_execute_algorithm)
+                              start_work=partial(re_execute_algorithm, session_id=session_id))
 
-    mmcc_instances[session_id] = framework
+    data[session_id]['framework'] = framework
     tuning_data = framework.handle_data_input({})
     return jsonify({"ready": True, "session_id": session_id, 'img': str(base64_string), 'tuning': tuning_data})
 
@@ -149,16 +153,18 @@ def get_results(received_id):
 @app.route('/tuning', methods=['POST'])
 def tuning():
     json_data = request.get_json(force=True)
+    session_id = json_data['session_id']
     if json_data['type'] == 'utterance':
-        response = mmcc_instances[session_id].handle_text_input(json_data['utterance'])
+        response = data[session_id]['framework'].handle_text_input(json_data['utterance'])
     else:
-        response = mmcc_instances[session_id].handle_data_input(json_data['payload'])
+        response = data[session_id]['framework'].handle_data_input(json_data['payload'])
     return jsonify({'tuning': response})
 
 
-def execute_algorithm(ir):
+def execute_algorithm(ir, session_id):
     app.logger.debug('Entering execute_algorithm function')
-    global dataset
+    app.logger.info('Running pipeline: %s', [i.to_json() for i in ir])
+    dataset = data[session_id]['dataset']
     results = {'original_dataset': dataset.ds, 'labels':dataset.label}
     result = run(ir, results)
     print(result)
@@ -170,10 +176,9 @@ def execute_algorithm(ir):
     app.logger.info('Exiting execute_algorithm function')
 
 
-def re_execute_algorithm(ir):
-    global dataset
-    dataset.name_plot = None
-    threading.Thread(target=execute_algorithm, kwargs={'ir': ir}).start()
+def re_execute_algorithm(ir, session_id):
+    data[session_id]['dataset'].name_plot = None
+    threading.Thread(target=execute_algorithm, kwargs={'ir': ir, 'session_id': session_id}).start()
 
 
 app.run(host='0.0.0.0', port=5000, debug=True)
