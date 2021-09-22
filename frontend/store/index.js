@@ -1,11 +1,13 @@
+import { pipelineJson } from '~/test/pipeline-json'
+
 export const state = () => ({
-  e1: 1,
+  e1: 3,
   sessionId: 1,
   requestDescription: '',
   resultsReady: false,
   imageBase64: null,
   tuningChat: [],
-  tuningPipeline: [],
+  tuningPipeline: pipelineJson,
 })
 
 export const mutations = {

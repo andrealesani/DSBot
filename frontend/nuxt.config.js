@@ -34,6 +34,7 @@ export default {
     '@nuxtjs/eslint-module',
     // https://go.nuxtjs.dev/vuetify
     '@nuxtjs/vuetify',
+    '@nuxtjs/fontawesome',
   ],
 
   // Modules: https://go.nuxtjs.dev/config-modules
@@ -72,6 +73,12 @@ export default {
           success: colors.green.accent3,
         },
       },
+    },
+  },
+
+  fontawesome: {
+    icons: {
+      solid: ['faUser'],
     },
   },
 
