@@ -8,13 +8,17 @@ from sklearn.impute import IterativeImputer
 from sklearn.decomposition import PCA
 
 class Dataset:
-    def __init__(self, ds):
+    def __init__(self, ds, label=None):
         self.ds = ds
         if ds is not None:
             self.missingValues, self.categorical, self.zeroVariance = self.check_ds()
-        self.label = None
         self.hasLabel = False
         self.name_plot = None
+
+    def set_label(self, label):
+        self.label = self.ds[label].astype('category')#.values
+        self.ds = self.ds.drop(label, axis=1)
+        self.hasLabel = True
 
     def missing_values(self):
         return (self.ds.isnull().sum().sum())>0

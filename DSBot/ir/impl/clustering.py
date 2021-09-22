@@ -64,7 +64,7 @@ class IRKMeans(IRClustering):
             except:
                 score = np.nan
             return score
-
+        print('KMEANS', self.parameters)
         optimizer = GridSearchCV(AgglomerativeClustering(),
                                  param_grid={"n_clusters": np.arange(2, dataset.shape[0]//2, 1)},
                                  scoring=silhouette_score)
@@ -88,6 +88,7 @@ class IRAgglomerativeClustering(IRClustering):
                 score = np.nan
             return score
 
+        print('AGGLOM', self.parameters)
         optimizer = GridSearchCV(KMeans(),
                                  param_grid={"n_clusters": np.arange(2, 5, 1)},
                                  scoring=silhouette_score)

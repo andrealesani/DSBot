@@ -2,7 +2,7 @@ from abc import abstractmethod
 
 import pandas as pd
 from sklearn.impute._iterative import IterativeImputer
-
+from pandas.api.types import is_numeric_dtype
 from ir.ir_operations import IROp, IROpOptions
 
 
@@ -112,13 +112,27 @@ class IRLabelRemove(IRPreprocessing):
         pass
 
     def run(self, result, session_id):
+        label = result['labels']
         if 'new_dataset' in result:
             dataset = result['new_dataset']
+            print(len(dataset))
+            print(len(label))
+            if len(dataset)<len(label):
+                label = label[set(dataset.index.values)]
+                print('hola',len(label))
         else:
             dataset = result['original_dataset'].ds
-        label = result['labels']
-        columns=list(set(dataset.columns) - set(label))
-        result['new_dataset'] = dataset[columns]
+
+        #if not is_numeric_dtype(label):
+        #    label = pd.get_dummies(label)
+        label = label.dropna()
+
+        result['new_dataset'] = dataset.T[set(label.index.values)].T
+        result['labels']=label
+
+
+        #columns=list(set(dataset.columns) - set(label))
+        #result['new_dataset'] = dataset[columns]
         return result
 
 class IRGenericPreprocessing(IROpOptions):

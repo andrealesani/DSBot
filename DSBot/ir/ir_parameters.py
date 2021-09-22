@@ -14,7 +14,7 @@ class IRPar(TuningParMixin, object):
     :ivar max_v: the maximum value that can be set
     """
 
-    def __init__(self, name: str, value: float, v_type: str, min_v: float, max_v: float, step: float):
+    def __init__(self, name: str, value: float, v_type: str, min_v : float = 1, max_v: float = 10, step: float = 1):
         self.name = name
         self.default_value = value
         self.v_type = v_type

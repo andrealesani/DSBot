@@ -6,7 +6,7 @@ from ir.ir_parameters import IRPar
 
 from sklearn.model_selection import RandomizedSearchCV
 from sklearn.ensemble import RandomForestClassifier
-from sklearn.model_selection import train_test_split
+from sklearn.model_selection import train_test_split, KFold
 import numpy as np
 
 
@@ -20,18 +20,15 @@ class IRClassification(IROp):
     def parameter_tune(self, dataset):
         pass
 
-    @abstractmethod
-    def train_test(self, dataset):
-        pass
-
     def set_model(self, result):
         if 'new_dataset' in result:
             dataset = result['new_dataset']
         else:
-            dataset = result['original_dataset']
-        self.parameter_tune(dataset)
+            dataset = result['original_dataset'].ds
+        labels = result['labels']
+        self.parameter_tune(dataset, labels)
         for p,v in self.parameters.items():
-            self._model.__setattr__(p,v.value)
+            self._model.__setattr__(p,v)
         self._param_setted = True
 
     def get_labels(self):
@@ -41,18 +38,31 @@ class IRClassification(IROp):
 
     #TDB cosa deve restituire questa funzione?
     def run(self, result, session_id):
+        if not self._param_setted:
+            self.set_model(result)
+
         if 'new_dataset' in result:
             dataset = result['new_dataset']
         else:
             dataset = result['original_dataset'].ds
+
+
+
         labels = result['labels']
-        self.train_features, self.test_features, self.train_labels, self.test_labels = self.train_test(dataset, labels)
-        if not self._param_setted:
-            self.set_model(dataset)
-        try:
-            self._model.fit_predict(dataset.ds.values)
-        except:
-            self._model.fit_predict(dataset)
+        print('PARAMETERSSSS', self.parameters)
+        predicted = []
+        kf = KFold(n_splits=4)
+        for train_index, test_index in kf.split(dataset):
+            train_features, test_features = dataset.values[train_index], dataset.values[test_index]
+            train_labels, test_labels = labels.values[train_index], labels.values[test_index]
+            try:
+                print((self._model.fit(train_features, train_labels).predict(test_features)))
+
+                predicted += list(self._model.fit(train_features, train_labels).predict(test_features))
+            except:
+                predicted += list(self._model.fit(train_features, train_labels).predict(test_features))
+        result['predicted_labels'] = predicted
+
         return result
 
 
@@ -66,12 +76,7 @@ class IRRandomForest(IRClassification):
                                         IRPar("min_samples_leaf", 1, "int", 1, 4, 1)],  # TODO: if I want to pass a list of values?
                                        RandomForestClassifier)
 
-    def train_test(self, dataset, labels):
-        train_features, test_features, train_labels, test_labels = train_test_split(dataset, labels,
-                                                                                    test_size=0.25, random_state=42)
-        return train_features, test_features, train_labels, test_labels
-
-    def parameter_tune(self, dataset):
+    def parameter_tune(self, dataset, labels):
         # Number of trees in random forest
         n_estimators = [int(x) for x in np.linspace(start=100, stop=2000, num=10)]
         # Number of features to consider at every split
@@ -82,7 +87,7 @@ class IRRandomForest(IRClassification):
         # Minimum number of samples required to split a node
         min_samples_split = [2, 5, 10]
         # Minimum number of samples required at each leaf node
-        min_samples_leaf = [1, 2, 4]
+        min_samples_leaf = [1, 2, 5]
         # Method of selecting samples for training each tree
         #bootstrap = [True, False]
         # Create the random grid
@@ -99,10 +104,16 @@ class IRRandomForest(IRClassification):
         # search across 100 different combinations, and use all available cores
         rf_random = RandomizedSearchCV(estimator=rf, param_distributions=random_grid, n_iter=100, cv=3, verbose=2,
                                        random_state=42, n_jobs=-1)
+        print('ds', dataset)
+        print('labels', labels)
         # Fit the random search model
-        rf_random.fit(self.train_features, self.train_labels)
-        for k,v in rf_random:
-            self.parameters[k] = v
+        print(dataset.shape)
+        print(labels.shape)
+        print(set(labels.values))
+        rf_random.fit(dataset, labels.values)
+        print(rf_random.best_params_.items)
+        for k in rf_random.best_params_:
+            self.parameters[k] = rf_random.best_params_[k]
         return self.parameters
 
 class IRGenericClassification(IROpOptions):

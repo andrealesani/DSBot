@@ -31,7 +31,6 @@ def create_IR(pipeline):
     dict_pipeline = []
     for item in pipeline:
         try:
-
             module = modules[item]()
             module.set_model(item)
             dict_pipeline.append(module)
