@@ -29,6 +29,7 @@
         <v-select
           v-model="separator"
           :items="separator_list"
+          :error="separatorError"
           label="Separator"
         ></v-select>
       </v-flex>
@@ -54,14 +55,18 @@ export default {
       separator: '',
       dataset: null,
       fileInputError: false,
+      separatorError: false,
       fileInputHint: '',
       label: '',
     }
   },
   methods: {
     sendData() {
-      if (this.dataset) {
+      this.fileInputError = !this.dataset
+      this.separatorError = !this.separator
+      if (!this.fileInputError && !this.separatorError) {
         this.fileInputError = false
+        this.separatorError = false
         const inputData = {
           ds: this.dataset,
           hasColumnNames: this.hasColumnNames,
@@ -71,8 +76,6 @@ export default {
           label: this.label,
         }
         this.sendDataStore(inputData)
-      } else {
-        this.fileInputError = true
       }
     },
     ...mapActions(['setStep', 'sendDataStore']),

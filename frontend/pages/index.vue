@@ -1,6 +1,6 @@
 <template>
   <v-row justify="center" align="center">
-    <v-col cols="12" sm="8" md="8">
+    <v-col cols="12" sm="12" md="12">
       <v-stepper v-model="e1">
         <v-stepper-header>
           <v-stepper-step :complete="e1 > 1" step="1">
@@ -38,8 +38,12 @@
           <v-stepper-content step="3" class="px-10 pb-8">
             <results></results>
 
-            <v-btn color="secondary" @click="setStep(1)"> Restart </v-btn>
-            <v-btn color="secondary" @click="toFramework({ intent: 'skip' })">
+            <v-btn color="secondary" @click="restart()"> Restart </v-btn>
+            <v-btn
+              v-if="resultsReady"
+              color="secondary"
+              @click="toFramework({ intent: 'skip' })"
+            >
               Continue without choosing a problem
             </v-btn>
           </v-stepper-content>
@@ -47,8 +51,12 @@
           <v-stepper-content step="4" class="px-10 pb-8">
             <tuning></tuning>
 
-            <v-btn color="secondary" @click="setStep(1)"> Restart </v-btn>
-            <v-btn color="secondary" @click="toFramework({ intent: 'run' })">
+            <v-btn color="secondary" @click="restart()"> Restart </v-btn>
+            <v-btn
+              v-if="resultsReady"
+              color="secondary"
+              @click="toFramework({ intent: 'run' })"
+            >
               Run again
             </v-btn>
           </v-stepper-content>
@@ -62,12 +70,24 @@
 import { mapState, mapMutations, mapActions } from 'vuex'
 
 export default {
+  data() {
+    return {
+      polling: null,
+    }
+  },
   computed: {
-    ...mapState(['e1']),
+    ...mapState(['e1', 'resultsReady']),
+  },
+  mounted() {
+    this.polling = setInterval(() => this.waitForResults(), 3000)
   },
   methods: {
-    ...mapMutations(['setStep']),
-    ...mapActions(['toFramework']),
+    ...mapMutations(['setStep', 'setResultsReady']),
+    ...mapActions(['toFramework', 'waitForResults']),
+    restart() {
+      this.setResultsReady(false)
+      this.setStep(1)
+    },
   },
 }
 </script>

@@ -6,6 +6,7 @@ export const state = () => ({
   imageBase64: null,
   tuningChat: [],
   tuningPipeline: [],
+  backendAvailable: true,
 })
 
 export const mutations = {
@@ -32,6 +33,9 @@ export const mutations = {
   },
   setTuningPipeline(state, pipeline) {
     state.tuningPipeline = pipeline
+  },
+  setAvailable(state, available) {
+    state.backendAvailable = available
   },
 }
 
@@ -68,6 +72,8 @@ export const actions = {
   },
 
   async sendUtterance(context, sentence) {
+    if (sentence === '') return null
+
     const bodyRequest = {
       session_id: this.state.sessionId,
       message: sentence,
@@ -84,7 +90,7 @@ export const actions = {
 
   async waitForResults(context) {
     console.log('WAIT FOR RESULTS', this.state.e1)
-    if (!this.state.resultsReady && this.state.e1 === 3) {
+    if (this.state.e1 === 3 && !this.state.resultsReady) {
       console.log('GET RESULTS CALLED')
       const pollingResponse = await this.$axios
         .get(`/results/${this.state.sessionId}`)
@@ -105,8 +111,12 @@ export const actions = {
   },
 
   async toFramework(context, data) {
+    if (!this.state.backendAvailable) {
+      return null
+    }
+    context.commit('setAvailable', false)
+
     const isUtterance = typeof data === 'string' || data instanceof String
-    console.log('SENDING DATA', isUtterance, data)
     let bodyRequest
     if (isUtterance) {
       context.commit('sendChat', data)
@@ -122,13 +132,10 @@ export const actions = {
         payload: data,
       }
     }
-    console.log(bodyRequest)
     const res = await this.$axios
       .post('/tuning', bodyRequest)
       .then(function (response) {
-        console.log('RECEIVED TUNING', response.data.tuning)
         if ('utterance' in response.data.tuning) {
-          console.log(response.data.tuning.utterance)
           context.commit('receiveChat', response.data.tuning.utterance)
         }
         if ('payload' in response.data.tuning) {
@@ -151,6 +158,8 @@ export const actions = {
             )
           }
         }
+
+        context.commit('setAvailable', true)
       })
     return res
   },

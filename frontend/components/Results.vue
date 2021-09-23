@@ -11,7 +11,6 @@
           />
         </div>
         We are performing your analysis
-        <v-btn color="warning" @click="pollData"> Manual poll </v-btn>
       </div>
       <v-row v-if="resultsReady" justify="center">
         <v-col :cols="imgWidth">
@@ -30,30 +29,16 @@
 </template>
 
 <script>
-import { mapActions, mapState } from 'vuex'
+import { mapState } from 'vuex'
 export default {
   components: {},
   data() {
     return {
-      polling: null,
       imgWidth: 8,
     }
   },
   computed: {
     ...mapState(['resultsReady', 'imageBase64']),
-  },
-  mounted() {
-    console.log('Results mounted!') // TODO: how to call it a second time?
-    this.pollData()
-  },
-  methods: {
-    ...mapActions(['waitForResults']),
-    pollData() {
-      this.polling = setInterval(() => {
-        if (!this.resultsReady) this.waitForResults()
-        else clearInterval(this.polling)
-      }, 3000)
-    },
   },
 }
 </script>
