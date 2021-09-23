@@ -1,62 +1,60 @@
 <template>
-  <v-card flat>
-    <v-card id="chat" flat class="chat-container">
-      <v-row
-        v-for="(item, index) in tuningChat"
-        :key="index"
-        :class="{ 'flex-row-reverse': !item.isBot }"
-      >
-        <v-col :cols="3">
-          <!--  TODO: make icon -->
-          <font-awesome-icon icon="user" />
-        </v-col>
-        <v-col :cols="8">
-          <v-card :color="item.isBot ? 'white' : 'accent'">
-            <div class="text--primary">
-              {{ item.message }}
-            </div>
-          </v-card>
+  <div>
+    <v-container fluid>
+      <v-row>
+        <v-col id="chat" flat class="chat-container">
+          <v-row
+            v-for="(item, index) in tuningChat"
+            :key="index"
+            :class="{ 'flex-row-reverse': !item.isBot }"
+          >
+            <v-col :cols="2">
+              <font-awesome-icon
+                :icon="item.isBot ? 'lightbulb' : 'user'"
+                size="2x"
+                color="#424242"
+              />
+            </v-col>
+            <v-col :cols="9">
+              <v-card
+                :color="item.isBot ? 'white' : 'accent'"
+                class="py-1 px-2"
+              >
+                {{ item.message }}
+              </v-card>
+            </v-col>
+          </v-row>
         </v-col>
       </v-row>
-    </v-card>
 
-    <v-card flat>
-      <v-row dense align="center">
-        <v-col cols="8" sm="8" md="8">
-          <!-- <v-text-field
-            v-model="utterance"
-            height="35"
-            :rounded="true"
-            background-color="grey lighten-3"
-            @keyup.enter="sendText"
-          /> -->
+      <v-row dense>
+        <v-col xl="10" lg="9" md="8" sm="7">
           <v-textarea
             v-model="utterance"
             solo
             flat
             no-resize
-            name="input-7-4"
-            label="Solo textarea"
+            label="Write here to chat"
             rows="3"
-            :rounded="false"
             background-color="grey lighten-3"
+            hide-details="true"
             @keyup.enter="sendText"
           ></v-textarea>
         </v-col>
-        <v-col cols="1" sm="1" md="1">
+
+        <v-col cols="2" class="align-self-stretch">
           <v-btn
+            height="100%"
             color="primary"
-            :rounded="true"
             :depressed="true"
             @click="sendText"
           >
-            <!--  TODO: make icon -->
-            ➤
+            <font-awesome-icon icon="chevron-right" size="2x" color="white" />
           </v-btn>
         </v-col>
       </v-row>
-    </v-card>
-  </v-card>
+    </v-container>
+  </div>
 </template>
 
 <script>
@@ -78,8 +76,10 @@ export default {
   methods: {
     ...mapActions(['toFramework']),
     sendText() {
-      this.toFramework(this.utterance)
-      this.utterance = ''
+      if (this.utterance.trim() !== '' && this.utterance !== '\n') {
+        this.toFramework(this.utterance)
+        this.utterance = ''
+      }
     },
     scrollToEnd() {
       const container = this.$el.querySelector('#chat')
@@ -94,8 +94,8 @@ export default {
 
 <style scoped>
 .chat-container {
-  height: 450px; /* This component is 450px tall. Deal with it. */
-  overflow-y: auto; /*TODO: keep scroll to bottom */
+  height: 400px; /* This component is 450px tall. Deal with it. */
+  overflow-y: auto;
   overflow-x: hidden;
 }
 </style>
