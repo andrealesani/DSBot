@@ -36,12 +36,12 @@ def receive_ds(ds, has_index, has_col ,sep, label):
     #print('sep', sep)
     dataset = pd.read_csv(ds, header=has_columns_name, index_col=has_index,  sep=sep, engine='python')
     dataset = Dataset(dataset)
-    print(dataset.ds)
-    dataset.label = label
+
+    dataset.set_label(label)
     kb.kb = dataset.filter_kb(kb.kb)
 
 
-receive_ds('penguins.csv',True, True, ',',None)
+receive_ds('penguins.csv',False, True, ',','sex')
 #ds = copy.deepcopy(dataset)
 message = 'find groups in the data'
 with open('./message_try.txt', 'w') as f:
@@ -58,15 +58,15 @@ with open('./wf_try_pred.txt', 'r') as f:
 scores = {}
 for i in range(len(kb.kb)):
     sent = [x for x in kb.kb.values[i, 1:] if str(x) != 'nan']
-    print('sent', sent)
-    print('wf', wf)
+    #print('sent', sent)
+    #print('wf', wf)
     scores[i] = NW(wf, sent, kb.voc)
-    print('scores', scores[i])
+    #print('scores', scores[i])
 max_key = max(scores, key=scores.get)
 max_key = [x for x in kb.kb.values[max_key, 1:] if str(x) != 'nan']
-print('MAX', max_key)
+#print('MAX', max_key)
 #
+max_key=['missingValuesRemove', 'oneHotEncode','labelRemove', 'randomForest']
 ir_tuning = create_IR(max_key)
-print('IRTUNING', [i for i in ir_tuning])
-results = {'original_dataset': dataset.ds, 'labels':dataset.label}
-res = run(ir_tuning, results)
+results = {'original_dataset': dataset, 'labels':dataset.label}
+res = run(ir_tuning, results, 'abc1')
