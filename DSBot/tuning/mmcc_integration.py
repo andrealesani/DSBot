@@ -8,10 +8,10 @@ from tuning.mmcc_config.callbacks import my_callbacks
 from tuning.types import Pipeline, PipelineCallback
 
 # Load the process description and kb from file.
-with open(Path(__file__).parent / 'mmcc_config/process_desc.json', "r") as process_file:
+with open(Path(__file__).parent / 'mmcc_config' / 'process_desc.json', "r") as process_file:
     proc = json.loads(process_file.read())
     logging.getLogger(__name__).debug('Reading process_desc file')
-with open(Path(__file__).parent / 'mmcc_config/process_kb.json', "r") as process_file:
+with open(Path(__file__).parent / 'mmcc_config' / 'process_kb.json', "r") as process_file:
     kb = json.loads(process_file.read())
     logging.getLogger(__name__).debug('Reading process_kb file')
 
