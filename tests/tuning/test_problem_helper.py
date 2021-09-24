@@ -13,53 +13,47 @@ class TestGetData(TestCase):
     @classmethod
     def setUpClass(cls) -> None:
         super().setUpClass()
-        cls.test_df = pd.read_csv(Path(__file__).parent / 'test_problem_kb.csv', sep=";")
+        tuning.p_table = pd.read_csv(Path(__file__).parent / 'test_problem_kb.csv', sep=';')
 
     def test_get_data_with_exact_match(self):
-        prb = {'e', 'd', 'f'}
-        m_n = {'md1', 'md2', 'me1', 'me2'}
+        prb = ['pa']
+        m_n = {'m1', 'm2'}
         mdl = make_irop(m_n)
-        par = {'me2.1', 'me2.2'}
-        utt = 'Sentence def'
-        res = tuning.get_data(prb, mdl, self.test_df)
+        par = [('m1', 'p11'), ('m2', 'p21'), ('m2', 'p22')]
+        utt = 'a11 a21 a22'
+        res = tuning.solve_problem(prb, mdl)
         self.assertEqual(res.problem, prb)
         self.assertEqual(set(res.pipeline), m_n)
-        self.assertEqual(set(res.relevant_params), par)
+        self.assertEqual(res.relevant_params, par)
         self.assertEqual(res.sentence, utt)
 
     def test_get_data_with_exact_match_more(self):
-        prb = {'b', 'c'}
-        m_n = {'mb1', 'mc1', 'mb2'}
+        prb = ['missing', 'pc']
+        m_n = {'m2'}
         mdl = make_irop(m_n)
-        par = {'mb1.1', 'mc1.2'}
-        utt = 'Sentence bcde'
-        res = tuning.get_data(prb, mdl, self.test_df)
+        par = [('m2', 'p22')]
+        utt = 'c22'
+        res = tuning.solve_problem(prb, mdl)
         self.assertEqual(res.problem, prb)
         self.assertEqual(set(res.pipeline), m_n)
-        self.assertEqual(set(res.relevant_params), par)
+        self.assertEqual(res.relevant_params, par)
         self.assertEqual(res.sentence, utt)
 
     def test_get_data_with_missing_module(self):
-        prb = {'b', 'c'}
-        m_n = {'mb1', 'mc1'}
-        mdl = make_irop(m_n)
-        par = {'mb1.1', 'mc1.2'}
-        utt = 'Sentence bc2'
-        res = tuning.get_data(prb, mdl, self.test_df)
-        self.assertEqual(res.problem, prb)
-        self.assertEqual(set(res.pipeline), m_n)
-        self.assertEqual(set(res.relevant_params), par)
-        self.assertEqual(res.sentence, utt)
+        prb = ['pa']
+        mdl = make_irop({'missing'})
+        with self.assertRaises(tuning.MissingSolutionError):
+            tuning.solve_problem(prb, mdl)
 
     def test_get_data_no_solution(self):
-        prb = {'missing'}
-        mdl = make_irop({'mb1'})
+        prb = ['missing']
+        mdl = make_irop({'m1'})
         with self.assertRaises(tuning.MissingSolutionError):
-            tuning.get_data(prb, mdl, self.test_df)
+            tuning.solve_problem(prb, mdl)
 
 
 class IROpImpl(DSBot.ir.ir_operations.IROp):
-    def run(self):
+    def run(self, result, session_id):
         print('Implemented')
 
 

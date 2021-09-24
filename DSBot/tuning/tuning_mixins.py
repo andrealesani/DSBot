@@ -16,7 +16,7 @@ The tuning_kb must be as follows:
 import json
 import logging
 from pathlib import Path
-from typing import Any, List
+from typing import Any, List, Tuple
 
 from tuning.types import Pipeline
 
@@ -177,11 +177,10 @@ class TuningParMixin:
         return str(self.to_json())
 
 
-def update_pipeline(pipeline: Pipeline, relevant_params: List[str]) -> Pipeline:
+def update_pipeline(pipeline: Pipeline, relevant_params: List[Tuple[str, str]]) -> Pipeline:
     """Updates the highlight property for this pipeline, relevant parameters must be as `module.parameter`."""
     data = {}
-    for p in relevant_params:
-        param = p.split(sep='.')
+    for param in relevant_params:
         if param[0] in data:
             data[param[0]].append(param[1])
         else:

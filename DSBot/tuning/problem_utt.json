@@ -1,0 +1,15 @@
+{
+  "u1": "If you don't like how the clusters are disposed, try to change the number of clusters.",
+  "u2": "Sparse clusters and low silhouette may be caused by a low number of clusters. Try to increase it!",
+  "u3": "Try to change the number of clusters.",
+  "u4": "If no other modifications satisfy you, try to change clustering algorithm.",
+  "u5": "If you don't find any meaning in the results, probably we are trying the wrong analysis.",
+  "u6": "Maybe the number of components selected in the Principal Component Analysis (PCA) is not suitable, try to change it.",
+  "u7": "The components you chose in the Principal Components Analysis (PCA) may make hard interpret the results. Try to change it!",
+  "u8": "Principal Component Analysis might not be the best choice here, try to change methodology.",
+  "u9": "A wrong number of estimators might influence negatively the performances. Try to modify it.",
+  "u10": "Too many estimators slow down the execution of the operations, try to reduce their number!",
+  "u11": "The depth of the estimators influences the overall performances... Try to modify it!",
+  "u12": "The minimum number of samples to consider a split influences the overall performances... Try to modify it!",
+  "u13": "The depth of the estimators influences the overall performances... Try to modify it!"
+}

@@ -11,7 +11,7 @@ import logging
 from mmcc_framework import Response
 
 import ir.ir_exceptions
-from tuning.problem_helper import get_data, MissingSolutionError
+from tuning.problem_helper import solve_problem, MissingSolutionError
 from tuning.tuning_mixins import update_pipeline
 
 
@@ -40,7 +40,7 @@ def choose_problem(data, kb, context, _):
             }
             return Response(kb, context, True, utterance=kb['no_highlights_sentence'], payload=payload)
 
-        solution = get_data(intent, context['pipeline'], data.get('test_p', None))
+        solution = solve_problem(intent, context['pipeline'])
         utterance = solution.sentence + ' ' + kb['edit_param_sentence']
         context['pipeline'] = update_pipeline(context['pipeline'], solution.relevant_params)
         payload = {
@@ -52,7 +52,8 @@ def choose_problem(data, kb, context, _):
     except KeyError:
         msg = f'Received data without intent: {str(data)}'
         logging.getLogger(__name__).error(msg)
-    except MissingSolutionError:
+    except MissingSolutionError as err:
+        logging.getLogger(__name__).warning(err)
         msg = kb['problem_err']
     return Response(kb, context, False, utterance=msg)
 
@@ -85,9 +86,9 @@ def edit_param(data, kb, context, _):
         logging.getLogger(__name__).error(msg)
     except StopIteration:
         msg = kb['no_module_err'] + data['module']
-    except DSBot.ir.ir_exceptions.UnknownParameter:
+    except ir.ir_exceptions.UnknownParameter:
         msg = kb['no_param_err'] + data['parameter']
-    except DSBot.ir.ir_exceptions.IncorrectValue:
+    except ir.ir_exceptions.IncorrectValue:
         msg = kb['value_err']
 
     return Response(kb, context, False, utterance=msg)

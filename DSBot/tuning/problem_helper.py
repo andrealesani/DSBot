@@ -1,10 +1,18 @@
+import json
 import logging
 from pathlib import Path
-from typing import List, Set
+from typing import List, Union, Tuple
 
 import pandas as pd
 
-from tuning.types import Problem, Pipeline
+from tuning.types import Pipeline
+
+# Load the process description and kb from file.
+p_table = pd.read_csv(Path(__file__).parent / 'problem_kb.csv', sep=',')
+logging.getLogger(__name__).debug('Reading problem_kb file')
+with open(Path(__file__).parent / 'problem_utt.json', "r") as utt_file:
+    utt = json.loads(utt_file.read())
+    logging.getLogger(__name__).debug('Reading problem_utt file')
 
 
 class MissingSolutionError(Exception):
@@ -24,44 +32,68 @@ class SolutionDetails:
     :ivar sentence: the sentence in the query response
     """
 
-    def __init__(self, problem: Set[str], pipeline: List[str], relevant_params: List[str], sentence: str):
+    def __init__(self, problem, pipeline: List[str], relevant_params: List[Tuple[str, str]], sentence: str):
         self.problem = problem
         self.pipeline = pipeline
         self.relevant_params = relevant_params
         self.sentence = sentence
 
 
-def get_data(problem: Problem, pipeline: Pipeline, df=None) -> SolutionDetails:
+def solve_problem(problem: Union[str, List[str]], pipeline: Pipeline):
     """Given a problem keyword and the pipeline in use, this returns the relevant solution details.
 
-    The solution is taken from the `problem_kb` file or the source provided; it contains the names of the parameters
+    The solution is taken from the `problem_kb` file; it contains the names of the parameters
     that are linked to the problem and an utterance that presents the solution.
 
-    This returns the first row in the table that has all the problem keywords in the query (or more) and whose modules
-    are all in the pipeline.
+    This first discards all the solutions whose parameters are not in the pipeline, then selects those that are linked
+    with the first problem of the list, if possible, otherwise moves to the second problem and so on.
 
-    :param problem: the problem keyword or a list or set of problem keywords
+    :param problem: the problem keyword or a list or of problem keywords
     :param pipeline: the pipeline used
-    :param df: the problem table kb, do not change this, used for testing
     :raise MissingSolutionError: if the queried problem and pipeline do not have a solution
     """
-
     # Uniform params types
     if isinstance(problem, str):
-        problem = {problem}
-    elif isinstance(problem, list):
-        problem = set(problem)
+        problem = [problem]
     pipeline = [o.name for o in pipeline]
-    pipeline_s = set(pipeline)
-    if df is None:
-        df = pd.read_csv(Path(__file__).parent / 'problem_kb.csv', sep=';')
 
-    # Scan table and return first result
-    for i, r in df.iterrows():
-        if problem <= set(r['problemKeyword'].split()) and set(r['pipeline'].split()) <= pipeline_s:
-            return SolutionDetails(problem, pipeline, r['param'].split(), r['sentence'].strip())
+    # Filter modules
+    filtered = p_table.loc[p_table['module'].isin(pipeline)]
+    if filtered.empty:
+        raise MissingSolutionError('any', pipeline)
 
-    # No results: raise
-    error = MissingSolutionError(problem, pipeline)
-    logging.getLogger(__name__).error(error)
-    raise error
+    # Search solution iteratively
+    res = _iter_solve(filtered, problem)
+    if res is None:
+        raise MissingSolutionError(problem, pipeline)
+
+    # Return solution
+    res = res.values.tolist()
+    params = [tuple(i[:2]) for i in res]
+    utterance = ' '.join([_get_utt(i[2]) for i in res])
+    return SolutionDetails(problem, pipeline, params, utterance)
+
+
+def _iter_solve(df, problems: List[str]):
+    try:
+        relevant = ['module', 'parameter', problems[0]]
+        res = df.loc[:, relevant].dropna()
+        if not res.empty:
+            return res
+    except IndexError:
+        # Reached the end of problems
+        return None
+    except KeyError:
+        pass
+
+    # Missing problem or only NaN
+    logging.getLogger(__name__).warning('No match for queried problem: %s', problems[0])
+    return _iter_solve(df, problems[1:])
+
+
+def _get_utt(key) -> str:
+    try:
+        return utt[key]
+    except KeyError:
+        logging.getLogger(__name__).warning('Missing problem utterance: %s', key)
+        return key
