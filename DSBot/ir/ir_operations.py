@@ -61,6 +61,11 @@ class IROpOptions(TuningOpOptionsMixin, object):
         else:
             return self.actual_model.__getattribute__(item)
 
+    def __setattr__(self, key, value):
+        if key in ["models", "default", "actual_model"]:
+            return object.__setattr__(self, key, value)
+        return self.actual_model.__setattr__(key, value)
+
 
 def par_helper(parameters: Iterable[IRPar], module_name: str) -> Dict[str, IRPar]:
     """Given an iterable of IRPar and their module name, returns a dictionary containing the parameters.
