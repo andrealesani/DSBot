@@ -19,7 +19,14 @@
           :step="param.type === 'int' ? '1' : '0.1'"
         >
           <template #append>
-            {{ localValue }}
+            {{ coolingDown ? '' : localValue }}
+            <v-progress-circular
+              v-if="coolingDown"
+              indeterminate
+              color="gray"
+              size="15"
+              width="2"
+            />
           </template>
         </v-slider>
       </div>
@@ -34,7 +41,7 @@ export default {
   data() {
     return {
       cooldown: null,
-      coolingdown: false,
+      coolingDown: false,
       isSlider: this.param.type === 'float' || this.param.type === 'int',
     }
   },
@@ -44,8 +51,8 @@ export default {
         return this.param.value
       },
       set(val) {
-        if (this.coolingdown) clearTimeout(this.cooldown)
-        this.coolingdown = true
+        if (this.coolingDown) clearTimeout(this.cooldown)
+        this.coolingDown = true
         this.cooldown = setTimeout(() => {
           this.coolingDown = false
           this.toFramework({
