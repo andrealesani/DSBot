@@ -94,7 +94,7 @@ export default {
 
 <style scoped>
 .chat-container {
-  height: 400px; /* This component is 450px tall. Deal with it. */
+  height: 600px; /* This component is 450px tall. Deal with it. */
   overflow-y: auto;
   overflow-x: hidden;
 }
