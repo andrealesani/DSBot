@@ -4,6 +4,7 @@ export const state = () => ({
   requestDescription: '',
   resultsReady: false,
   imageBase64: null,
+  resultsDetails: '',
   tuningChat: [],
   tuningPipeline: [],
   backendAvailable: true,
@@ -24,6 +25,9 @@ export const mutations = {
   },
   setImage(state, image) {
     state.imageBase64 = image
+  },
+  setResultsDetails(state, details) {
+    state.resultsDetails = details
   },
   sendChat(state, msg) {
     state.tuningChat.push({ isBot: false, message: msg })
@@ -98,6 +102,7 @@ export const actions = {
           console.log(response)
           if (response.data.ready) {
             context.commit('setImage', response.data.img)
+            context.commit('setResultsDetails', response.data.details)
             context.commit('setResultsReady', response.data.ready)
             context.commit('receiveChat', response.data.tuning.utterance)
           } else {

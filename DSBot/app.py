@@ -143,7 +143,11 @@ def get_results(received_id):
 
     data[session_id]['framework'] = framework
     tuning_data = framework.handle_data_input({})
-    return jsonify({"ready": True, "session_id": session_id, 'img': str(base64_string), 'tuning': tuning_data})
+    return jsonify({"ready": True,
+                    "session_id": session_id,
+                    'img': str(base64_string),
+                    'details': '',  # TODO add details if necessary
+                    'tuning': tuning_data})
 
 
 @app.route('/tuning', methods=['POST'])
