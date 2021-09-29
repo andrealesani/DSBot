@@ -82,9 +82,10 @@ export default {
     this.polling = setInterval(() => this.waitForResults(), 3000)
   },
   methods: {
-    ...mapMutations(['setStep', 'setResultsReady']),
+    ...mapMutations(['setStep', 'setResultsReady', 'setAvailable']),
     ...mapActions(['toFramework', 'waitForResults']),
     restart() {
+      this.setAvailable(true)
       this.setResultsReady(false)
       this.setStep(1)
     },
