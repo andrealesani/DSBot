@@ -7,6 +7,7 @@ from flask_cors import CORS
 from flask_restful import reqparse
 
 from ir.ir import create_IR, run
+from log_helpers import setup_logger
 from main import Dataset
 #from flask_session import Session
 from needleman_wunsch import NW
@@ -24,6 +25,8 @@ from datetime import timedelta
 from flask.sessions import SecureCookieSessionInterface
 
 from tuning import get_framework
+
+setup_logger()
 
 app = Flask(__name__)
 cors = CORS(app, supports_credentials=True)
