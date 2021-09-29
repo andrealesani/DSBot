@@ -73,8 +73,13 @@ def edit_param(data, kb, context, _):
             return Response(kb, context, True, payload={'status': 'end'})
 
         if intent == 'set' and 'module' in data and 'parameter' in data and 'value' in data:
-            module = next(m for m in context['pipeline'] if m.name == data['module'])
-            parameter = module.get_param(data['parameter'])
+            module = next(m for m in context['pipeline'] if m.name == data['module'] or m.pretty_name == data['module'])
+            try:
+                given = data['parameter']
+                p_id = next(k for (k, p) in module.parameters.items() if p.name == given or p.pretty_name == given)
+                parameter = module.get_param(p_id)
+            except StopIteration as err:
+                raise ir.ir_exceptions.UnknownParameter() from err
             parameter.tune_value(data['value'])
             payload = {'status': 'edit_param', 'pipeline': [e.to_json() for e in context['pipeline']]}
             return Response(kb, context, False, payload=payload, utterance=kb['values_updated'])

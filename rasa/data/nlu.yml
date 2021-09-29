@@ -1,0 +1,142 @@
+version: "2.0"
+
+nlu:
+  - intent: skip
+    examples: |
+      - I want to edit the pipeline manually
+      - Let me do it by hand
+      - Skip this step
+      - There is no problem
+      - I don't know
+      - Change by hand
+      - Manual edit
+      - Skip
+      - Continue to the next step
+      - Continue
+
+  - intent: run
+    examples: |
+      - Run the pipeline again
+      - Update the graph
+      - Refresh the results
+      - I want to run it again
+      - Run
+      - Apply the changes
+      - I am ready to run again
+      - I am done editing
+      - Done
+      - I finished the work
+
+  - intent: set
+    examples: |
+      - I want to set the [number of clusters](parameter) of [agglomerative clustering](module) to [2](value)
+      - Set [number of parameters](parameter) in [principal component analysis](module) to [3.2](value)
+      - Set to [1](value) [n_clusters](parameter) of [agglomerativeClustering](module)
+      - Make in [interesting method](module) the parameter [useful slider](parameter) equal to [12.3](value)
+      - Apply [7.12](value) to [efficiency](parameter) of [extensive lookup](module)
+      - Set [epsilon](parameter) of module [pipeline runner](module) to [1.01](value)
+      - I want [direction of growth](parameter) of [lookup](module) to be [46](value)
+      - Increase the value of [gamma](parameter) in module [tree search](module) to [7](value)
+      - [efficient algorithm](module) [delta](parameter) to [9.2](value)
+      - Set the value of [zeta](parameter) of module [clustering](module) to [0.12](value)
+
+  - intent: wrong_cluster_division
+    examples: |
+      - I see two clusters in the same
+      - Cluster 2 should be split
+      - Clusters 2 and 3 should be merged
+      - Divide more the data
+      - Points in clusters are too far
+      - I want more clusters
+      - I want less cluster
+      - Change the number of groups
+      - The groups are wrong
+      - The clusters are wrong
+      - I want to reduce the number of groups
+      - There are too many groups
+
+  - intent: bad_silohuette
+    examples: |
+      - I want an higher silhouette
+      - I don't like the silhouette
+      - Improve the performances of clustering
+      - Points in clusters are too far
+      - Make the distinction more clear
+      - I do not see a clear distinction between the clusters
+      - I want the data to be more separated
+
+  - intent: not_interpretable_results
+    examples: |
+      - I don't understand the clusters' meaning
+      - The sets are not meaningful
+      - I don't understand what I am looking at
+      - Clusters make no sense
+
+  - intent: fitting
+    examples: |
+      - Performances sucks
+      - Unseen data have terrible performances
+      - It doesn't work with new data
+      - It doesn't predict anything
+      - It doesn't work
+
+  - intent: time_performance
+    examples: |
+      - It is too slow
+      - I don't have enough time
+
+# - intent: greet
+#   examples: |
+#     - hey
+#     - hello
+#     - hi
+#     - hello there
+#     - good morning
+#     - good evening
+#     - moin
+#     - hey there
+#     - let's go
+#     - hey dude
+#     - goodmorning
+#     - goodevening
+#     - good afternoon
+
+# - intent: goodbye
+#   examples: |
+#     - good afternoon
+#     - cu
+#     - good by
+#     - cee you later
+#     - good night
+#     - bye
+#     - goodbye
+#     - have a nice day
+#     - see you around
+#     - bye bye
+#     - see you later
+
+# - intent: affirm
+#   examples: |
+#     - yes
+#     - y
+#     - indeed
+#     - of course
+#     - that sounds good
+#     - correct
+
+# - intent: deny
+#   examples: |
+#     - no
+#     - n
+#     - never
+#     - I don't think so
+#     - don't like that
+#     - no way
+#     - not really
+
+# - intent: bot_challenge
+#   examples: |
+#     - are you a bot?
+#     - are you a human?
+#     - am I talking to a bot?
+#     - am I talking to a human?
