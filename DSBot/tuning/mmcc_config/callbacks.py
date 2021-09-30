@@ -12,7 +12,7 @@ from mmcc_framework import Response
 
 import ir.ir_exceptions
 from tuning.problem_helper import solve_problem, MissingSolutionError
-from tuning.tuning_mixins import update_pipeline
+from tuning.tuning_mixins import update_pipeline, TuningParMixin, TuningOpOptionsMixin
 
 
 def start(_, kb, context, __):
@@ -61,42 +61,44 @@ def choose_problem(data, kb, context, _):
 def edit_param(data, kb, context, _):
     """In this step the user can edit the pipeline.
 
-    data['intent'] can be 'set' or 'run', the latter causes the pipeline to be run.
-    data['module'] contains the module of the parameter to change.
+    data['intent'] can be 'set', 'set_module', or 'run', the latter causes the pipeline to be run.
+    data['module'] contains the module of the parameter to change or the module to change.
     data['parameter'] contains the parameter name to change.
     data['value'] contains the new value.
     """
-    try:
-        intent = data['intent']
-        if intent == 'run':
-            context['start_work'](context['pipeline'])
-            return Response(kb, context, True, payload={'status': 'end'})
-
-        if intent == 'set' and 'module' in data and 'parameter' in data and 'value' in data:
-            module = next(m for m in context['pipeline'] if m.name == data['module'] or m.pretty_name == data['module'])
-            try:
-                given = data['parameter']
-                p_id = next(k for (k, p) in module.parameters.items() if p.name == given or p.pretty_name == given)
-                parameter = module.get_param(p_id)
-            except StopIteration as err:
-                raise ir.ir_exceptions.UnknownParameter() from err
-            parameter.tune_value(data['value'])
-            payload = {'status': 'edit_param', 'pipeline': [e.to_json() for e in context['pipeline']]}
-            return Response(kb, context, False, payload=payload, utterance=kb['values_updated'])
-
-        msg = kb['values_intent_err']
-
-    except KeyError:
+    intent = data.get('intent', None)
+    if intent is None:
         msg = f'Received data with missing intent or entities: {str(data)}'
         logging.getLogger(__name__).error(msg)
-    except StopIteration:
-        msg = kb['no_module_err'] + data['module']
-    except ir.ir_exceptions.UnknownParameter:
-        msg = kb['no_param_err'] + data['parameter']
-    except ir.ir_exceptions.IncorrectValue:
-        msg = kb['value_err']
 
-    return Response(kb, context, False, utterance=msg)
+    elif intent == 'run':
+        context['start_work'](context['pipeline'])
+        return Response(kb, context, True, payload={'status': 'end'})
+
+    if intent == 'set' and 'module' in data and 'parameter' in data and 'value' in data:
+        param, module = TuningParMixin.reverse_pretty(data['parameter'], context['pipeline'])
+        if param is None:
+            msg = kb['no_module_err'] + data['module'] + ' or ' + kb['no_param_err'] + data['parameter']
+        else:
+            try:
+                module.get_param(param.name).tune_value(data['value'])
+                msg = kb['values_updated']
+            except ir.ir_exceptions.IncorrectValue:
+                msg = kb['value_err']
+
+    elif intent == 'set_module' and 'module' in data:
+        module, parent = TuningOpOptionsMixin.reverse_pretty(data['module'], context['pipeline'])
+        if module is None:
+            msg = kb['no_module_err'] + data['module']
+        else:
+            parent.set_model(module.name)
+            msg = kb['values_updated']
+
+    else:
+        msg = kb['values_intent_err']
+
+    payload = {'status': 'edit_param', 'pipeline': [e.to_json() for e in context['pipeline']]}
+    return Response(kb, context, False, payload=payload, utterance=msg)
 
 
 my_callbacks = {

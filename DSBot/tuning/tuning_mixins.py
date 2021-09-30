@@ -76,6 +76,15 @@ class TuningOpMixin:
     def __repr__(self) -> str:
         return str(self.to_json())
 
+    @classmethod
+    def reverse_pretty(cls, pretty: str, pipeline: Pipeline):
+        """Returns the first IROp (IROpOptions) with `pretty` as its `name` or `pretty_name`.
+        This ignores submodules. If none is found this returns None."""
+        for module in pipeline:
+            if module.name == pretty or module.pretty_name == pretty:
+                return module
+        return None
+
 
 class TuningOpOptionsMixin:
     """Adds tuning functionalities to a IROpOptions class."""
@@ -89,6 +98,19 @@ class TuningOpOptionsMixin:
 
     def __repr__(self) -> str:
         return str(self.to_json())
+
+    @classmethod
+    def reverse_pretty(cls, pretty: str, pipeline: Pipeline):
+        """Returns the first IROp that has `pretty` as its `name` or `pretty_name` and its IROpOptions.
+        If none is found this returns None."""
+        for module in pipeline:
+            if module.name == pretty or module.pretty_name == pretty:
+                return module, module
+
+            for option in module.models.values():
+                if option.name == pretty or option.pretty_name == pretty:
+                    return option, module
+        return None, None
 
 
 class TuningParMixin:
@@ -175,6 +197,16 @@ class TuningParMixin:
 
     def __repr__(self) -> str:
         return str(self.to_json())
+
+    @classmethod
+    def reverse_pretty(cls, pretty: str, pipeline: Pipeline):
+        """Returns the first IRPar that has `pretty` as its `name` or `pretty_name` and its IROp (IROpOptions).
+        If none is found this returns None."""
+        for module in pipeline:
+            for param in module.parameters.values():
+                if param.name == pretty or param.pretty_name == pretty:
+                    return param, module
+        return None, None
 
 
 def update_pipeline(pipeline: Pipeline, relevant_params: List[Tuple[str, str]]) -> Pipeline:
