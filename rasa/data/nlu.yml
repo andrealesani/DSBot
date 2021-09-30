@@ -39,6 +39,19 @@ nlu:
       - Increase the value of [gamma](parameter) in module [tree search](module) to [7](value)
       - [efficient algorithm](module) [delta](parameter) to [9.2](value)
       - Set the value of [zeta](parameter) of module [clustering](module) to [0.12](value)
+  
+  - intent: set_module
+    examples: |
+      - Use [agglomerative clustering](module)
+      - I want to use [pca](module)
+      - Swap pca with [pca2](module)
+      - Use [kmeans](module) instead of random forest
+      - Use [random forest](module) for this pipeline
+      - Instead of agglomerative clustering use [kmeans](module)
+      - I want [dbscan](module)
+      - Set [missing values remove](module) instead of missing values fill
+      - Remove pca2 and use [pca](module)
+      - Set [scatterplot](module) as the default method
 
   - intent: wrong_cluster_division
     examples: |

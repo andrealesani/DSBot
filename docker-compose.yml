@@ -14,4 +14,10 @@ services:
     command: >
       run
       --enable-api
-      -m models/nlu-20210929-081055.tar.gz
+      -m models/nlu-20210930-135350.tar.gz
+
+  # rasa-train:
+  #   image: ubuntu:latest
+  #   volumes:
+  #     - ./rasa:/app
+  #   tty: true
