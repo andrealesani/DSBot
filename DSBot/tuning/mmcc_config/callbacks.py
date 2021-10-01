@@ -75,30 +75,53 @@ def edit_param(data, kb, context, _):
         context['start_work'](context['pipeline'])
         return Response(kb, context, True, payload={'status': 'end'})
 
-    if intent == 'set' and 'module' in data and 'parameter' in data and 'value' in data:
-        param, module = TuningParMixin.reverse_pretty(data['parameter'], context['pipeline'])
-        if param is None:
-            msg = kb['no_module_err'] + data['module'] + ' or ' + kb['no_param_err'] + data['parameter']
-        else:
-            try:
-                module.get_param(param.name).tune_value(data['value'])
-                msg = kb['values_updated']
-            except ir.ir_exceptions.IncorrectValue:
-                msg = kb['value_err']
+    elif intent == 'set' and 'parameter' in data and 'value' in data:
+        msg = _set_impl(data, kb, context)
+
+    elif intent == 'reset' and 'parameter' in data:
+        msg = _reset_impl(data, kb, context)
 
     elif intent == 'set_module' and 'module' in data:
-        module, parent = TuningOpOptionsMixin.reverse_pretty(data['module'], context['pipeline'])
-        if module is None:
-            msg = kb['no_module_err'] + data['module']
-        else:
-            parent.set_model(module.name)
-            msg = kb['values_updated']
+        msg = _set_module_impl(data, kb, context)
 
     else:
         msg = kb['values_intent_err']
 
     payload = {'status': 'edit_param', 'pipeline': [e.to_json() for e in context['pipeline']]}
     return Response(kb, context, False, payload=payload, utterance=msg)
+
+
+def _set_impl(data, kb, context) -> str:
+    param, module = TuningParMixin.reverse_pretty(data['parameter'], context['pipeline'])
+    if param is None:
+        msg = kb['no_param_err'] + data['parameter']
+    else:
+        try:
+            module.get_param(param.name).tune_value(data['value'])
+            msg = kb['values_updated']
+        except ir.ir_exceptions.IncorrectValue:
+            msg = kb['value_err']
+    return msg
+
+
+def _set_module_impl(data, kb, context) -> str:
+    module, parent = TuningOpOptionsMixin.reverse_pretty(data['module'], context['pipeline'])
+    if module is None:
+        msg = kb['no_module_err'] + data['module']
+    else:
+        parent.set_model(module.name)
+        msg = kb['values_updated']
+    return msg
+
+
+def _reset_impl(data, kb, context) -> str:
+    param, module = TuningParMixin.reverse_pretty(data['parameter'], context['pipeline'])
+    if param is None:
+        msg = kb['no_param_err'] + data['parameter']
+    else:
+        del module.get_param(param.name).value
+        msg = kb['values_updated']
+    return msg
 
 
 my_callbacks = {

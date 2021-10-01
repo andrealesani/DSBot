@@ -11,13 +11,18 @@ services:
       - 5005:5005
     volumes:
       - ./rasa:/app
+    
+    # To train rasa:
+    # - uncomment the following two lines
+    # - remove the 'command' section
+    # - connect to the container
+    # - run 'rasa train nlu'
+    # - take note of the output and replace it in the command below
+
+    # entrypoint: /bin/bash
+    # tty: true
+
     command: >
       run
       --enable-api
-      -m models/nlu-20210930-135350.tar.gz
-
-  # rasa-train:
-  #   image: ubuntu:latest
-  #   volumes:
-  #     - ./rasa:/app
-  #   tty: true
+      -m models/nlu-20211001-091956.tar.gz

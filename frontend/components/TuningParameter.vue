@@ -17,6 +17,8 @@
           :track-color="'secondary'"
           :thumb-label="true"
           :step="param.type === 'int' ? '1' : '0.1'"
+          :prepend-icon="param.value === param.default ? '' : 'mdi-restore'"
+          @click:prepend="reset"
         >
           <template #append>
             {{ coolingDown ? '' : localValue }}
@@ -67,6 +69,13 @@ export default {
   },
   methods: {
     ...mapActions(['toFramework']),
+    reset() {
+      this.toFramework({
+        intent: 'reset',
+        module: this.module,
+        parameter: this.param.name,
+      })
+    },
   },
 }
 </script>

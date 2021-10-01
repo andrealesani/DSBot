@@ -93,7 +93,7 @@ class TuningOpOptionsMixin:
 
     def to_json(self):
         actual = self.actual_model.to_json()
-        actual['models'] = {k: v.to_json() for k, v in self.models.items()}
+        actual['models'] = [v.to_json() for v in self.models.values()]
         return actual
 
     def __repr__(self) -> str:

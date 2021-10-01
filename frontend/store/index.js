@@ -140,6 +140,8 @@ export const actions = {
     const res = await this.$axios
       .post('/tuning', bodyRequest)
       .then(function (response) {
+        console.log(response)
+
         if ('utterance' in response.data.tuning) {
           context.commit('receiveChat', response.data.tuning.utterance)
         }
