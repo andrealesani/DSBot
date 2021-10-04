@@ -78,16 +78,16 @@ class IRRandomForest(IRClassification):
 
     def parameter_tune(self, dataset, labels):
         # Number of trees in random forest
-        n_estimators = [int(x) for x in np.linspace(start=100, stop=2000, num=10)]
+        n_estimators = [int(x) for x in np.linspace(start=self.parameters['n_estimators'].min_v, stop=self.parameters['n_estimators'].max_v, num=self.parameters['n_estimators'].step)]
         # Number of features to consider at every split
         #max_features = ['auto', 'sqrt']
         # Maximum number of levels in tree
-        max_depth = [int(x) for x in np.linspace(10, 110, num=11)]
+        max_depth = [int(x) for x in np.linspace(self.parameters['max_depth'].min_v, self.parameters['max_depth'].max_v, num=self.parameters['max_depth'].step)]
         max_depth.append(None)
         # Minimum number of samples required to split a node
-        min_samples_split = [2, 5, 10]
+        min_samples_split = np.arange(self.parameters['min_samples_split'].min_v, self.parameters['min_samples_split'].max_v, self.parameters['min_samples_split'].step)
         # Minimum number of samples required at each leaf node
-        min_samples_leaf = [1, 2, 5]
+        min_samples_leaf = np.arange(self.parameters['min_samples_leaf'].min_v, self.parameters['min_samples_leaf'].max_v, self.parameters['min_samples_leaf'].step)
         # Method of selecting samples for training each tree
         #bootstrap = [True, False]
         # Create the random grid
@@ -113,7 +113,7 @@ class IRRandomForest(IRClassification):
         rf_random.fit(dataset, labels.values)
         print(rf_random.best_params_.items)
         for k in rf_random.best_params_:
-            self.parameters[k] = rf_random.best_params_[k]
+            self.parameters[k].value = rf_random.best_params_[k]
         return self.parameters
 
 class IRGenericClassification(IROpOptions):
