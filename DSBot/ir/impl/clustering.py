@@ -64,9 +64,9 @@ class IRKMeans(IRClustering):
             except:
                 score = np.nan
             return score
-        print('KMEANS', self.parameters)
-        optimizer = GridSearchCV(AgglomerativeClustering(),
-                                 param_grid={"n_clusters": np.arange(2, dataset.shape[0]//2, 1)},
+
+        optimizer = GridSearchCV(KMeans(),
+                                 param_grid={"n_clusters": np.arange(self.parameters['n_clusters']['min'],self.parameters['n_clusters']['max'], self.parameters['n_clusters']['step'])},
                                  scoring=silhouette_score)
         grid = optimizer.fit(dataset)
         self.parameters['n_clusters'].value = grid.best_estimator_.n_clusters
@@ -88,13 +88,11 @@ class IRAgglomerativeClustering(IRClustering):
                 score = np.nan
             return score
 
-        print('AGGLOM', self.parameters)
-        optimizer = GridSearchCV(KMeans(),
-                                 param_grid={"n_clusters": np.arange(2, 5, 1)},
+        optimizer = GridSearchCV(AgglomerativeClustering(),
+                                 param_grid={"n_clusters": np.arange(self.parameters['n_clusters'].min_v, self.parameters['n_clusters'].max_v, self.parameters['n_clusters'].step)},
                                  scoring=silhouette_score)
         grid = optimizer.fit(dataset)
         self.parameters['n_clusters'].value = grid.best_estimator_.n_clusters
-        print('parameters', self.parameters)
         return self.parameters
 
 
@@ -119,7 +117,7 @@ class IRDBSCAN(IRClustering):
                     pos = i
             eps = sorted_dist[pos]
         except:
-            eps = 0.1
+            eps = self.parameters['eps'].default_value
 
         self.parameters['eps'].value = eps
         return self.parameters

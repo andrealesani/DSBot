@@ -34,7 +34,10 @@
         ></v-select>
       </v-flex>
       <v-flex xs7>
-        <v-text-field label="Label (leave blank if not present)"></v-text-field>
+        <v-text-field
+          v-model="label"
+          label="Label (leave blank if not present)"
+        ></v-text-field>
       </v-flex>
     </v-card>
     <!-- <v-btn color="primary"> Continue </v-btn> -->
