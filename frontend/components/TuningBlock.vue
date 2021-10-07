@@ -5,6 +5,11 @@
         v-if="available.length > 1"
         v-model="activeMod"
         :items="available"
+        solo
+        flat
+        hide-details
+        :background-color="module.should_change ? 'accent' : 'white'"
+        :append-icon="'mdi-swap-horizontal-bold'"
       ></v-select>
       <div v-else>
         {{ module.pretty_name }}
