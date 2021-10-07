@@ -40,9 +40,7 @@ def choose_problem(data, kb, context, _):
             }
             return Response(kb, context, True, utterance=kb['no_highlights_sentence'], payload=payload)
 
-        solution = solve_problem(intent, context['pipeline'])
-        utterance = solution.sentence + ' ' + kb['edit_param_sentence']
-        context['pipeline'] = update_pipeline(context['pipeline'], solution.relevant_params)
+        utterance = _query_impl(intent, kb, context)
         payload = {
             'status': 'edit_param',
             'pipeline': [e.to_json() for e in context['pipeline']],
@@ -58,10 +56,18 @@ def choose_problem(data, kb, context, _):
     return Response(kb, context, False, utterance=msg)
 
 
+def _query_impl(intent, kb, context) -> str:
+    solution = solve_problem(intent, context['pipeline'])
+    context['solution'] = solution
+    context['pipeline'] = update_pipeline(context['pipeline'], solution.relevant_params)
+    utterance = solution.sentence + ' ' + kb['edit_param_sentence']
+    return utterance
+
+
 def edit_param(data, kb, context, _):
     """In this step the user can edit the pipeline.
 
-    data['intent'] can be 'set', 'set_module', or 'run', the latter causes the pipeline to be run.
+    data['intent'] can be 'set', 'reset', 'set_module', or 'run', the latter causes the pipeline to be run.
     data['module'] contains the module of the parameter to change or the module to change.
     data['parameter'] contains the parameter name to change.
     data['value'] contains the new value.
@@ -85,7 +91,11 @@ def edit_param(data, kb, context, _):
         msg = _set_module_impl(data, kb, context)
 
     else:
-        msg = kb['values_intent_err']
+        try:
+            msg = _query_impl(intent, kb, context)
+        except MissingSolutionError as err:
+            logging.getLogger(__name__).warning(err)
+            msg = kb['problem_err_edit']
 
     payload = {'status': 'edit_param', 'pipeline': [e.to_json() for e in context['pipeline']]}
     return Response(kb, context, False, payload=payload, utterance=msg)
