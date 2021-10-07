@@ -90,11 +90,24 @@ class TuningOpOptionsMixin:
     """Adds tuning functionalities to a IROpOptions class."""
     actual_model: Any
     models: dict
+    _change: bool
 
     def to_json(self):
         actual = self.actual_model.to_json()
+        actual['should_change'] = self.should_change
         actual['models'] = [v.to_json() for v in self.models.values()]
         return actual
+
+    @property
+    def should_change(self):
+        try:
+            return self._change
+        except AttributeError:
+            return False
+
+    @should_change.setter
+    def should_change(self, value):
+        self._change = value
 
     def __repr__(self) -> str:
         return str(self.to_json())
@@ -212,6 +225,7 @@ class TuningParMixin:
 def update_pipeline(pipeline: Pipeline, relevant_params: List[Tuple[str, str]]) -> Pipeline:
     """Updates the highlight property for this pipeline, relevant parameters must be as `module.parameter`."""
     data = {}
+    logging.getLogger(__name__).debug("Relevant parameters: %s", relevant_params)
     for param in relevant_params:
         if param[0] in data:
             data[param[0]].append(param[1])
@@ -221,10 +235,12 @@ def update_pipeline(pipeline: Pipeline, relevant_params: List[Tuple[str, str]]) 
     for module in pipeline:
         if module.name in data:
             module.is_highlighted = True
+            module.should_change = ('wrong_module' in data[module.name])
             for p_key in module.get_parameters_list():
                 param = module.get_param(p_key)
                 param.is_highlighted = (param.name in data[module.name])
         else:
             module.is_highlighted = False
+            module.should_change = False
 
     return pipeline

@@ -56,13 +56,14 @@ class IROpOptions(TuningOpOptionsMixin, object):
         self.actual_model = self.models[name]
 
     def __getattribute__(self, item):
-        if item in ["__init__", "get_models", "set_model", "actual_model", "default", "models", "to_json", "__repr__"]:
+        if item in ["__init__", "get_models", "set_model", "actual_model", "default", "models", "to_json", "__repr__",
+                    "should_change"]:
             return object.__getattribute__(self, item)
         else:
             return self.actual_model.__getattribute__(item)
 
     def __setattr__(self, key, value):
-        if key in ["models", "default", "actual_model"]:
+        if key in ["models", "default", "actual_model", "should_change"]:
             return object.__setattr__(self, key, value)
         return self.actual_model.__setattr__(key, value)
 
