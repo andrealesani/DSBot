@@ -26,7 +26,7 @@ class IRClustering(IROp):
         self.parameter_tune(dataset)
         for p,v in self.parameters.items():
             self._model.__setattr__(p,v.value)
-        self._param_setted = True
+        # self._param_setted = True
 
         #if self.labels is None:
         #    raise LabelsNotAvailable
@@ -39,8 +39,8 @@ class IRClustering(IROp):
             dataset = result['new_dataset']
         else:
             dataset = result['original_dataset'].ds
-        if not self._param_setted:
-            self.set_model(dataset)
+        # if not self._param_setted:
+        self.set_model(dataset)
         try:
             self._model.fit_predict(dataset.values)
         except:
