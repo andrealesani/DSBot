@@ -27,60 +27,6 @@ nlu:
       - Done
       - I finished the work
 
-  # This is the old set intent, with explicit module
-  #
-  # - intent: set
-  #   examples: |
-  #     - I want to set the [number of clusters](parameter) of [agglomerative clustering](module) to [2](value)
-  #     - Set [number of parameters](parameter) in [principal component analysis](module) to [3.2](value)
-  #     - Set to [1](value) [n_clusters](parameter) of [agglomerativeClustering](module)
-  #     - Make in [interesting method](module) the parameter [useful slider](parameter) equal to [12.3](value)
-  #     - Apply [7.12](value) to [efficiency](parameter) of [extensive lookup](module)
-  #     - Set [epsilon](parameter) of module [pipeline runner](module) to [1.01](value)
-  #     - I want [direction of growth](parameter) of [lookup](module) to be [46](value)
-  #     - Increase the value of [gamma](parameter) in module [tree search](module) to [7](value)
-  #     - [efficient algorithm](module) [delta](parameter) to [9.2](value)
-  #     - Set the value of [zeta](parameter) of module [clustering](module) to [0.12](value)
-
-  - intent: set
-    examples: |
-      - I want to set the [number of clusters](parameter) to [2](value)
-      - Set [number of parameters](parameter) to [3.2](value)
-      - Set to [1](value) [n_clusters](parameter)
-      - Make the parameter [useful slider](parameter) equal to [12.3](value)
-      - Apply [7.12](value) to [efficiency](parameter)
-      - Set [epsilon](parameter) to [1.01](value)
-      - I want [direction of growth](parameter) to be [46](value)
-      - Increase the value of [gamma](parameter) to [7](value)
-      - [delta](parameter) to [9.2](value)
-      - Set the value of [zeta](parameter) to [0.12](value)
-  
-  - intent: set_module
-    examples: |
-      - Use [agglomerative clustering](module)
-      - I want to use [pca](module)
-      - Swap pca with [pca2](module)
-      - Use [kmeans](module) instead of random forest
-      - Use [random forest](module) for this pipeline
-      - Instead of agglomerative clustering use [kmeans](module)
-      - I want [dbscan](module)
-      - Set [missing values remove](module) instead of missing values fill
-      - Remove pca2 and use [pca](module)
-      - Set [scatterplot](module) as the default method
-  
-  - intent: reset
-    examples: |
-      - I want to reset the [number of clusters](parameter)
-      - Reset [number of parameters](parameter)
-      - Make the parameter [useful slider](parameter) equal to the original value
-      - Apply the default to [efficiency](parameter)
-      - I want [direction of growth](parameter) to be reset
-      - Reset the value of [gamma](parameter)
-      - [delta](parameter) to default
-      - Revert [zeta](parameter)
-      - Clear the value of [sensitivity](parameter)
-      - Undo the changes to [en](parameter)
-
   - intent: wrong_cluster_division
     examples: |
       - I see two clusters in the same
@@ -96,7 +42,7 @@ nlu:
       - I want to reduce the number of groups
       - There are too many groups
 
-  - intent: bad_silohuette
+  - intent: bad_silhouette
     examples: |
       - I want an higher silhouette
       - I don't like the silhouette
@@ -126,58 +72,58 @@ nlu:
       - It is too slow
       - I don't have enough time
 
-# - intent: greet
-#   examples: |
-#     - hey
-#     - hello
-#     - hi
-#     - hello there
-#     - good morning
-#     - good evening
-#     - moin
-#     - hey there
-#     - let's go
-#     - hey dude
-#     - goodmorning
-#     - goodevening
-#     - good afternoon
+  - intent: greet
+    examples: |
+      - hey
+      - hello
+      - hi
+      - hello there
+      - good morning
+      - good evening
+      - moin
+      - hey there
+      - let's go
+      - hey dude
+      - goodmorning
+      - goodevening
+      - good afternoon
 
-# - intent: goodbye
-#   examples: |
-#     - good afternoon
-#     - cu
-#     - good by
-#     - cee you later
-#     - good night
-#     - bye
-#     - goodbye
-#     - have a nice day
-#     - see you around
-#     - bye bye
-#     - see you later
+  - intent: goodbye
+    examples: |
+      - good afternoon
+      - cu
+      - good by
+      - cee you later
+      - good night
+      - bye
+      - goodbye
+      - have a nice day
+      - see you around
+      - bye bye
+      - see you later
 
-# - intent: affirm
-#   examples: |
-#     - yes
-#     - y
-#     - indeed
-#     - of course
-#     - that sounds good
-#     - correct
+  - intent: affirm
+    examples: |
+      - yes
+      - y
+      - indeed
+      - of course
+      - that sounds good
+      - correct
 
-# - intent: deny
-#   examples: |
-#     - no
-#     - n
-#     - never
-#     - I don't think so
-#     - don't like that
-#     - no way
-#     - not really
+  - intent: deny
+    examples: |
+      - no
+      - n
+      - never
+      - I don't think so
+      - don't like that
+      - no way
+      - not really
 
-# - intent: bot_challenge
-#   examples: |
-#     - are you a bot?
-#     - are you a human?
-#     - am I talking to a bot?
-#     - am I talking to a human?
+  - intent: bot_challenge
+    examples: |
+      - are you a bot?
+      - are you a human?
+      - am I talking to a bot?
+      - am I talking to a human?
