@@ -67,9 +67,14 @@ def receive_ds():
         dataset.to_csv('./temp/temp_'+str(session_id)+'/' + uploaded_file.filename)
         dataset = Dataset(dataset)
         dataset.session = session_id
+        print(label)
+
         if label is not None and label != '':
-            dataset.label = label
-            dataset.hasLabel = True
+            dataset.set_label(label)
+            #dataset.label = label
+            #dataset.hasLabel = True
+            print('dslabel', dataset.label, dataset.hasLabel)
+
         kb = KnowledgeBase()
         kb.kb = dataset.filter_kb(kb.kb)
         data[session_id]['kb'] = kb
@@ -77,6 +82,7 @@ def receive_ds():
 
     print(kb.kb)
     print("SESSION ID", session_id)
+    #print('label', label, dataset.label, dataset.hasLabel)
     return jsonify({"session_id": session_id})
 
 
@@ -119,8 +125,7 @@ def receive_utterance():
         data[session_id]['ir_tuning'] = ir_tuning
         threading.Thread(target=execute_algorithm, kwargs={'ir': ir_tuning, 'session_id':session_id}).start()
         return jsonify({"session_id": session_id,
-                        "request": wf
-                        })
+                        "request": wf})
     return jsonify({"message": "Errore"})
 
 

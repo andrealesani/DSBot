@@ -48,6 +48,7 @@ class IRClustering(IROp):
         self.labels = self._model.labels_
         result['labels'] = self.labels
         print('labels', result['labels'])
+        self._param_setted = False
         return result
 
 class IRKMeans(IRClustering):

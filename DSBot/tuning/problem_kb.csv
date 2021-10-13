@@ -1,6 +1,8 @@
 module,parameter,fitting,wrong_cluster_division,bad_silhouette,not_interpretable_results,time_performance
 kmeans,n_clusters,,u1,u2,u3,
 kmeans,wrong_module,,u4,,u5,
+agglomerativeClustering,n_clusters,,u1,u2,u3,
+agglomerativeClustering,wrong_module,,u4,,u5,
 pca,n_components,,u6,,u7,
 pca,wrong_module,,,,u8,
 randomForest,n_estimators,u9,,,,u10

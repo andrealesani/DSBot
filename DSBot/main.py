@@ -6,6 +6,7 @@ from sklearn.preprocessing import StandardScaler
 from sklearn.experimental import enable_iterative_imputer
 from sklearn.impute import IterativeImputer
 from sklearn.decomposition import PCA
+from difflib import SequenceMatcher
 
 class Dataset:
     def __init__(self, ds, label=None):
@@ -16,8 +17,12 @@ class Dataset:
         self.hasLabel = False
 
     def set_label(self, label):
-        self.label = self.ds[label].astype('category')#.values
-        self.ds = self.ds.drop(label, axis=1)
+        for c in self.ds.columns:
+            if SequenceMatcher(None, c.strip().lower(), label.strip().lower()).ratio()>0.75:
+                label = c
+        #self.label = self.ds[label].astype('category')#.values
+        self.label = label
+        #self.ds = self.ds.drop(label, axis=1)
         self.hasLabel = True
 
     def missing_values(self):

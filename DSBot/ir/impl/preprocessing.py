@@ -48,7 +48,7 @@ class IRMissingValuesRemove(IRPreprocessing):
 
         dataset = dataset.dropna()
         result['new_dataset'] = dataset
-        print('missingvalremove')
+        print('missingvalremove', dataset.shape)
         return result
 
 class IRMissingValuesFill(IRPreprocessing):
@@ -77,7 +77,7 @@ class IRMissingValuesFill(IRPreprocessing):
         else:
             dataset = dataset.apply(lambda col: col.fillna(self.parameter))
         result['new_dataset'] = dataset
-        print('missingvalfill')
+        print('missingvalfill', dataset.shape)
 
         return result
 
@@ -98,7 +98,7 @@ class IROneHotEncode(IRPreprocessing):
         num_cols = dataset._get_numeric_data().columns
         dataset = pd.get_dummies(dataset, columns=list(set(cols) - set(num_cols)))
         result['new_dataset'] = dataset
-        print('onehotencode')
+        print('onehotencode', dataset.shape)
         return result
 
 
@@ -113,8 +113,10 @@ class IRLabelRemove(IRPreprocessing):
 
     def run(self, result, session_id):
         label = result['labels']
+        #print('labels', label.shape)
         if 'new_dataset' in result:
             dataset = result['new_dataset']
+            label = dataset[label]
             print(len(dataset))
             print(len(label))
             if len(dataset)<len(label):
@@ -122,7 +124,7 @@ class IRLabelRemove(IRPreprocessing):
                 print('hola',len(label))
         else:
             dataset = result['original_dataset'].ds
-
+            label = dataset[label]
         #if not is_numeric_dtype(label):
         #    label = pd.get_dummies(label)
         #label = label.dropna()

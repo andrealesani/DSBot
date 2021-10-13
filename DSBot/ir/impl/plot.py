@@ -8,7 +8,11 @@ matplotlib.use('Agg')
 import seaborn as sns
 from seaborn import scatterplot, clustermap
 from matplotlib.pyplot import scatter
-
+from sklearn.metrics import roc_curve, auc
+from sklearn.model_selection import train_test_split
+from sklearn.preprocessing import label_binarize
+from sklearn.metrics import roc_auc_score
+from scipy import interp
 from ir.ir_exceptions import LabelsNotAvailable, PCADataNotAvailable
 from ir.ir_operations import IROp, IROpOptions
 from ir.ir_parameters import IRPar
@@ -102,6 +106,86 @@ class IRClustermap(IRPlot):
         pass
 
     def run(self, result):
+        if 'transformed_ds' not in result:
+            raise PCADataNotAvailable
+        else:
+            transformed_ds = result['transformed_ds']
+
+        plt.figure(figsize=(15, 15))
+        matplotlib.rcParams.update({'font.size': 18})
+
+        cg = clustermap(transformed_ds, cmap='binary', xticklabels=False, yticklabels=False)
+        cg.ax_row_dendrogram.set_visible(False)
+        ax = cg.ax_heatmap
+
+        if 'plot' not in result:
+            result['plot'] = ax
+
+        return  result
+
+
+class IRROC(IRPlot):
+    def __init__(self):
+        super(IRROC, self).__init__("roc",
+                                           [],
+                                           clustermap)
+
+    def parameter_tune(self, dataset):
+        pass
+
+    def run(self, result):
+        n_classes = set(result['label'])
+        fpr = dict()
+        tpr = dict()
+        roc_auc = dict()
+        for i in range(n_classes):
+            fpr[i], tpr[i], _ = roc_curve(result['y_test'][:, i], result['y_score'][:, i])
+            roc_auc[i] = auc(fpr[i], tpr[i])
+
+        # Compute micro-average ROC curve and ROC area
+        fpr["micro"], tpr["micro"], _ = roc_curve(result['y_test'].ravel(), result['y_score'].ravel())
+        roc_auc["micro"] = auc(fpr["micro"], tpr["micro"])
+        # First aggregate all false positive rates
+        all_fpr = np.unique(np.concatenate([fpr[i] for i in range(n_classes)]))
+
+        # Then interpolate all ROC curves at this points
+        mean_tpr = np.zeros_like(all_fpr)
+        for i in range(n_classes):
+            mean_tpr += interp(all_fpr, fpr[i], tpr[i])
+
+        # Finally average it and compute AUC
+        mean_tpr /= n_classes
+
+        fpr["macro"] = all_fpr
+        tpr["macro"] = mean_tpr
+        roc_auc["macro"] = auc(fpr["macro"], tpr["macro"])
+
+        # Plot all ROC curves
+        plt.figure()
+        plt.plot(fpr["micro"], tpr["micro"],
+                 label='micro-average ROC curve (area = {0:0.2f})'
+                       ''.format(roc_auc["micro"]),
+                 color='deeppink', linestyle=':', linewidth=4)
+
+        plt.plot(fpr["macro"], tpr["macro"],
+                 label='macro-average ROC curve (area = {0:0.2f})'
+                       ''.format(roc_auc["macro"]),
+                 color='navy', linestyle=':', linewidth=4)
+
+        colors = cycle(['aqua', 'darkorange', 'cornflowerblue'])
+        for i, color in zip(range(n_classes), colors):
+            plt.plot(fpr[i], tpr[i], color=color, lw=lw,
+                     label='ROC curve of class {0} (area = {1:0.2f})'
+                           ''.format(i, roc_auc[i]))
+
+        plt.plot([0, 1], [0, 1], 'k--', lw=lw)
+        plt.xlim([0.0, 1.0])
+        plt.ylim([0.0, 1.05])
+        plt.xlabel('False Positive Rate')
+        plt.ylabel('True Positive Rate')
+        plt.title('Some extension of Receiver operating characteristic to multi-class')
+        plt.legend(loc="lower right")
+        plt.show()
         if 'transformed_ds' not in result:
             raise PCADataNotAvailable
         else:
