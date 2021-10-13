@@ -42,9 +42,9 @@ class IRClustering(IROp):
         # if not self._param_setted:
         self.set_model(dataset)
         try:
-            self._model.fit_predict(dataset.values)
+            y= self._model.fit_predict(dataset.values)
         except:
-            self._model.fit_predict(dataset)
+            y= self._model.fit_predict(dataset.values)
         self.labels = self._model.labels_
         result['labels'] = self.labels
         print('labels', result['labels'])
@@ -54,7 +54,7 @@ class IRClustering(IROp):
 class IRKMeans(IRClustering):
     def __init__(self):
         super(IRKMeans, self).__init__("kmeans",
-                                       [IRPar("n_clusters", 8, "int", 1, 10, 1)],  # TODO: what is the maximum?
+                                       [IRPar("n_clusters", 2, "int", 2, 10, 1)],  # TODO: what is the maximum?
                                        KMeans)
 
     def parameter_tune(self, dataset):
@@ -71,12 +71,13 @@ class IRKMeans(IRClustering):
                                  scoring=silhouette_score, cv=KFold(10,shuffle=True))
         grid = optimizer.fit(dataset)
         self.parameters['n_clusters'].value = grid.best_estimator_.n_clusters
+
         return self.parameters
 
 class IRAgglomerativeClustering(IRClustering):
     def __init__(self):
         super(IRAgglomerativeClustering, self).__init__("agglomerativeClustering",
-                                       [IRPar("n_clusters", 8, "int", 1, 10, 1)],  # TODO: what is the maximum?
+                                       [IRPar("n_clusters", 2, "int", 2, 10, 1)],  # TODO: what is the maximum?
                                        AgglomerativeClustering)
 
 
@@ -96,6 +97,24 @@ class IRAgglomerativeClustering(IRClustering):
         self.parameters['n_clusters'].value = grid.best_estimator_.n_clusters
         return self.parameters
 
+    def run(self, result, session_id):
+        print('clustering')
+        if 'new_dataset' in result:
+            dataset = result['new_dataset']
+        else:
+            dataset = result['original_dataset'].ds
+        # if not self._param_setted:
+        self.set_model(dataset)
+        self._model = AgglomerativeClustering(linkage='single', n_clusters=self.parameters['n_clusters'].value)
+        try:
+            y = self._model.fit_predict(dataset.values)
+        except:
+            y = self._model.fit_predict(dataset.values)
+        self.labels = self._model.labels_
+        result['labels'] = self.labels
+        print('labels', result['labels'])
+        self._param_setted = False
+        return result
 
 class IRDBSCAN(IRClustering):
     def __init__(self):

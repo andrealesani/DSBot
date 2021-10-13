@@ -16,6 +16,7 @@ class Dataset:
         self.moreFeatures = self.more_features()
         self.name_plot = None
         self.hasLabel = False
+        print('mv',self.missingValues, 'cat',self.categorical,'zv', self.zeroVariance, 'mf',self.moreFeatures, 'outliers')
 
     def more_features(self):
         if self.ds.shape[1]>2:
@@ -35,7 +36,6 @@ class Dataset:
     def missing_values(self):
         return (self.ds.isnull().sum().sum())>0
 
-
     def zero_variance(self):
         var = self.ds.std(axis=1)
         return (var==0).sum()>0
@@ -44,7 +44,6 @@ class Dataset:
         cols = self.ds.columns
         num_cols = self.ds._get_numeric_data().columns
         return len(list(set(cols) - set(num_cols))) > 0, list(set(cols) - set(num_cols))
-
 
     def curse_of_dim(self):
         data = StandardScaler().fit_transform(self.ds)
