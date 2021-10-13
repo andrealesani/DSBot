@@ -3,7 +3,7 @@ from abc import abstractmethod
 import numpy as np
 from sklearn import metrics
 from sklearn.cluster import KMeans, AgglomerativeClustering, DBSCAN
-from sklearn.model_selection import GridSearchCV
+from sklearn.model_selection import GridSearchCV, KFold
 
 from ir.ir_exceptions import LabelsNotAvailable
 from ir.ir_operations import IROp, IROpOptions
@@ -68,7 +68,7 @@ class IRKMeans(IRClustering):
 
         optimizer = GridSearchCV(KMeans(),
                                  param_grid={"n_clusters": np.arange(self.parameters['n_clusters']['min'],self.parameters['n_clusters']['max'], self.parameters['n_clusters']['step'])},
-                                 scoring=silhouette_score)
+                                 scoring=silhouette_score, cv=KFold(10,shuffle=True))
         grid = optimizer.fit(dataset)
         self.parameters['n_clusters'].value = grid.best_estimator_.n_clusters
         return self.parameters
@@ -89,9 +89,9 @@ class IRAgglomerativeClustering(IRClustering):
                 score = np.nan
             return score
 
-        optimizer = GridSearchCV(AgglomerativeClustering(),
+        optimizer = GridSearchCV(AgglomerativeClustering(linkage='single'),
                                  param_grid={"n_clusters": np.arange(self.parameters['n_clusters'].min_v, self.parameters['n_clusters'].max_v, self.parameters['n_clusters'].step)},
-                                 scoring=silhouette_score)
+                                 scoring=silhouette_score, cv=KFold(10, shuffle=True))
         grid = optimizer.fit(dataset)
         self.parameters['n_clusters'].value = grid.best_estimator_.n_clusters
         return self.parameters

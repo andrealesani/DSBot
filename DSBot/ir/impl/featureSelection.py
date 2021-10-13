@@ -61,12 +61,13 @@ class IRLaplace(IRFeatureSelection):
         if not self._param_setted:
             self.set_model(dataset)
         try:
-            transformed_ds = self._model(dataset.values)
+            transformed_ds = self._model.fit_transform(dataset.values)
         except:
-            transformed_ds = self._model(dataset.values)
+            transformed_ds = self._model.fit_transform(dataset.values)
         self.transformed_ds = transformed_ds
         if 'transformed_ds' not in result:
             result['transformed_ds'] = self.transformed_ds
+            print('laplace' , result['transformed_ds'])
         return result
 
 

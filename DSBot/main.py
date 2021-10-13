@@ -13,8 +13,15 @@ class Dataset:
         self.ds = ds
         if ds is not None:
             self.missingValues, self.categorical, self.zeroVariance = self.check_ds()
+        self.moreFeatures = self.more_features()
         self.name_plot = None
         self.hasLabel = False
+
+    def more_features(self):
+        if self.ds.shape[1]>2:
+            return True
+        else:
+            False
 
     def set_label(self, label):
         for c in self.ds.columns:
@@ -59,7 +66,7 @@ class Dataset:
     def filter_kb(self, kb):
         drop = []
         for i in self.__dict__:
-            if (str(i) in ['missingValues','categorical','zeroVariance','hasLabel']):
+            if (str(i) in ['missingValues','categorical','zeroVariance','hasLabel','moreFeatures']):
                 if getattr(self, i):
                     for j in range(len(kb)):
                         kb_val = [i.strip() for i in kb.values[j,0].split(',')]
