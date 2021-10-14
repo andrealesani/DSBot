@@ -67,8 +67,10 @@ class IRKMeans(IRClustering):
             return score
 
         optimizer = GridSearchCV(KMeans(),
-                                 param_grid={"n_clusters": np.arange(self.parameters['n_clusters']['min'],self.parameters['n_clusters']['max'], self.parameters['n_clusters']['step'])},
-                                 scoring=silhouette_score, cv=KFold(10,shuffle=True))
+                                 param_grid={"n_clusters": np.arange(self.parameters['n_clusters'].min_v,
+                                                                     self.parameters['n_clusters'].max_v,
+                                                                     self.parameters['n_clusters'].step)},
+                                 scoring=silhouette_score, cv=KFold(10, shuffle=True))
         grid = optimizer.fit(dataset)
         self.parameters['n_clusters'].value = grid.best_estimator_.n_clusters
 
