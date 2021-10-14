@@ -104,19 +104,20 @@ def receive_utterance():
 
         with open('./temp/temp_' + str(session_id) + '/pred' + str(session_id) + '.txt', 'r') as f:
             wf = f.readlines()[0].strip().split(' ')
-        print(wf)
 
-        print(session_id)
         with open('./temp/temp_' + str(session_id) + '/pred' + str(session_id) + '.txt', 'r') as f:
             wf = f.readlines()[0].strip().split(' ')
         scores = {}
 
         kb = data[session_id]['kb']
+        print(kb.kb)
         for i in range(len(kb.kb)):
             sent = [x for x in kb.kb.values[i, 1:] if str(x) != 'nan']
-        print(sent)
-        print(wf)
-        scores[i] = NW(wf, sent, kb.voc)
+            print(sent)
+            scores[i] = NW(wf, sent, kb.voc)
+            print(scores[i])
+
+        print(scores)
         max_key = max(scores, key=scores.get)
         max_key = [x for x in kb.kb.values[max_key, 1:] if str(x) != 'nan']
         print('MAX', max_key)

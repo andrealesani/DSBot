@@ -13,7 +13,7 @@ from sklearn.model_selection import train_test_split
 from sklearn.preprocessing import label_binarize
 from sklearn.metrics import roc_auc_score
 from scipy import interp
-from ir.ir_exceptions import LabelsNotAvailable, PCADataNotAvailable
+from ir.ir_exceptions import LabelsNotAvailable, PCADataNotAvailable, CorrelationNotAvailable
 from ir.ir_operations import IROp, IROpOptions
 from ir.ir_parameters import IRPar
 
@@ -105,21 +105,28 @@ class IRClustermap(IRPlot):
     def parameter_tune(self, dataset):
         pass
 
-    def run(self, result):
-        if 'transformed_ds' not in result:
-            raise PCADataNotAvailable
+    def run(self, result, session_id):
+        if 'correlation' not in result:
+            raise CorrelationNotAvailable
         else:
-            transformed_ds = result['transformed_ds']
+            correlation = result['correlation']
 
         plt.figure(figsize=(15, 15))
         matplotlib.rcParams.update({'font.size': 18})
 
-        cg = clustermap(transformed_ds, cmap='binary', xticklabels=False, yticklabels=False)
+        cg = clustermap(correlation, cmap='binary')#, xticklabels=False, yticklabels=False)
         cg.ax_row_dendrogram.set_visible(False)
+        cg.ax_col_dendrogram.set_visible(False)
         ax = cg.ax_heatmap
-
+        plt.savefig('./temp/temp_' + str(session_id) + '/clustermap.png')
         if 'plot' not in result:
-            result['plot'] = ax
+            result['plot'] = ['./temp/temp_' + str(session_id) + '/clustermap.png']
+            # result['plot'] = ["u_labels = np.unique(result['labels'])\nfor i in u_labels:\n\tax = plt.scatter(result['transformed_ds'][result['labels'] == i, 0], result['transformed_ds'][result['labels'] == i, 1], label=i)"]
+        else:
+            result['plot'].append('./temp/temp_' + str(session_id) + '/clustermap.png')
+            # result['plot'].append("u_labels = np.unique(result['labels'])\nfor i in u_labels:\n\tax = plt.scatter(result['transformed_ds'][result['labels'] == i, 0], result['transformed_ds'][result['labels'] == i, 1], label=i)")
+
+        result['original_dataset'].name_plot = './temp/temp_' + str(session_id) + '/clustermap.png'
 
         return  result
 

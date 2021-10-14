@@ -19,7 +19,7 @@ class IRCorrelation(IROp):
             dataset = result['new_dataset']
         else:
             dataset = result['original_dataset'].ds
-        self.correlation = dataset.ds.corr(method=self._model)
+        self.correlation = dataset.corr(method=self._model)
         result['correlation'] = self.correlation
         return result
 
