@@ -1,5 +1,6 @@
 import json
 import logging
+import os
 from http.client import HTTPConnection
 from pathlib import Path
 from typing import Dict, Any
@@ -64,6 +65,10 @@ class MyRasaNlu(NluAdapter):
     :ivar interpreter: the instance of the rasa interpreter used by this adapter
     """
 
+    def __init__(self):
+        self.host = os.getenv("RASA_IP", "localhost")  # TODO(giubots): fix here (host.docker.internal)
+        self.port = int(os.getenv("RASA_PORT", "5005"))
+
     def parse(self, utterance: str) -> Dict[str, Any]:
         """ Runs the interpreter to parse the given utterance and returns a dictionary containing the parsed data.
 
@@ -72,7 +77,7 @@ class MyRasaNlu(NluAdapter):
         :param utterance: the text input from the user
         :return: a dictionary containing the detected intent and corresponding entities if any exists.
         """
-        connection = HTTPConnection("host.docker.internal:5005")  # TODO modify here to use without docker
+        connection = HTTPConnection(host=self.host, port=self.port)
         connection.request("POST", "/model/parse", json.dumps({"text": utterance}))
         response = json.loads(connection.getresponse().read())
         if response["intent"]["name"] is None:

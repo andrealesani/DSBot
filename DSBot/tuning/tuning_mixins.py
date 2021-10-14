@@ -242,5 +242,7 @@ def update_pipeline(pipeline: Pipeline, relevant_params: List[Tuple[str, str]]) 
         else:
             module.is_highlighted = False
             module.should_change = False
+            for p in module.parameters.values():
+                p.is_highlighted = False
 
     return pipeline
