@@ -48,6 +48,9 @@ class IRClustering(IROp):
         self.labels = self._model.labels_
         result['labels'] = self.labels
         print('labels', result['labels'])
+        clusters = self._model.fit_predict(dataset)
+        result['silhouette'] = metrics.silhouette_score(dataset, clusters)
+        result['original_dataset'].measures['silhouette'] = result['silhouette']
         self._param_setted = False
         return result
 
@@ -108,12 +111,16 @@ class IRAgglomerativeClustering(IRClustering):
         # if not self._param_setted:
         self.set_model(dataset)
         self._model = AgglomerativeClustering(linkage='single', n_clusters=self.parameters['n_clusters'].value)
+        clusters = self._model.fit_predict(dataset)
+        result['silhouette'] = metrics.silhouette_score(dataset, clusters)
         try:
             y = self._model.fit_predict(dataset.values)
         except:
             y = self._model.fit_predict(dataset.values)
         self.labels = self._model.labels_
         result['labels'] = self.labels
+        #result['original_dataset'].measures['num_clusters'] = self.parameters['n_clusters'].value
+        result['original_dataset'].measures['silhouette'] = result['silhouette']
         print('labels', result['labels'])
         self._param_setted = False
         return result

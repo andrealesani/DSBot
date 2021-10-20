@@ -141,3 +141,11 @@ extract meaningful rules in the data
 i want to mine the frequent itemsets in the dataset
 can you find if the data are related?
 are those data related?
+visualize my data
+see data
+I want to see the distribution of my data
+can I see my data
+can I visualize my data?
+can I visualize the distribution of my data?
+can I see the distribution?
+is it available the distribution?

@@ -9125,4 +9125,6 @@ pearson correlation coefficient
 the  pearson correlation coefficient measures the
 in this article we discussed the  pearson correlation coefficient  we used the
 we also demonstrated that nonlinear associations can have a correlation coefficient zero or close to zero implying that variables having high associations may not have a high value of the  pearson correlation coefficient
-
+distplot
+i want to see the distribution of my data
+can i see a distplot of the data?

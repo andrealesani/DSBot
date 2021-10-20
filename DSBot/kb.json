@@ -1,4 +1,4 @@
 {"clustering": ["clustering","kmeans","hierarchicalClust","dbscan", "agglomerativeClustering"],
-"plot":  ["plot","scatterplot","heatmap","clustermap"],
+"plot":  ["plot","scatterplot","heatmap","clustermap", "distplot", "barplot"],
 "classification" :  ["classification","randomForest","logisticRegression"],
 "correlation":  ["correlation","pearson", "spearman"]}

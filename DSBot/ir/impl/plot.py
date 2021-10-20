@@ -7,7 +7,8 @@ import matplotlib
 matplotlib.use('Agg')
 import seaborn as sns
 from seaborn import scatterplot, clustermap
-from matplotlib.pyplot import scatter
+from matplotlib.pyplot import scatter, plot, boxplot
+from seaborn import barplot
 from sklearn.metrics import roc_curve, auc
 from sklearn.model_selection import train_test_split
 from sklearn.preprocessing import label_binarize
@@ -16,6 +17,7 @@ from scipy import interp
 from ir.ir_exceptions import LabelsNotAvailable, PCADataNotAvailable, CorrelationNotAvailable
 from ir.ir_operations import IROp, IROpOptions
 from ir.ir_parameters import IRPar
+from autoviz.AutoViz_Class import AutoViz_Class#Instantiate the AutoViz class
 
 
 class IRPlot(IROp):
@@ -45,18 +47,23 @@ class IRPlot(IROp):
 
     #TDB cosa deve restituire questa funzione?
     def run(self, result, session_id):
+        AV = AutoViz_Class()
         if 'new_dataset' in result:
             dataset = result['new_dataset']
         else:
             dataset = result['original_dataset'].ds
-        if not self._param_setted:
-            self.set_model(dataset)
-        try:
-            self._model.fit_predict(dataset.ds.values)
-        except:
-            self._model.fit_predict(dataset)
-        self.labels = self._model.labels_
-        result['plot'] = self.labels
+        fig = plt.figure()
+        ax = AV.AutoViz("",sep=",", depVar="", dfte= dataset, verbose=2)
+
+        plt.savefig('./temp/temp_' + str(session_id) + '/auto_plot.png')
+        if 'plot' not in result:
+            result['plot'] = ['./temp/temp_' + str(session_id) + '/auto_plot.png']
+            # result['plot'] = ["u_labels = np.unique(result['labels'])\nfor i in u_labels:\n\tax = plt.scatter(result['transformed_ds'][result['labels'] == i, 0], result['transformed_ds'][result['labels'] == i, 1], label=i)"]
+        else:
+            result['plot'].append('./temp/temp_' + str(session_id) + '/auto_plot.png')
+            # result['plot'].append("u_labels = np.unique(result['labels'])\nfor i in u_labels:\n\tax = plt.scatter(result['transformed_ds'][result['labels'] == i, 0], result['transformed_ds'][result['labels'] == i, 1], label=i)")
+
+        result['original_dataset'].name_plot = './temp/temp_' + str(session_id) + '/auto_plot.png'
         return result
 
 class IRScatterplot(IRPlot):
@@ -95,6 +102,102 @@ class IRScatterplot(IRPlot):
         # plt.show()
         return  result
 
+class IRDistplot(IRPlot):
+    def __init__(self):
+        super(IRDistplot, self).__init__("distplot",
+                                            [],
+                                            plot)
+
+    def parameter_tune(self, dataset):
+        pass
+
+    #def run(self, result, session_id):
+    #    pass
+    #
+    #     if 'transformed_ds' not in result:
+    #         transformed_ds = result['original_dataset'].ds
+    #     else:
+    #         transformed_ds = result['transformed_ds']
+    #
+    #     fig = plt.figure()
+    #     ax = plot(transformed_ds)
+    #     plt.savefig('./temp/temp_' + str(session_id) + '/distplot.png')
+    #     if 'plot' not in result:
+    #         result['plot'] = ['./temp/temp_' + str(session_id) + '/distplot.png']
+    #         #result['plot'] = ["u_labels = np.unique(result['labels'])\nfor i in u_labels:\n\tax = plt.scatter(result['transformed_ds'][result['labels'] == i, 0], result['transformed_ds'][result['labels'] == i, 1], label=i)"]
+    #     else:
+    #         result['plot'].append('./temp/temp_' + str(session_id) + '/distplot.png')
+    #         #result['plot'].append("u_labels = np.unique(result['labels'])\nfor i in u_labels:\n\tax = plt.scatter(result['transformed_ds'][result['labels'] == i, 0], result['transformed_ds'][result['labels'] == i, 1], label=i)")
+    #
+    #     result['original_dataset'].name_plot = './temp/temp_' + str(session_id) + '/distplot.png'
+    #
+    #     # plt.show()
+    #     return  result
+
+class IRBoxplot(IRPlot):
+    def __init__(self):
+        super(IRBoxplot, self).__init__("boxplot",
+                                            [],
+                                            boxplot)
+
+    def parameter_tune(self, dataset):
+        pass
+
+    #def run(self, result, session_id):
+    #    pass
+    #
+    #     if 'transformed_ds' not in result:
+    #         transformed_ds = result['original_dataset'].ds
+    #     else:
+    #         transformed_ds = result['transformed_ds']
+    #
+    #     fig = plt.figure()
+    #     ax = boxplot(transformed_ds)
+    #     plt.savefig('./temp/temp_' + str(session_id) + '/boxplot.png')
+    #     if 'plot' not in result:
+    #         result['plot'] = ['./temp/temp_' + str(session_id) + '/boxplot.png']
+    #         #result['plot'] = ["u_labels = np.unique(result['labels'])\nfor i in u_labels:\n\tax = plt.scatter(result['transformed_ds'][result['labels'] == i, 0], result['transformed_ds'][result['labels'] == i, 1], label=i)"]
+    #     else:
+    #         result['plot'].append('./temp/temp_' + str(session_id) + '/boxplot.png')
+    #         #result['plot'].append("u_labels = np.unique(result['labels'])\nfor i in u_labels:\n\tax = plt.scatter(result['transformed_ds'][result['labels'] == i, 0], result['transformed_ds'][result['labels'] == i, 1], label=i)")
+    #
+    #     result['original_dataset'].name_plot = './temp/temp_' + str(session_id) + '/boxplot.png'
+    #
+    #     # plt.show()
+    #     return  result
+
+
+class IRBarplot(IRPlot):
+    def __init__(self):
+        super(IRBarplot, self).__init__("barplot",
+                                            [],
+                                            barplot)
+
+    def parameter_tune(self, dataset):
+        pass
+
+    #def run(self, result, session_id):
+    #    pass
+    #
+    #     if 'transformed_ds' not in result:
+    #         transformed_ds = result['original_dataset'].ds
+    #     else:
+    #         transformed_ds = result['transformed_ds']
+    #
+    #     fig = plt.figure()
+    #     ax = barplot(transformed_ds)
+    #     plt.savefig('./temp/temp_' + str(session_id) + '/barplot.png')
+    #     if 'plot' not in result:
+    #         result['plot'] = ['./temp/temp_' + str(session_id) + '/barplot.png']
+    #         #result['plot'] = ["u_labels = np.unique(result['labels'])\nfor i in u_labels:\n\tax = plt.scatter(result['transformed_ds'][result['labels'] == i, 0], result['transformed_ds'][result['labels'] == i, 1], label=i)"]
+    #     else:
+    #         result['plot'].append('./temp/temp_' + str(session_id) + '/barplot.png')
+    #         #result['plot'].append("u_labels = np.unique(result['labels'])\nfor i in u_labels:\n\tax = plt.scatter(result['transformed_ds'][result['labels'] == i, 0], result['transformed_ds'][result['labels'] == i, 1], label=i)")
+    #
+    #     result['original_dataset'].name_plot = './temp/temp_' + str(session_id) + '/barplot.png'
+
+        # plt.show()
+    #    return  result
 
 class IRClustermap(IRPlot):
     def __init__(self):
@@ -213,4 +316,4 @@ class IRROC(IRPlot):
 # FIXME: this class was commented out because the implementation raises errors
 class IRGenericPlot(IROpOptions):
      def __init__(self):
-         super(IRGenericPlot, self).__init__([IRScatterplot(), IRClustermap()], "scatterplot")
+         super(IRGenericPlot, self).__init__([IRScatterplot(), IRClustermap(), IRDistplot(), IRBoxplot(), IRBarplot()], "scatterplot")

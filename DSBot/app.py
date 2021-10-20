@@ -100,7 +100,7 @@ def receive_utterance():
         with open('./temp/temp_'+str(session_id)+'/message'+str(session_id)+'.txt', 'w') as f:
             f.write(args['message'])
 
-        os.system('onmt_translate -model wf/run/model_step_1000.pt -src temp/temp_'+str(session_id)+'/message'+str(session_id)+'.txt -output ./temp/temp_'+str(session_id)+'/pred'+str(session_id)+'.txt -gpu -1 -verbose')
+        os.system('onmt_translate -model wf/run/model1_step_1000.pt -src temp/temp_'+str(session_id)+'/message'+str(session_id)+'.txt -output ./temp/temp_'+str(session_id)+'/pred'+str(session_id)+'.txt -gpu -1 -verbose')
 
         with open('./temp/temp_' + str(session_id) + '/pred' + str(session_id) + '.txt', 'r') as f:
             wf = f.readlines()[0].strip().split(' ')
@@ -151,11 +151,12 @@ def get_results(received_id):
                               start_work=partial(re_execute_algorithm, session_id=session_id))
 
     data[session_id]['framework'] = framework
+    details = data[session_id]['dataset'].measures
     tuning_data = framework.handle_data_input({})
     return jsonify({"ready": True,
                     "session_id": session_id,
                     'img': str(base64_string),
-                    'details': '',  # TODO add details if necessary
+                    'details': str(details),
                     'tuning': tuning_data})
 
 

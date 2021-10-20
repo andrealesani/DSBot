@@ -16,6 +16,7 @@ class Dataset:
         self.moreFeatures = self.more_features()
         self.name_plot = None
         self.hasLabel = False
+        self.measures = {}
         print('mv',self.missingValues, 'cat',self.categorical,'zv', self.zeroVariance, 'mf',self.moreFeatures, 'outliers')
 
     def more_features(self):
