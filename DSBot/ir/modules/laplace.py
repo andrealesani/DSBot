@@ -15,6 +15,7 @@ import math
 import numpy as np
 from scipy.sparse import *
 from sklearn.metrics.pairwise import pairwise_distances
+#from skfeature.function.similarity_based import lap_score
 
 
 def construct_S(X, **kwargs):
@@ -156,24 +157,35 @@ def LaplacianScore(X, **kwargs):
     return numpy.diag(Lr)
 
 class Laplace:
-    def __init__(self):
-        pass
+    def __init__(self, percentage=None):
+        self.percentage = percentage
 
     def fit_transform(self, X):
         print(X)
         n_samples, n_feature = X.shape
-        data = X[:, 0:n_feature - 1]
+        data = X[:, 0:n_feature]
 
-        L = LaplacianScore(data)
+        L = lap_score(data)
         #print(L)
         #print(feature_ranking(L))
+        if self.percentage==None:
+            val = L.mean()
+            for i in range(len(feature_ranking(L))):
+                if L[i] < val:
+                    if len(selected_k) == 0:
+                        selected_k = [X[i].values]
+                    else:
+                        selected_k = np.concatenate((selected_k, [X[i].values]))
+        else:
+            val = val*X.shape[1]
+            for i in range(len(feature_ranking(L))):
+                if feature_ranking(L) < val:
+                    if len(selected_k) == 0:
+                        selected_k = [X[i].values]
+                    else:
+                        selected_k = np.concatenate((selected_k, [X[i].values]))
         selected_k = []
-        for i in range(len(feature_ranking(L))):
-            if L[i] < L.mean():
-                if len(selected_k) == 0:
-                    selected_k = [X[i].values]
-                else:
-                    selected_k = np.concatenate((selected_k, [X[i].values]))
+
         selected_k = pd.DataFrame(selected_k).T
         X = selected_k
         print(X)

@@ -1,7 +1,7 @@
 from abc import abstractmethod
 
 import numpy as np
-from sklearn.decomposition import PCA
+from sklearn.decomposition import PCA, FastICA
 from sklearn.manifold import MDS
 from ir.ir_exceptions import LabelsNotAvailable
 from ir.ir_operations import IROp, IROpOptions
@@ -118,6 +118,15 @@ class IRMDS2(IRFeatureEngineeringForViz):
     def parameter_tune(self, dataset):
         pass
 
+class IRFastICA2(IRFeatureEngineeringForViz):
+    def __init__(self):
+        super(IRFastICA2, self).__init__("ica2",
+                                    [IRPar("n_components", 2, "int", 2, 2, 1)],  # TODO: what are minimum and maximum?
+                                    FastICA)
+
+    def parameter_tune(self, dataset):
+        pass
+
 class IRPCA3(IRFeatureEngineeringForViz):
     def __init__(self):
         super(IRPCA3, self).__init__("pca3",
@@ -129,4 +138,4 @@ class IRPCA3(IRFeatureEngineeringForViz):
 
 class IRGenericFeatureEngineeringForViz(IROpOptions):
     def __init__(self):
-        super(IRGenericFeatureEngineeringForViz, self).__init__([IRPCA2(), IRPCA3(), IRMDS2()], "pca2")
+        super(IRGenericFeatureEngineeringForViz, self).__init__([IRPCA2(), IRPCA3(), IRMDS2(),IRFastICA2()], "pca2")

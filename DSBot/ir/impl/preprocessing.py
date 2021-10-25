@@ -1,6 +1,7 @@
 from abc import abstractmethod
 
 import pandas as pd
+import numpy as np
 from sklearn.impute._iterative import IterativeImputer
 from pandas.api.types import is_numeric_dtype
 from ir.ir_operations import IROp, IROpOptions
@@ -31,7 +32,32 @@ class IRPreprocessing(IROp):
     def run(self, result, session_id):
         pass
 
-class IRMissingValuesRemove(IRPreprocessing):
+class IRMissingValues(IROp):
+    def __init__(self, name, parameters=None, model = None):
+        super(IRMissingValues, self).__init__(name, parameters if parameters is not None else [])
+        #self.parameter = parameters['value']  # FIXME: use self.get_param('value'), but it will raise UnknownParameter
+        self.labels = None
+
+    @abstractmethod
+    def parameter_tune(self, dataset):
+        pass
+
+    def set_model(self, result):
+        if 'new_dataset' in result:
+            dataset = result['new_dataset']
+        else:
+            dataset = result['original_dataset'].ds
+        if self.parameter == None:
+            self.parameter_tune(dataset)
+        #for p,v in self.parameters.items():
+        #    self._model.__setattr__(p,v.value)
+        self._param_setted = True
+
+    #TDB cosa deve restituire questa funzione?
+    def run(self, result, session_id):
+        pass
+
+class IRMissingValuesRemove(IRMissingValues):
     def __init__(self):
         super(IRMissingValuesRemove, self).__init__("missingValuesRemove")
 
@@ -51,7 +77,7 @@ class IRMissingValuesRemove(IRPreprocessing):
         print('missingvalremove', dataset.shape)
         return result
 
-class IRMissingValuesFill(IRPreprocessing):
+class IRMissingValuesFill(IRMissingValues):
     def __init__(self, parameter):
         super(IRMissingValuesFill, self).__init__("missingValuesFill", parameter)
 
@@ -80,6 +106,12 @@ class IRMissingValuesFill(IRPreprocessing):
         print('missingvalfill', dataset.shape)
 
         return result
+
+class IRGenericMissingValues(IROpOptions):
+    def __init__(self):
+        super(IRGenericMissingValues, self).__init__([IRMissingValuesRemove(), IRMissingValuesFill([])],
+                                                     "missingValuesRemove")
+
 
 class IROneHotEncode(IRPreprocessing):
     def __init__(self):
@@ -137,7 +169,26 @@ class IRLabelRemove(IRPreprocessing):
         #result['new_dataset'] = dataset[columns]
         return result
 
+class IROutliersRemove(IRPreprocessing):
+    def __init__(self):
+        super(IROutliersRemove, self).__init__("outliersRemove")
+
+    def parameter_tune(self, dataset):
+        # TODO: implement
+        pass
+
+    def run(self, result, session_id):
+        if 'new_dataset' in result:
+            dataset = result['new_dataset']
+        else:
+            dataset = result['original_dataset'].ds
+
+        ds = dataset[np.abs(dataset.values - dataset.values.mean()) <= (3 * dataset.values.std())]
+        result['new_dataset'] = ds
+        return result
+
 class IRGenericPreprocessing(IROpOptions):
     def __init__(self):
-        super(IRGenericPreprocessing, self).__init__([IRMissingValuesRemove(), IRMissingValuesFill([]), IRLabelRemove(), IROneHotEncode()],
-                                                     "missingValuesRemove")
+        super(IRGenericPreprocessing, self).__init__([IRLabelRemove(), IROneHotEncode(), IROutliersRemove()],
+                                                     "labelRemove")
+

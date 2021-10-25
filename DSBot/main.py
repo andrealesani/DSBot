@@ -7,17 +7,18 @@ from sklearn.experimental import enable_iterative_imputer
 from sklearn.impute import IterativeImputer
 from sklearn.decomposition import PCA
 from difflib import SequenceMatcher
+import numpy as np
 
 class Dataset:
     def __init__(self, ds, label=None):
         self.ds = ds
         if ds is not None:
-            self.missingValues, self.categorical, self.zeroVariance = self.check_ds()
+            self.missingValues, self.categorical, self.zeroVariance, self.outliers = self.check_ds()
         self.moreFeatures = self.more_features()
         self.name_plot = None
         self.hasLabel = False
         self.measures = {}
-        print('mv',self.missingValues, 'cat',self.categorical,'zv', self.zeroVariance, 'mf',self.moreFeatures, 'outliers')
+        print('mv',self.missingValues, 'cat',self.categorical,'zv', self.zeroVariance, 'mf',self.moreFeatures, 'outliers', self.outliers)
 
     def more_features(self):
         if self.ds.shape[1]>2:
@@ -46,6 +47,11 @@ class Dataset:
         num_cols = self.ds._get_numeric_data().columns
         return len(list(set(cols) - set(num_cols))) > 0, list(set(cols) - set(num_cols))
 
+    def has_outliers(self):
+        #if len(self.ds[np.abs(self.ds.values - self.ds.values.mean()) <= (3 * self.ds.values.std())])< len(self.ds):
+        #    return True
+        return False
+
     def curse_of_dim(self):
         data = StandardScaler().fit_transform(self.ds)
         eucl = squareform(pdist(data.values))
@@ -61,7 +67,8 @@ class Dataset:
         missing_val = self.missing_values()
         categorical, cols = self.categorical_columns()
         zero_var = self.zero_variance()
-        return missing_val, categorical, zero_var
+        outliers = self.has_outliers()
+        return missing_val, categorical, zero_var, outliers
 
     def filter_kb(self, kb):
         drop = []

@@ -5,6 +5,7 @@ from ir.ir_exceptions import LabelsNotAvailable
 from ir.ir_operations import IROp, IROpOptions
 from ir.ir_parameters import IRPar
 from ir.modules.laplace import Laplace
+from sklearn.feature_selection import VarianceThreshold
 
 class IRFeatureSelection(IROp):
     def __init__(self, name, parameters, model = None):
@@ -44,10 +45,19 @@ class IRFeatureSelection(IROp):
             result['transformed_ds'] = self.transformed_ds
         return result
 
+class IRVarianceThreshold(IRFeatureSelection):
+    def __init__(self):
+        super(IRVarianceThreshold, self).__init__("varianceThreshold",
+                                    [IRPar('threshold', 0, "float", 0, 1, 0.1)],  # TODO: what are minimum and maximum?
+                                    VarianceThreshold)
+
+    def parameter_tune(self, dataset):
+        pass
+
 class IRLaplace(IRFeatureSelection):
     def __init__(self):
         super(IRLaplace, self).__init__("laplace",
-                                    [],  # TODO: what are minimum and maximum?
+                                    [IRPar('percentage', 0, "int", 0, 100, 5)],  # TODO: what are minimum and maximum?
                                     Laplace)
 
     def parameter_tune(self, dataset):
@@ -69,7 +79,6 @@ class IRLaplace(IRFeatureSelection):
             result['transformed_ds'] = self.transformed_ds
             print('laplace' , result['transformed_ds'])
         return result
-
 
 
 

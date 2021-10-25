@@ -119,7 +119,7 @@ class IRAgglomerativeClustering(IRClustering):
             y = self._model.fit_predict(dataset.values)
         self.labels = self._model.labels_
         result['labels'] = self.labels
-        #result['original_dataset'].measures['num_clusters'] = self.parameters['n_clusters'].value
+        result['original_dataset'].measures['num_clusters'] = self.parameters['n_clusters'].value
         result['original_dataset'].measures['silhouette'] = result['silhouette']
         print('labels', result['labels'])
         self._param_setted = False
