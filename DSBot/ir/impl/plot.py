@@ -17,7 +17,7 @@ from scipy import interp
 from itertools import cycle
 from ir.ir_exceptions import LabelsNotAvailable, PCADataNotAvailable, CorrelationNotAvailable
 from ir.ir_operations import IROp, IROpOptions
-from ir.ir_parameters import IRPar
+from ir.ir_parameters import IRNumPar
 from autoviz.AutoViz_Class import AutoViz_Class#Instantiate the AutoViz class
 
 

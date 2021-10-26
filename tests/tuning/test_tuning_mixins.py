@@ -4,7 +4,7 @@ from unittest import TestCase
 
 import DSBot.tuning.tuning_mixins as mixins
 from DSBot.ir.ir_operations import IROp, IROpOptions
-from DSBot.ir.ir_parameters import IRPar
+from DSBot.ir.ir_parameters import IRNumPar
 
 
 def change_file():
@@ -45,7 +45,7 @@ class TestTuningOpMixin(TestCase):
         self.assertFalse(mod.is_highlighted)
 
     def test_tojson(self):
-        mod = IROpImpl('mod4', [IRPar('param4.1', 0, 'float', 0, 1)])
+        mod = IROpImpl('mod4', [IRNumPar('param4.1', 0, 'float', 0, 1)])
         self.assertDictEqual(mod.to_json(), {
             'name': 'mod4',
             'pretty_name': 'Module 4',
@@ -74,66 +74,66 @@ class TestTuningParMixin(TestCase):
         change_file()
 
     def test_get_param_data_missing_module(self):
-        par = IRPar('param', 0, 'float', 0, 1)
+        par = IRNumPar('param', 0, 'float', 0, 1)
         with self.assertRaises(mixins.MissingModuleNameError):
             par._get_param_data()
 
     def test_get_param_data_none_module(self):
-        par = IRPar('param', 0, 'float', 0, 1)
+        par = IRNumPar('param', 0, 'float', 0, 1)
         par.module = None
         with self.assertRaises(mixins.MissingModuleNameError):
             par._get_param_data()
 
     def test_get_param_data_missing_module_data(self):
-        par = IRPar('param', 0, 'float', 0, 1)
+        par = IRNumPar('param', 0, 'float', 0, 1)
         par.module = 'missing'
         with self.assertRaises(mixins.IncorrectKbError):
             par._get_param_data()
 
     def test_get_param_data_missing_params_data(self):
-        par = IRPar('param', 0, 'float', 0, 1)
+        par = IRNumPar('param', 0, 'float', 0, 1)
         par.module = 'mod2'
         with self.assertRaises(mixins.IncorrectKbError):
             par._get_param_data()
 
     def test_get_param_data_missing_data(self):
-        par = IRPar('param', 0, 'float', 0, 1)
+        par = IRNumPar('param', 0, 'float', 0, 1)
         par.module = 'mod1'
         with self.assertRaises(mixins.IncorrectKbError):
             par._get_param_data()
 
     def test_pretty_name(self):
-        par = IRPar('param1.1', 0, 'float', 0, 1)
+        par = IRNumPar('param1.1', 0, 'float', 0, 1)
         par.module = 'mod1'
         self.assertEqual(par.pretty_name, 'Param 1.1')
 
     def test_pretty_name_missing(self):
-        par = IRPar('param1.2', 0, 'float', 0, 1)
+        par = IRNumPar('param1.2', 0, 'float', 0, 1)
         par.module = 'mod1'
         self.assertEqual(par.pretty_name, 'param1.2')
 
     def test_pretty_name_missing_mod(self):
-        par = IRPar('param1.1', 0, 'float', 0, 1)
+        par = IRNumPar('param1.1', 0, 'float', 0, 1)
         with self.assertRaises(mixins.MissingModuleNameError):
             par.pretty_name
 
     def test_description(self):
-        par = IRPar('param1.1', 0, 'float', 0, 1)
+        par = IRNumPar('param1.1', 0, 'float', 0, 1)
         par.module = 'mod1'
         self.assertEqual(par.description, 'Parameter 1 of module 1')
 
     def test_description_missing(self):
-        par = IRPar('param1.2', 0, 'float', 0, 1)
+        par = IRNumPar('param1.2', 0, 'float', 0, 1)
         par.module = 'mod1'
         self.assertEqual(par.description, '')
 
     def test_description_missing_mod(self):
-        par = IRPar('param1.1', 0, 'float', 0, 1)
+        par = IRNumPar('param1.1', 0, 'float', 0, 1)
         with self.assertRaises(mixins.MissingModuleNameError):
             par.description
 
     def test_is_highlighted(self):
-        par = IRPar('param3', 0, 'float', 0, 1)
+        par = IRNumPar('param3', 0, 'float', 0, 1)
         par.is_highlighted = True
         self.assertTrue(par.is_highlighted)
         par.is_highlighted = False
@@ -142,11 +142,11 @@ class TestTuningParMixin(TestCase):
         self.assertTrue(par.is_highlighted)
 
     def test_is_highlighted_not_set(self):
-        par = IRPar('param3', 0, 'float', 0, 1)
+        par = IRNumPar('param3', 0, 'float', 0, 1)
         self.assertFalse(par.is_highlighted)
 
     def test_tojson(self):
-        par = IRPar('param4.1', 0, 'float', 0, 1)
+        par = IRNumPar('param4.1', 0, 'float', 0, 1)
         par.module = 'mod4'
         self.assertDictEqual(par.to_json(), {
             'name': 'param4.1',
@@ -168,7 +168,7 @@ class TestTuningOpOptionsMixin(TestCase):
         change_file()
 
     def test_tojson(self):
-        opt = IROpOptions([IROpImpl('mod4', [IRPar('param4.1', 0, 'float', 0, 1)])], 'mod4')
+        opt = IROpOptions([IROpImpl('mod4', [IRNumPar('param4.1', 0, 'float', 0, 1)])], 'mod4')
         res = {
             'name': 'mod4',
             'pretty_name': 'Module 4',
@@ -196,9 +196,9 @@ class TestUpdatePipeline(TestCase):
     def setUp(self) -> None:
         super().setUp()
         pipeline = [
-            IROpImpl('m1', [IRPar('p1', 0, '', 0, 1), IRPar('p2', 0, '', 0, 1), IRPar('p3', 0, '', 0, 1)]),
-            IROpImpl('m2', [IRPar('p1', 0, '', 0, 1), IRPar('p2', 0, '', 0, 1), IRPar('p3', 0, '', 0, 1)]),
-            IROpImpl('m3', [IRPar('p1', 0, '', 0, 1), IRPar('p2', 0, '', 0, 1), IRPar('p3', 0, '', 0, 1)]),
+            IROpImpl('m1', [IRNumPar('p1', 0, '', 0, 1), IRNumPar('p2', 0, '', 0, 1), IRNumPar('p3', 0, '', 0, 1)]),
+            IROpImpl('m2', [IRNumPar('p1', 0, '', 0, 1), IRNumPar('p2', 0, '', 0, 1), IRNumPar('p3', 0, '', 0, 1)]),
+            IROpImpl('m3', [IRNumPar('p1', 0, '', 0, 1), IRNumPar('p2', 0, '', 0, 1), IRNumPar('p3', 0, '', 0, 1)]),
         ]
         relevant = ['m1.p1', 'm1.p2', 'm3.p1', 'm3.p3']
         self.pipeline = mixins.update_pipeline(pipeline, relevant)

@@ -136,6 +136,7 @@ class TuningParMixin:
     max_v: Any
     v_type: str
     _highlighted: bool
+    possible_val: list
 
     @property
     def pretty_name(self):
@@ -196,17 +197,28 @@ class TuningParMixin:
         self._highlighted = value
 
     def to_json(self):
-        return {
-            'name': self.name,
-            'pretty_name': self.pretty_name,
-            'value': self.value,
-            'min': self.min_v,
-            'max': self.max_v,
-            'default': self.default_value,
-            'description': self.description,
-            'is_highlighted': self.is_highlighted,
-            'type': self.v_type
-        }
+        if type(self).__name__== "IRNumPar":
+            return {
+                'name': self.name,
+                'pretty_name': self.pretty_name,
+                'value': self.value,
+                'min': self.min_v,
+                'max': self.max_v,
+                'default': self.default_value,
+                'description': self.description,
+                'is_highlighted': self.is_highlighted,
+                'type': self.v_type
+            }
+        else:
+            return {
+                'name': self.name,
+                'pretty_name': self.pretty_name,
+                'value': self.value,
+                'possible_val': self.possible_val,
+                'default': self.default_value,
+                'description': self.description,
+                'is_highlighted': self.is_highlighted
+            }
 
     def __repr__(self) -> str:
         return str(self.to_json())

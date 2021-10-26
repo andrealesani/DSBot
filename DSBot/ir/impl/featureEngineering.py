@@ -5,7 +5,7 @@ from sklearn.decomposition import PCA, FastICA
 from sklearn.manifold import MDS
 from ir.ir_exceptions import LabelsNotAvailable
 from ir.ir_operations import IROp, IROpOptions
-from ir.ir_parameters import IRPar
+from ir.ir_parameters import IRNumPar
 
 
 class IRFeatureEngineering(IROp):
@@ -49,7 +49,7 @@ class IRFeatureEngineering(IROp):
 class IRPCA(IRFeatureEngineering):
     def __init__(self):
         super(IRPCA, self).__init__("pca",
-                                    [IRPar("n_components", 2, "float", 0, 10, 0.1)],  # TODO: what are minimum and maximum?
+                                    [IRNumPar("n_components", 2, "float", 0, 10, 0.1)],  # TODO: what are minimum and maximum?
                                     PCA)
 
     def parameter_tune(self, dataset):
@@ -102,8 +102,8 @@ class IRFeatureEngineeringForViz(IROp):
 class IRPCA2(IRFeatureEngineeringForViz):
     def __init__(self):
         super(IRPCA2, self).__init__("pca2",
-                                    [IRPar("n_components", 2, "int", 2, 2, 1)],  # TODO: what are minimum and maximum?
-                                    PCA)
+                                     [IRNumPar("n_components", 2, "int", 2, 2, 1)],  # TODO: what are minimum and maximum?
+                                     PCA)
 
     def parameter_tune(self, dataset):
         pass
@@ -112,8 +112,8 @@ class IRPCA2(IRFeatureEngineeringForViz):
 class IRMDS2(IRFeatureEngineeringForViz):
     def __init__(self):
         super(IRMDS2, self).__init__("mds2",
-                                    [IRPar("n_components", 2, "int", 2, 2, 1)],  # TODO: what are minimum and maximum?
-                                    MDS)
+                                     [IRNumPar("n_components", 2, "int", 2, 2, 1)],  # TODO: what are minimum and maximum?
+                                     MDS)
 
     def parameter_tune(self, dataset):
         pass
@@ -121,8 +121,8 @@ class IRMDS2(IRFeatureEngineeringForViz):
 class IRFastICA2(IRFeatureEngineeringForViz):
     def __init__(self):
         super(IRFastICA2, self).__init__("ica2",
-                                    [IRPar("n_components", 2, "int", 2, 2, 1)],  # TODO: what are minimum and maximum?
-                                    FastICA)
+                                         [IRNumPar("n_components", 2, "int", 2, 2, 1)],  # TODO: what are minimum and maximum?
+                                         FastICA)
 
     def parameter_tune(self, dataset):
         pass
@@ -130,8 +130,8 @@ class IRFastICA2(IRFeatureEngineeringForViz):
 class IRPCA3(IRFeatureEngineeringForViz):
     def __init__(self):
         super(IRPCA3, self).__init__("pca3",
-                                    [IRPar("n_components", 3, "int", 3, 3, 1)],  # TODO: what are minimum and maximum?
-                                    PCA)
+                                     [IRNumPar("n_components", 3, "int", 3, 3, 1)],  # TODO: what are minimum and maximum?
+                                     PCA)
 
     def parameter_tune(self, dataset):
         pass

@@ -3,7 +3,7 @@ from abc import abstractmethod
 import numpy as np
 from ir.ir_exceptions import LabelsNotAvailable
 from ir.ir_operations import IROp, IROpOptions
-from ir.ir_parameters import IRPar
+from ir.ir_parameters import IRNumPar
 from ir.modules.laplace import Laplace
 from sklearn.feature_selection import VarianceThreshold
 
@@ -48,8 +48,8 @@ class IRFeatureSelection(IROp):
 class IRVarianceThreshold(IRFeatureSelection):
     def __init__(self):
         super(IRVarianceThreshold, self).__init__("varianceThreshold",
-                                    [IRPar('threshold', 0, "float", 0, 1, 0.1)],  # TODO: what are minimum and maximum?
-                                    VarianceThreshold)
+                                                  [IRNumPar('threshold', 0, "float", 0, 1, 0.1)],  # TODO: what are minimum and maximum?
+                                                  VarianceThreshold)
 
     def parameter_tune(self, dataset):
         pass
@@ -57,8 +57,8 @@ class IRVarianceThreshold(IRFeatureSelection):
 class IRLaplace(IRFeatureSelection):
     def __init__(self):
         super(IRLaplace, self).__init__("laplace",
-                                    [IRPar('percentage', 1, "float", 0, 1, 0.05)],  # TODO: what are minimum and maximum?
-                                    Laplace)
+                                        [IRNumPar('percentage', 1, "float", 0, 1, 0.05)],  # TODO: what are minimum and maximum?
+                                        Laplace)
 
     def parameter_tune(self, dataset):
         pass
@@ -86,4 +86,4 @@ class IRLaplace(IRFeatureSelection):
 
 class IRGenericFeatureSelection(IROpOptions):
     def __init__(self):
-        super(IRGenericFeatureSelection, self).__init__([IRLaplace()], "laplace")
+        super(IRGenericFeatureSelection, self).__init__([IRVarianceThreshold(), IRLaplace()], "varianceThreshold")

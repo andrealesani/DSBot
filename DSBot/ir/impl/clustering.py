@@ -7,7 +7,7 @@ from sklearn.model_selection import GridSearchCV, KFold
 
 from ir.ir_exceptions import LabelsNotAvailable
 from ir.ir_operations import IROp, IROpOptions
-from ir.ir_parameters import IRPar
+from ir.ir_parameters import IRNumPar, IRCatPar
 
 
 class IRClustering(IROp):
@@ -50,6 +50,7 @@ class IRClustering(IROp):
         print('labels', result['labels'])
         clusters = self._model.fit_predict(dataset)
         result['silhouette'] = metrics.silhouette_score(dataset, clusters)
+        result['original_dataset'].measures['num_clusters'] = self.parameters['n_clusters'].value
         result['original_dataset'].measures['silhouette'] = result['silhouette']
         self._param_setted = False
         return result
@@ -57,7 +58,7 @@ class IRClustering(IROp):
 class IRKMeans(IRClustering):
     def __init__(self):
         super(IRKMeans, self).__init__("kmeans",
-                                       [IRPar("n_clusters", 2, "int", 2, 10, 1)],  # TODO: what is the maximum?
+                                       [IRNumPar("n_clusters", 2, "int", 2, 10, 1)],  # TODO: what is the maximum?
                                        KMeans)
 
     def parameter_tune(self, dataset):
@@ -82,8 +83,9 @@ class IRKMeans(IRClustering):
 class IRAgglomerativeClustering(IRClustering):
     def __init__(self):
         super(IRAgglomerativeClustering, self).__init__("agglomerativeClustering",
-                                       [IRPar("n_clusters", 2, "int", 2, 10, 1)],  # TODO: what is the maximum?
-                                       AgglomerativeClustering)
+                                                        [IRNumPar("n_clusters", 2, "int", 2, 10, 1),
+                                                         IRCatPar("linkage", "single", ['single','complete','ward'])],  # TODO: what is the maximum?
+                                                        AgglomerativeClustering)
 
 
     def parameter_tune(self, dataset):
@@ -95,40 +97,18 @@ class IRAgglomerativeClustering(IRClustering):
                 score = np.nan
             return score
 
-        optimizer = GridSearchCV(AgglomerativeClustering(linkage='single'),
+        optimizer = GridSearchCV(AgglomerativeClustering(),
                                  param_grid={"n_clusters": np.arange(self.parameters['n_clusters'].min_v, self.parameters['n_clusters'].max_v, self.parameters['n_clusters'].step)},
                                  scoring=silhouette_score, cv=KFold(10, shuffle=True))
         grid = optimizer.fit(dataset)
         self.parameters['n_clusters'].value = grid.best_estimator_.n_clusters
         return self.parameters
 
-    def run(self, result, session_id):
-        print('clustering')
-        if 'new_dataset' in result:
-            dataset = result['new_dataset']
-        else:
-            dataset = result['original_dataset'].ds
-        # if not self._param_setted:
-        self.set_model(dataset)
-        self._model = AgglomerativeClustering(linkage='single', n_clusters=self.parameters['n_clusters'].value)
-        clusters = self._model.fit_predict(dataset)
-        result['silhouette'] = metrics.silhouette_score(dataset, clusters)
-        try:
-            y = self._model.fit_predict(dataset.values)
-        except:
-            y = self._model.fit_predict(dataset.values)
-        self.labels = self._model.labels_
-        result['labels'] = self.labels
-        result['original_dataset'].measures['num_clusters'] = self.parameters['n_clusters'].value
-        result['original_dataset'].measures['silhouette'] = result['silhouette']
-        print('labels', result['labels'])
-        self._param_setted = False
-        return result
 
 class IRDBSCAN(IRClustering):
     def __init__(self):
         super(IRDBSCAN, self).__init__("dbscan",
-                                       [IRPar("eps", 0.1, "float", 0, 1, 0.1)],  # TODO: what is the maximum?
+                                       [IRNumPar("eps", 0.1, "float", 0, 1, 0.1)],  # TODO: what is the maximum?
                                        DBSCAN)
 
     def parameter_tune(self, dataset):

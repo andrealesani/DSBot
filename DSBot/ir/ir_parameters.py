@@ -3,8 +3,76 @@ import logging
 from ir.ir_exceptions import IncorrectValue
 from tuning import TuningParMixin
 
-
 class IRPar(TuningParMixin, object):
+    @property
+    def value(self):
+        if self._actual_value is None:
+            return self.default_value
+        return self._actual_value
+
+    @value.deleter
+    def value(self):
+        self._actual_value = None
+
+    @property
+    def is_custom(self):
+        """Whether the user has set a custom value during tuning."""
+        return self._actual_value is not None
+
+    def __str__(self):
+        return f'{self.name} = {self.value}'
+
+
+class IRCatPar(IRPar, TuningParMixin, object):
+    """Represents a parameter of an operation.
+
+    :ivar name: the name of this
+    :ivar value: the initial value of this
+    :ivar possible_val: the possible values that can have
+    """
+
+    def __init__(self, name: str, value: str, possible_val: list):
+        self.name = name
+        self.default_value = value
+        self.possible_val = possible_val
+        self._actual_value = None
+
+    @property
+    def value(self):
+        if self._actual_value is None:
+            return self.default_value
+        return self._actual_value
+
+    @value.setter
+    def value(self, new_value):
+        """Do not use this method during tuning by the user (use tune_value)."""
+        if self._actual_value is not None:
+            logging.getLogger(__name__).debug('Parameter set was ignored because a custom value was defined')
+            return
+
+        if not self.is_valid(new_value):
+            logging.getLogger(__name__).error('Wrong parameter: %s; module: %s', self.name, self.module)
+            return
+
+        self.default_value = new_value
+
+    @value.deleter
+    def value(self):
+        self._actual_value = None
+
+    def tune_value(self, new_value):
+        if not self.is_valid(new_value):
+            raise IncorrectValue()
+
+        self._actual_value = new_value
+
+    def is_valid(self, new_value):
+        return new_value in self.possible_val
+
+
+
+
+class IRNumPar(IRPar, TuningParMixin, object):
     """Represents a parameter of an operation.
 
     :ivar name: the name of this
@@ -49,11 +117,6 @@ class IRPar(TuningParMixin, object):
     def value(self):
         self._actual_value = None
 
-    @property
-    def is_custom(self):
-        """Whether the user has set a custom value during tuning."""
-        return self._actual_value is not None
-
     def tune_value(self, new_value):
         """Do not use this method from within the pipeline, use the value setter."""
         new_value = self.uniform_type(new_value)
@@ -82,5 +145,3 @@ class IRPar(TuningParMixin, object):
                                                  self.v_type, self.name, self.module)
         return new_value
 
-    def __str__(self):
-        return f'{self.name} = {self.value}'

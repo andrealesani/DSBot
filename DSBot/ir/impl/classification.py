@@ -2,7 +2,7 @@ from abc import abstractmethod
 
 from ir.ir_exceptions import LabelsNotAvailable
 from ir.ir_operations import IROp, IROpOptions
-from ir.ir_parameters import IRPar
+from ir.ir_parameters import IRNumPar
 
 from sklearn.model_selection import RandomizedSearchCV
 from sklearn.ensemble import RandomForestClassifier
@@ -77,11 +77,11 @@ class IRClassification(IROp):
 class IRRandomForest(IRClassification):
     def __init__(self):
         super(IRRandomForest, self).__init__("randomForest",
-                                       [IRPar("n_estimators", 100, "int", 100, 150, 10),  # TODO: what is the maximum? Which first value give?
-                                        IRPar("max_depth", 10, "int", 10, 22, 11),  # TODO: what is the maximum?
-                                        IRPar("min_samples_split", 2, "int", 2, 5, 3),
-                                        IRPar("min_samples_leaf", 1, "int", 1, 2, 1)],  # TODO: if I want to pass a list of values?
-                                       RandomForestClassifier)
+                                             [IRNumPar("n_estimators", 100, "int", 100, 150, 10),  # TODO: what is the maximum? Which first value give?
+                                              IRNumPar("max_depth", 10, "int", 10, 22, 11),  # TODO: what is the maximum?
+                                              IRNumPar("min_samples_split", 2, "int", 2, 5, 3),
+                                              IRNumPar("min_samples_leaf", 1, "int", 1, 2, 1)],  # TODO: if I want to pass a list of values?
+                                             RandomForestClassifier)
         self._param_setted = False
 
     def parameter_tune(self, dataset, labels):
@@ -128,8 +128,8 @@ class IRRandomForest(IRClassification):
 class IRLogisticRegression(IRClassification):
     def __init__(self):
         super(IRLogisticRegression, self).__init__("logisticRegression",
-                                       [IRPar("max_iter", 100, "int", 100, 1000, 10)],  # TODO: if I want to pass a list of values?
-                                       LogisticRegression)
+                                                   [IRNumPar("max_iter", 100, "int", 100, 1000, 10)],  # TODO: if I want to pass a list of values?
+                                                   LogisticRegression)
         self._param_setted = False
 
     def parameter_tune(self, dataset, labels):

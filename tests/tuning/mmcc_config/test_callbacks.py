@@ -9,7 +9,7 @@ from mmcc_framework import Framework
 import DSBot.tuning.mmcc_integration as integration
 import DSBot.tuning.tuning_mixins as mixins
 from ir.ir_operations import IROp
-from ir.ir_parameters import IRPar
+from ir.ir_parameters import IRNumPar
 
 
 class IROpImpl(IROp):
@@ -19,9 +19,9 @@ class IROpImpl(IROp):
 
 # noinspection DuplicatedCode
 pipeline = [
-    IROpImpl('m1', [IRPar('p1', 0, '', 0, 1), IRPar('p2', 0, '', 0, 1), IRPar('p3', 0, '', 0, 1)]),
-    IROpImpl('m2', [IRPar('p1', 0, '', 0, 1), IRPar('p2', 0, '', 0, 1), IRPar('p3', 0, '', 0, 1)]),
-    IROpImpl('m3', [IRPar('p1', 0, '', 0, 1), IRPar('p2', 0, '', 0, 1), IRPar('p3', 0, '', 0, 1)]),
+    IROpImpl('m1', [IRNumPar('p1', 0, '', 0, 1), IRNumPar('p2', 0, '', 0, 1), IRNumPar('p3', 0, '', 0, 1)]),
+    IROpImpl('m2', [IRNumPar('p1', 0, '', 0, 1), IRNumPar('p2', 0, '', 0, 1), IRNumPar('p3', 0, '', 0, 1)]),
+    IROpImpl('m3', [IRNumPar('p1', 0, '', 0, 1), IRNumPar('p2', 0, '', 0, 1), IRNumPar('p3', 0, '', 0, 1)]),
 ]
 
 
