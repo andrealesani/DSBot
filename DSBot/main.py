@@ -48,7 +48,9 @@ class Dataset:
         return len(list(set(cols) - set(num_cols))) > 0, list(set(cols) - set(num_cols))
 
     def has_outliers(self):
-        #if len(self.ds[np.abs(self.ds.values - self.ds.values.mean()) <= (3 * self.ds.values.std())])< len(self.ds):
+        _, cat_col = self.categorical_columns()
+        df = self.ds.drop(list(cat_col), axis=1)
+        #if len(df[np.abs(df.values - df.values.mean()) <= (3 * df.values.std())])< len(df):
         #    return True
         return False
 

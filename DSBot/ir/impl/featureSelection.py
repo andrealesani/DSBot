@@ -21,7 +21,7 @@ class IRFeatureSelection(IROp):
         self.parameter_tune(result)
         for p,v in self.parameters.items():
             self._model.__setattr__(p,v.value)
-        self._param_setted = True
+        #self._param_setted = True
 
     def get_labels(self):
         if self.labels is None:
@@ -57,19 +57,20 @@ class IRVarianceThreshold(IRFeatureSelection):
 class IRLaplace(IRFeatureSelection):
     def __init__(self):
         super(IRLaplace, self).__init__("laplace",
-                                    [IRPar('percentage', 0, "int", 0, 100, 5)],  # TODO: what are minimum and maximum?
+                                    [IRPar('percentage', 1, "float", 0, 1, 0.05)],  # TODO: what are minimum and maximum?
                                     Laplace)
 
     def parameter_tune(self, dataset):
         pass
 
     def run(self, result, session_id):
+        print('param', self.parameters)
         if 'new_dataset' in result:
             dataset = result['new_dataset']
         else:
             dataset = result['original_dataset'].ds
-        if not self._param_setted:
-            self.set_model(dataset)
+        #if not self._param_setted:
+        self.set_model(dataset)
         try:
             transformed_ds = self._model.fit_transform(dataset.values)
         except:
@@ -78,6 +79,7 @@ class IRLaplace(IRFeatureSelection):
         if 'transformed_ds' not in result:
             result['transformed_ds'] = self.transformed_ds
             print('laplace' , result['transformed_ds'])
+
         return result
 
 

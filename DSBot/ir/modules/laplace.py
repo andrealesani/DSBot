@@ -66,11 +66,11 @@ def lap_score(X, **kwargs):
     # if 'W' is not specified, use the default W
     if 'W' not in kwargs.keys():
         if 't_param' not in kwargs.keys():
-            t_param = 1
+            t = 1
         else:
             t = kwargs['t_param']
         if 'neighbour_size' not in kwargs.keys():
-            neighbour_size = 5
+            n = 5
         else:
             n = kwargs['neighbour_size']
 
@@ -161,11 +161,11 @@ class Laplace:
         self.percentage = percentage
 
     def fit_transform(self, X):
-        print(X)
         n_samples, n_feature = X.shape
         data = X[:, 0:n_feature]
 
         L = lap_score(data)
+        selected_k = []
         #print(L)
         #print(feature_ranking(L))
         if self.percentage==None:
@@ -173,20 +173,25 @@ class Laplace:
             for i in range(len(feature_ranking(L))):
                 if L[i] < val:
                     if len(selected_k) == 0:
-                        selected_k = [X[i].values]
+                        selected_k = [X.T[i]]
+
                     else:
-                        selected_k = np.concatenate((selected_k, [X[i].values]))
+                        selected_k = np.concatenate((selected_k, [X.T[i]]))
         else:
-            val = val*X.shape[1]
+            val = self.percentage*X.shape[1]
+            print('perc', self.percentage, 'val', val)
             for i in range(len(feature_ranking(L))):
-                if feature_ranking(L) < val:
+                #print(feature_ranking(L)[i])
+                if feature_ranking(L)[i] <= val:
                     if len(selected_k) == 0:
-                        selected_k = [X[i].values]
+                        selected_k = [X.T[i]]
+
                     else:
-                        selected_k = np.concatenate((selected_k, [X[i].values]))
-        selected_k = []
+                        selected_k = np.concatenate((selected_k, [X.T[i]]))
 
         selected_k = pd.DataFrame(selected_k).T
-        X = selected_k
-        print(X)
+        print('selected_k shape', selected_k.shape)
+        #print(selected_k)
+        X = selected_k.values
+        #print(X)
         return X
