@@ -54,7 +54,7 @@
             <v-btn color="secondary" @click="restart()"> Restart </v-btn>
             <v-btn
               v-if="resultsReady"
-              color="secondary"
+              :color="pipelineEdited ? 'primary' : 'secondary'"
               @click="toFramework({ intent: 'run' })"
             >
               Run again
@@ -76,7 +76,7 @@ export default {
     }
   },
   computed: {
-    ...mapState(['e1', 'resultsReady']),
+    ...mapState(['e1', 'resultsReady', 'pipelineEdited']),
   },
   mounted() {
     this.polling = setInterval(() => this.waitForResults(), 3000)

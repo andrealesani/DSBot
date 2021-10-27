@@ -113,16 +113,17 @@ class TuningOpOptionsMixin:
         return str(self.to_json())
 
     @classmethod
-    def reverse_pretty(cls, pretty: str, pipeline: Pipeline):
+    def reverse_pretty(cls, pretty: str, pipeline: Pipeline, module_n=None):
         """Returns the first IROp that has `pretty` as its `name` or `pretty_name` and its IROpOptions.
         If none is found this returns None."""
         for module in pipeline:
-            if module.name == pretty or module.pretty_name == pretty:
-                return module, module
+            if module_n is None or module.name == module_n:
+                if module.name == pretty or module.pretty_name == pretty:
+                    return module, module
 
-            for option in module.models.values():
-                if option.name == pretty or option.pretty_name == pretty:
-                    return option, module
+                for option in module.models.values():
+                    if option.name == pretty or option.pretty_name == pretty:
+                        return option, module
         return None, None
 
 
@@ -219,13 +220,14 @@ class TuningParMixin:
         return str(self.to_json())
 
     @classmethod
-    def reverse_pretty(cls, pretty: str, pipeline: Pipeline):
+    def reverse_pretty(cls, pretty: str, pipeline: Pipeline, module_n: str = None):
         """Returns the first IRPar that has `pretty` as its `name` or `pretty_name` and its IROp (IROpOptions).
         If none is found this returns None."""
         for module in pipeline:
-            for param in module.parameters.values():
-                if param.name == pretty or param.pretty_name == pretty:
-                    return param, module
+            if module_n is None or module.name == module_n:
+                for param in module.parameters.values():
+                    if param.name == pretty or param.pretty_name == pretty:
+                        return param, module
         return None, None
 
 

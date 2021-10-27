@@ -10,7 +10,7 @@
           >
             <v-col :cols="2">
               <font-awesome-icon
-                :icon="item.isBot ? 'lightbulb' : 'user'"
+                :icon="item.isBot ? 'robot' : 'user'"
                 size="2x"
                 color="#424242"
               />

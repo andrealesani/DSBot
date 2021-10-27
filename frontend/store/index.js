@@ -8,6 +8,7 @@ export const state = () => ({
   tuningChat: [],
   tuningPipeline: [],
   backendAvailable: true,
+  pipelineEdited: false,
 })
 
 export const mutations = {
@@ -33,13 +34,17 @@ export const mutations = {
     state.tuningChat.push({ isBot: false, message: msg })
   },
   receiveChat(state, msg) {
-    state.tuningChat.push({ isBot: true, message: msg })
+    if (msg) state.tuningChat.push({ isBot: true, message: msg })
   },
   setTuningPipeline(state, pipeline) {
     state.tuningPipeline = pipeline
   },
   setAvailable(state, available) {
     state.backendAvailable = available
+  },
+
+  setPipelineEdited(state, edited) {
+    state.pipelineEdited = edited
   },
 }
 
@@ -105,6 +110,7 @@ export const actions = {
             context.commit('setResultsDetails', response.data.details)
             context.commit('setResultsReady', response.data.ready)
             context.commit('receiveChat', response.data.tuning.utterance)
+            context.commit('setPipelineEdited', false)
           } else {
             console.log('Non faccio niente')
           }

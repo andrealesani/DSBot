@@ -81,13 +81,13 @@ def edit_param(data, kb, context, _):
         context['start_work'](context['pipeline'])
         return Response(kb, context, True, payload={'status': 'end'})
 
-    elif intent == 'set' and 'parameter' in data and 'value' in data:
+    elif intent == 'set' and 'module' in data and 'parameter' in data and 'value' in data:
         msg = _set_impl(data, kb, context)
 
-    elif intent == 'reset' and 'parameter' in data:
+    elif intent == 'reset' and 'module' in data and 'parameter' in data:
         msg = _reset_impl(data, kb, context)
 
-    elif intent == 'set_module' and 'module' in data:
+    elif intent == 'set_module' and 'module' in data and 'value' in data:
         msg = _set_module_impl(data, kb, context)
 
     else:
@@ -102,7 +102,7 @@ def edit_param(data, kb, context, _):
 
 
 def _set_impl(data, kb, context) -> str:
-    param, module = TuningParMixin.reverse_pretty(data['parameter'], context['pipeline'])
+    param, module = TuningParMixin.reverse_pretty(data['parameter'], context['pipeline'], data['module'])
     if param is None:
         msg = kb['no_param_err'] + data['parameter']
     else:
@@ -115,7 +115,7 @@ def _set_impl(data, kb, context) -> str:
 
 
 def _set_module_impl(data, kb, context) -> str:
-    module, parent = TuningOpOptionsMixin.reverse_pretty(data['module'], context['pipeline'])
+    module, parent = TuningOpOptionsMixin.reverse_pretty(data['value'], context['pipeline'], data['module'])
     if module is None:
         msg = kb['no_module_err'] + data['module']
     else:
@@ -125,7 +125,7 @@ def _set_module_impl(data, kb, context) -> str:
 
 
 def _reset_impl(data, kb, context) -> str:
-    param, module = TuningParMixin.reverse_pretty(data['parameter'], context['pipeline'])
+    param, module = TuningParMixin.reverse_pretty(data['parameter'], context['pipeline'], data['module'])
     if param is None:
         msg = kb['no_param_err'] + data['parameter']
     else:

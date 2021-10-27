@@ -7,13 +7,16 @@
         </template>
         <span>{{ param.description }}</span>
       </v-tooltip>
-      <div v-if="isSlider">
+
+      <div v-if="isVisible">
         <v-slider
+          v-if="isSlider"
           :key="param.name"
           v-model="localValue"
+          hide-details
           :min="param.min"
           :max="param.max"
-          :color="param.is_highlighted ? 'primary' : 'secondary'"
+          :color="param.is_highlighted ? 'red' : 'secondary'"
           :track-color="'secondary'"
           :thumb-label="true"
           :step="param.type === 'int' ? '1' : '0.1'"
@@ -57,12 +60,13 @@
             /> </template
         ></v-select>
       </div>
+      <div v-else class="px-3">This parameter is not enabled</div>
     </v-col>
   </div>
 </template>
 
 <script>
-import { mapActions } from 'vuex'
+import { mapActions, mapMutations } from 'vuex'
 export default {
   props: ['param', 'module'],
   data() {
@@ -85,13 +89,14 @@ export default {
         return this.param.value
       },
       set(val) {
+        this.setPipelineEdited(true)
         if (this.coolingDown) clearTimeout(this.cooldown)
         this.coolingDown = true
         this.cooldown = setTimeout(() => {
           this.coolingDown = false
           this.toFramework({
             intent: 'set',
-            module: this.module,
+            module: this.module.name,
             parameter: this.param.name,
             value: val,
           })
@@ -104,10 +109,11 @@ export default {
     reset() {
       this.toFramework({
         intent: 'reset',
-        module: this.module,
+        module: this.module.name,
         parameter: this.param.name,
       })
     },
+    ...mapMutations(['setPipelineEdited']),
   },
 }
 </script>

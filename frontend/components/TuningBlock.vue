@@ -8,8 +8,14 @@
         solo
         flat
         hide-details
-        :background-color="module.should_change ? 'accent' : 'white'"
-        :append-icon="'mdi-swap-horizontal-bold'"
+        :background-color="
+          module.should_change
+            ? 'orange'
+            : module.is_highlighted
+            ? '#FFF9BF'
+            : 'white'
+        "
+        :append-icon="'mdi-menu'"
       ></v-select>
       <div v-else>
         {{ module.pretty_name }}
@@ -24,13 +30,13 @@
       v-for="parameter in module.parameters"
       :key="parameter.name"
       :param="parameter"
-      :module="module.name"
+      :module="module"
     />
   </v-card>
 </template>
 
 <script>
-import { mapActions } from 'vuex'
+import { mapActions, mapMutations } from 'vuex'
 export default {
   props: ['module'],
 
@@ -45,15 +51,18 @@ export default {
         return this.module.pretty_name
       },
       set(val) {
+        this.setPipelineEdited(true)
         this.toFramework({
           intent: 'set_module',
-          module: val,
+          module: this.module.name,
+          value: val,
         })
       },
     },
   },
   methods: {
     ...mapActions(['toFramework']),
+    ...mapMutations(['setPipelineEdited']),
   },
 }
 </script>
