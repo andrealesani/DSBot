@@ -1,6 +1,7 @@
 absl-py==0.12.0
 aniso8601==9.0.1
 apyori==1.1.2
+autoviz==0.0.84
 cachetools==4.2.2
 certifi==2020.12.5
 chardet==4.0.0
@@ -64,6 +65,7 @@ tqdm==4.60.0
 urllib3==1.26.4
 waitress==1.4.4
 Werkzeug==1.0.1
+wordcloud==1.8.1
 xlrd==2.0.1
 
 # TODO: fix conflicts. Move to requirements-dev.txt? 
