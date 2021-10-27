@@ -31,6 +31,31 @@
             />
           </template>
         </v-slider>
+
+        <v-select
+          v-if="isCategorical"
+          :key="param.name"
+          v-model="localValue"
+          :items="param.possible_val"
+          hide-details
+          :background-color="
+            param.is_highlighted
+              ? 'orange'
+              : module.is_highlighted
+              ? '#FFF9BF'
+              : 'white'
+          "
+          :prepend-icon="param.value === param.default ? '' : 'mdi-restore'"
+          @click:prepend="reset"
+          ><template #append>
+            <v-progress-circular
+              v-if="coolingDown"
+              indeterminate
+              color="gray"
+              size="15"
+              width="2"
+            /> </template
+        ></v-select>
       </div>
     </v-col>
   </div>
@@ -41,10 +66,17 @@ import { mapActions } from 'vuex'
 export default {
   props: ['param', 'module'],
   data() {
+    const iSl = this.param.type === 'float' || this.param.type === 'int'
+    const iCa = this.param.type === 'categorical'
+
     return {
       cooldown: null,
       coolingDown: false,
-      isSlider: this.param.type === 'float' || this.param.type === 'int',
+      isSlider: iSl,
+      isCategorical: iCa,
+      isVisible:
+        (iSl && this.param.max !== this.param.min) ||
+        (iCa && this.param.possible_val.length > 1),
     }
   },
   computed: {

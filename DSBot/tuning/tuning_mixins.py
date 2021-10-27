@@ -197,28 +197,23 @@ class TuningParMixin:
         self._highlighted = value
 
     def to_json(self):
-        if type(self).__name__== "IRNumPar":
-            return {
-                'name': self.name,
-                'pretty_name': self.pretty_name,
-                'value': self.value,
-                'min': self.min_v,
-                'max': self.max_v,
-                'default': self.default_value,
-                'description': self.description,
-                'is_highlighted': self.is_highlighted,
-                'type': self.v_type
-            }
-        else:
-            return {
-                'name': self.name,
-                'pretty_name': self.pretty_name,
-                'value': self.value,
-                'possible_val': self.possible_val,
-                'default': self.default_value,
-                'description': self.description,
-                'is_highlighted': self.is_highlighted
-            }
+        j = {
+            'name': self.name,
+            'pretty_name': self.pretty_name,
+            'value': self.value,
+            'default': self.default_value,
+            'description': self.description,
+            'is_highlighted': self.is_highlighted,
+            'type': self.v_type
+        }
+
+        if self.v_type == 'categorical':
+            j['possible_val'] = self.possible_val
+        elif self.v_type in ['int', 'float']:
+            j['min'] = self.min_v
+            j['max'] = self.max_v
+
+        return j
 
     def __repr__(self) -> str:
         return str(self.to_json())

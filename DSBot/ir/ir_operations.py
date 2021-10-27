@@ -2,7 +2,7 @@ from abc import ABC, abstractmethod
 from typing import Iterable, Dict
 
 from ir.ir_exceptions import UnknownParameter
-from ir.ir_parameters import IRNumPar
+from ir.ir_parameters import IRPar
 from tuning import TuningOpMixin, TuningOpOptionsMixin
 
 
@@ -15,7 +15,7 @@ class IROp(TuningOpMixin, ABC):
     :ivar parameters: dictionary where the keys are the parameter names and the values are `IRPar` objects
     """
 
-    def __init__(self, name: str, parameters: Iterable[IRNumPar]):
+    def __init__(self, name: str, parameters: Iterable[IRPar]):
         self.name = name
         self.parameters = par_helper(parameters, name)
         self._param_setted = False
@@ -68,7 +68,7 @@ class IROpOptions(TuningOpOptionsMixin, object):
         return self.actual_model.__setattr__(key, value)
 
 
-def par_helper(parameters: Iterable[IRNumPar], module_name: str) -> Dict[str, IRNumPar]:
+def par_helper(parameters: Iterable[IRPar], module_name: str) -> Dict[str, IRPar]:
     """Given an iterable of IRPar and their module name, returns a dictionary containing the parameters.
 
     This helps to reduce chances of errors with mismatching dictionary key and parameter name,
