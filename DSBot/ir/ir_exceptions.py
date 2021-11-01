@@ -16,3 +16,7 @@ class PCADataNotAvailable(Exception):
 
 class IncorrectValue(Exception):
     pass
+
+
+class RulesNotAvailable(Exception):
+    pass

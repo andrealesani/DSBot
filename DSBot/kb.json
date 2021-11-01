@@ -2,4 +2,5 @@
 "plot":  ["plot","scatterplot","heatmap","clustermap", "distplot", "barplot"],
 "classification" :  ["classification","randomForest","logisticRegression"],
 "correlation":  ["correlation","pearson", "spearman"],
-"featureSelection": ["featureSelection", "laplace", "varianceThreshold"]}
+"featureSelection": ["featureSelection", "laplace", "varianceThreshold"],
+"associationRules":  ["associationRules","aPriori"]}

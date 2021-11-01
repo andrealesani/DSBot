@@ -74,7 +74,7 @@ def receive_ds():
             #dataset.label = label
             #dataset.hasLabel = True
             print('dslabel', dataset.label, dataset.hasLabel)
-
+        dataset.set_characteristics()
         kb = KnowledgeBase()
         kb.kb = dataset.filter_kb(kb.kb)
         data[session_id]['kb'] = kb

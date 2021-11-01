@@ -138,7 +138,7 @@ aPriori
 aPriori
 aPriori
 aPriori
-correlation
+aPriori
 correlation
 correlation
 distplot

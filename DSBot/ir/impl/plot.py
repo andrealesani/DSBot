@@ -15,7 +15,7 @@ from sklearn.preprocessing import label_binarize
 from sklearn.metrics import roc_auc_score
 from scipy import interp
 from itertools import cycle
-from ir.ir_exceptions import LabelsNotAvailable, PCADataNotAvailable, CorrelationNotAvailable
+from ir.ir_exceptions import LabelsNotAvailable, PCADataNotAvailable, CorrelationNotAvailable, RulesNotAvailable
 from ir.ir_operations import IROp, IROpOptions
 from ir.ir_parameters import IRNumPar
 from autoviz.AutoViz_Class import AutoViz_Class#Instantiate the AutoViz class
@@ -99,6 +99,46 @@ class IRScatterplot(IRPlot):
             #result['plot'].append("u_labels = np.unique(result['labels'])\nfor i in u_labels:\n\tax = plt.scatter(result['transformed_ds'][result['labels'] == i, 0], result['transformed_ds'][result['labels'] == i, 1], label=i)")
 
         result['original_dataset'].name_plot = './temp/temp_' + str(session_id) + '/scatter.png'
+
+        # plt.show()
+        return  result
+
+class IRScatterAssociationRules(IRPlot):
+    def __init__(self):
+        super(IRScatterAssociationRules, self).__init__("scatterAssociationRules",
+                                            [],
+                                            scatter)
+
+    def parameter_tune(self, dataset):
+        pass
+
+    def run(self, result, session_id):
+        if 'associationRules' not in result:
+            raise RulesNotAvailable
+        else:
+            rules = result['associationRules']
+        fig, (ax1) = plt.subplots(3, figsize=(15, 30))
+        ax1[0].scatter(rules['support'], rules['confidence'], alpha=0.5)
+        ax1[0].set_xlabel('support')
+        ax1[0].set_ylabel('confidence')
+        ax1[0].set_title('Support vs Confidence')
+        ax1[1].scatter(rules['support'], rules['lift'], alpha=0.5)
+        ax1[1].set_xlabel('support')
+        ax1[1].set_ylabel('lift')
+        ax1[1].set_title('Support vs Lift')
+        fit = np.polyfit(rules['lift'], rules['confidence'], 1)
+        fit_fn = np.poly1d(fit)
+        ax1[2].plot(rules['lift'], rules['confidence'], 'yo', rules['lift'],
+                    fit_fn(rules['lift']))
+        plt.savefig('./temp/temp_' + str(session_id) + '/scatter_associationRules.png')
+        if 'plot' not in result:
+            result['plot'] = ['./temp/temp_' + str(session_id) + '/scatter_associationRules.png']
+            #result['plot'] = ["u_labels = np.unique(result['labels'])\nfor i in u_labels:\n\tax = plt.scatter(result['transformed_ds'][result['labels'] == i, 0], result['transformed_ds'][result['labels'] == i, 1], label=i)"]
+        else:
+            result['plot'].append('./temp/temp_' + str(session_id) + '/scatter_associationRules.png')
+            #result['plot'].append("u_labels = np.unique(result['labels'])\nfor i in u_labels:\n\tax = plt.scatter(result['transformed_ds'][result['labels'] == i, 0], result['transformed_ds'][result['labels'] == i, 1], label=i)")
+
+        result['original_dataset'].name_plot = './temp/temp_' + str(session_id) + '/scatter_associationRules.png'
 
         # plt.show()
         return  result
@@ -288,7 +328,10 @@ class IRROC(IRPlot):
         result['original_dataset'].measures['auc'] = roc_auc
         return result
 
+
+
+
 # FIXME: this class was commented out because the implementation raises errors
 class IRGenericPlot(IROpOptions):
      def __init__(self):
-         super(IRGenericPlot, self).__init__([IRScatterplot(), IRClustermap(), IRDistplot(), IRBoxplot(), IRBarplot(), IRROC()], "scatterplot")
+         super(IRGenericPlot, self).__init__([IRScatterplot(), IRClustermap(), IRDistplot(), IRBoxplot(), IRBarplot(), IRROC(), IRScatterAssociationRules()], "scatterplot")

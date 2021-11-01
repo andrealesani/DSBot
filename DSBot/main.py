@@ -12,13 +12,10 @@ import numpy as np
 class Dataset:
     def __init__(self, ds, label=None):
         self.ds = ds
-        if ds is not None:
-            self.missingValues, self.categorical, self.zeroVariance, self.outliers = self.check_ds()
-        self.moreFeatures = self.more_features()
         self.name_plot = None
         self.hasLabel = False
         self.measures = {}
-        print('mv',self.missingValues, 'cat',self.categorical,'zv', self.zeroVariance, 'mf',self.moreFeatures, 'outliers', self.outliers)
+
 
     def more_features(self):
         if self.ds.shape[1]>2:
@@ -35,6 +32,12 @@ class Dataset:
         #self.ds = self.ds.drop(label, axis=1)
         self.hasLabel = True
 
+    def set_characteristics(self):
+        if self.ds is not None:
+            self.missingValues, self.categorical, self.zeroVariance, self.outliers = self.check_ds()
+        self.moreFeatures = self.more_features()
+        print('mv',self.missingValues, 'cat',self.categorical,'zv', self.zeroVariance, 'mf',self.moreFeatures, 'outliers', self.outliers)
+
     def missing_values(self):
         return (self.ds.isnull().sum().sum())>0
 
@@ -48,10 +51,12 @@ class Dataset:
         return len(list(set(cols) - set(num_cols))) > 0, list(set(cols) - set(num_cols))
 
     def has_outliers(self):
-        _, cat_col = self.categorical_columns()
-        df = self.ds.drop(list(cat_col), axis=1)
-        #if len(df[np.abs(df.values - df.values.mean()) <= (3 * df.values.std())])< len(df):
-        #    return True
+        df = self.ds.drop(list(self.cat_cols), axis=1)
+        df = df.T
+        mean = df.mean()
+        std = df.std()
+        if len(df[(np.abs(df - mean) <= (7 * std)).all(axis=1)])< len(df):
+            return True
         return False
 
     def curse_of_dim(self):
@@ -67,7 +72,7 @@ class Dataset:
 
     def check_ds(self):
         missing_val = self.missing_values()
-        categorical, cols = self.categorical_columns()
+        categorical, self.cat_cols = self.categorical_columns()
         zero_var = self.zero_variance()
         outliers = self.has_outliers()
         return missing_val, categorical, zero_var, outliers
@@ -75,7 +80,7 @@ class Dataset:
     def filter_kb(self, kb):
         drop = []
         for i in self.__dict__:
-            if (str(i) in ['missingValues','categorical','zeroVariance','hasLabel','moreFeatures']):
+            if (str(i) in ['missingValues','categorical','zeroVariance','hasLabel','moreFeatures', 'outliers']):
                 if getattr(self, i):
                     for j in range(len(kb)):
                         kb_val = [i.strip() for i in kb.values[j,0].split(',')]

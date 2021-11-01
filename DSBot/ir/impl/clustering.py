@@ -4,7 +4,7 @@ import numpy as np
 from sklearn import metrics
 from sklearn.cluster import KMeans, AgglomerativeClustering, DBSCAN
 from sklearn.model_selection import GridSearchCV, KFold
-
+from sklearn.neighbors import NearestNeighbors
 from ir.ir_exceptions import LabelsNotAvailable
 from ir.ir_operations import IROp, IROpOptions
 from ir.ir_parameters import IRNumPar, IRCatPar
@@ -49,10 +49,14 @@ class IRClustering(IROp):
         result['labels'] = self.labels
         print('labels', result['labels'])
         clusters = self._model.fit_predict(dataset)
-        result['silhouette'] = metrics.silhouette_score(dataset, clusters)
-        result['original_dataset'].measures['num_clusters'] = self.parameters['n_clusters'].value
-        result['original_dataset'].measures['silhouette'] = result['silhouette']
+        try:
+            result['silhouette'] = metrics.silhouette_score(dataset, clusters)
+            result['original_dataset'].measures['num_clusters'] = self.parameters['n_clusters'].value
+            result['original_dataset'].measures['silhouette'] = result['silhouette']
+        except:
+            LabelsNotAvailable
         self._param_setted = False
+        print(self._model.get_params())
         return result
 
 class IRKMeans(IRClustering):
@@ -84,7 +88,8 @@ class IRAgglomerativeClustering(IRClustering):
     def __init__(self):
         super(IRAgglomerativeClustering, self).__init__("agglomerativeClustering",
                                                         [IRNumPar("n_clusters", 2, "int", 2, 10, 1),
-                                                         IRCatPar("linkage", "single", ['single','complete','ward'])],  # TODO: what is the maximum?
+                                                         IRCatPar("linkage", "single", ['single','complete','ward']),
+                                                         IRCatPar("affinity", "euclidean", ["euclidean", "l1", "l2", "manhattan", "cosine", "precomputed"])],  # TODO: what is the maximum?
                                                         AgglomerativeClustering)
 
 
@@ -108,11 +113,12 @@ class IRAgglomerativeClustering(IRClustering):
 class IRDBSCAN(IRClustering):
     def __init__(self):
         super(IRDBSCAN, self).__init__("dbscan",
-                                       [IRNumPar("eps", 0.1, "float", 0, 1, 0.1)],  # TODO: what is the maximum?
+                                       [IRNumPar("eps", 0.1, "float", 0, 1, 0.1),
+                                        IRNumPar('min_samples', 5, 'int', 2, 10,1)],  # TODO: what is the maximum?
                                        DBSCAN)
 
     def parameter_tune(self, dataset):
-        from sklearn.neighbors import NearestNeighbors
+        self.parameters['min_samples'].max_v = len(dataset)
         neigh = NearestNeighbors(n_neighbors=2)
         nbrs = neigh.fit(dataset)
         distances, indices = nbrs.kneighbors(dataset)

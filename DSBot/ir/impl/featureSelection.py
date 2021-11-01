@@ -17,8 +17,8 @@ class IRFeatureSelection(IROp):
     def parameter_tune(self, dataset):
         pass
 
-    def set_model(self, result):
-        self.parameter_tune(result)
+    def set_model(self, dataset):
+        self.parameter_tune(dataset)
         for p,v in self.parameters.items():
             self._model.__setattr__(p,v.value)
         #self._param_setted = True
@@ -48,11 +48,12 @@ class IRFeatureSelection(IROp):
 class IRVarianceThreshold(IRFeatureSelection):
     def __init__(self):
         super(IRVarianceThreshold, self).__init__("varianceThreshold",
-                                                  [IRNumPar('threshold', 0, "float", 0, 1, 0.1)],  # TODO: what are minimum and maximum?
+                                                  [IRNumPar('threshold', 0, "float", 0, 10, 0.1)],  # TODO: what are minimum and maximum?
                                                   VarianceThreshold)
 
     def parameter_tune(self, dataset):
-        pass
+        self.parameters['threshold'].max_v=dataset.std().max()
+
 
 class IRLaplace(IRFeatureSelection):
     def __init__(self):

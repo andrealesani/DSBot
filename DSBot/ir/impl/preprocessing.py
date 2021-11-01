@@ -182,8 +182,13 @@ class IROutliersRemove(IRPreprocessing):
             dataset = result['new_dataset']
         else:
             dataset = result['original_dataset'].ds
-
-        ds = dataset[np.abs(dataset.values - dataset.values.mean()) <= (3 * dataset.values.std())]
+            dataset = dataset.drop(list(result['original_dataset'].cat_cols), axis=1)
+        #df = dataset.drop(list(result['original_dataset'].cat_cols), axis=1)
+        df = dataset.T
+        mean = df.mean()
+        std = df.std()
+        ds = df[(np.abs(df - mean) <= (7 * std)).all(axis=1)].T
+        print('len', ds.shape)
         result['new_dataset'] = ds
         return result
 

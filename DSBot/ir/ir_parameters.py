@@ -42,9 +42,9 @@ class IRPar(TuningParMixin, ABC):
     @value.setter
     def value(self, new_value):
         """Do not use this method during tuning by the user (use tune_value)."""
-        if self._actual_value is not None:
-            logging.getLogger(__name__).debug('Parameter set was ignored because a custom value was defined')
-            return
+        #if self._actual_value is not None:
+        #    logging.getLogger(__name__).debug('Parameter set was ignored because a custom value was defined')
+        #    return
 
         if not self.is_valid(new_value):
             logging.getLogger(__name__).error('Wrong parameter: %s; module: %s', self.name, self.module)
@@ -95,6 +95,11 @@ class IRCatPar(IRPar):
 
     def is_valid(self, new_value):
         return new_value in self.possible_val
+
+
+    @IRPar.value.setter
+    def value(self, new_value):
+        IRPar.value.fset(self, new_value)
 
 
 class IRNumPar(IRPar):
