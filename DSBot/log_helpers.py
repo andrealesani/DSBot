@@ -38,6 +38,7 @@ def setup_logger(prefix: str = ''):
     # Set root logger to accept all messages
     root = logging.getLogger()
     root.setLevel(logging.DEBUG)
+    logging.getLogger("matplotlib.font_manager").setLevel(logging.INFO)
 
     # Log string: prefix 2003-07-08 16:49:45,896 Logger.Name LEVEL Message
     format_s = f"%(asctime)s %(name)s %(levelname)s %(message)s"
