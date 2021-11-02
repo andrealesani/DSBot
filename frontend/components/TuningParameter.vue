@@ -92,15 +92,18 @@ export default {
         this.setPipelineEdited(true)
         if (this.coolingDown) clearTimeout(this.cooldown)
         this.coolingDown = true
-        this.cooldown = setTimeout(() => {
-          this.coolingDown = false
-          this.toFramework({
-            intent: 'set',
-            module: this.module.name,
-            parameter: this.param.name,
-            value: val,
-          })
-        }, 2000)
+        this.cooldown = setTimeout(
+          () => {
+            this.coolingDown = false
+            this.toFramework({
+              intent: 'set',
+              module: this.module.name,
+              parameter: this.param.name,
+              value: val,
+            })
+          },
+          this.isSlider ? 2000 : 100 // Different cooling down duration
+        )
       },
     },
   },
