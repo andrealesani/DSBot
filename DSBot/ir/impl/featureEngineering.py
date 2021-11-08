@@ -95,8 +95,8 @@ class IRFeatureEngineeringForViz(IROp):
         except:
             transformed_ds = self._model.fit_transform(dataset.values)
         self.transformed_ds = transformed_ds
-        if 'transformed_ds' not in result:
-            result['transformed_ds'] = self.transformed_ds
+        #if 'transformed_ds' not in result:
+        result['transformed_ds'] = self.transformed_ds
         return result
 
 class IRPCA2(IRFeatureEngineeringForViz):
@@ -117,6 +117,23 @@ class IRMDS2(IRFeatureEngineeringForViz):
 
     def parameter_tune(self, dataset):
         pass
+
+    def run(self, result, session_id):
+        if 'new_dataset' in result:
+            dataset = result['new_dataset']
+        else:
+            dataset = result['original_dataset'].ds
+        if not self._param_setted:
+            self.set_model(dataset)
+        print('mds', self._model)
+        try:
+            transformed_ds = self._model.fit_transform(dataset.values)
+        except:
+            transformed_ds = self._model.fit_transform(dataset.values)
+        self.transformed_ds = transformed_ds
+        #if 'transformed_ds' not in result:
+        result['transformed_ds'] = self.transformed_ds
+        return result
 
 class IRFastICA2(IRFeatureEngineeringForViz):
     def __init__(self):

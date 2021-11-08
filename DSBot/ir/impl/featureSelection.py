@@ -79,7 +79,7 @@ class IRLaplace(IRFeatureSelection):
         self.transformed_ds = transformed_ds
         if 'transformed_ds' not in result:
             result['transformed_ds'] = self.transformed_ds
-            print('laplace' , result['transformed_ds'])
+            print('laplace' , result['transformed_ds'].shape)
 
         return result
 

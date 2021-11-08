@@ -114,7 +114,7 @@ def receive_utterance():
         for i in range(len(kb.kb)):
             sent = [x for x in kb.kb.values[i, 1:] if str(x) != 'nan']
             print(sent)
-            scores[i] = NW(wf, sent, kb.voc)
+            scores[i] = NW(wf, sent, kb.voc)/len(sent)
             print(scores[i])
 
         print(scores)
