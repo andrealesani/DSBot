@@ -3,6 +3,7 @@ from abc import abstractmethod
 import pandas as pd
 import numpy as np
 from sklearn.impute._iterative import IterativeImputer
+from sklearn.preprocessing import StandardScaler, MinMaxScaler, LabelEncoder
 from pandas.api.types import is_numeric_dtype
 from ir.ir_operations import IROp, IROpOptions
 
@@ -160,6 +161,7 @@ class IRLabelRemove(IRPreprocessing):
         #if not is_numeric_dtype(label):
         #    label = pd.get_dummies(label)
         #label = label.dropna()
+        label = LabelEncoder().fit_transform(label)
 
         #result['new_dataset'] = dataset.T[set(label.index.values)].T
         result['labels']=label
@@ -187,13 +189,53 @@ class IROutliersRemove(IRPreprocessing):
         df = dataset.T
         mean = df.mean()
         std = df.std()
-        ds = df[(np.abs(df - mean) <= (7 * std)).all(axis=1)].T
-        print('len', ds.shape)
-        result['new_dataset'] = ds
+        ds = df[(np.abs(df - mean) <= (5 * std)).all(axis=1)].T
+        if ds.shape[1]!=0 and ds.shape[0]!=0:
+            print('len', ds.shape)
+            result['new_dataset'] = ds
+
+        return result
+
+class IRStandardization(IRPreprocessing):
+    def __init__(self):
+        super(IRStandardization, self).__init__("standardization")
+
+    def parameter_tune(self, dataset):
+        # TODO: implement
+        pass
+
+    def run(self, result, session_id):
+        if 'new_dataset' in result:
+            dataset = result['new_dataset']
+        else:
+            dataset = result['original_dataset'].ds
+            dataset = dataset.drop(list(result['original_dataset'].cat_cols), axis=1)
+        #df = dataset.drop(list(result['original_dataset'].cat_cols), axis=1)
+
+        result['new_dataset'] = pd.DataFrame(StandardScaler().fit_transform(dataset))
+        return result
+
+class IRNormalization(IRPreprocessing):
+    def __init__(self):
+        super(IRNormalization, self).__init__("normalization")
+
+    def parameter_tune(self, dataset):
+        # TODO: implement
+        pass
+
+    def run(self, result, session_id):
+        if 'new_dataset' in result:
+            dataset = result['new_dataset']
+        else:
+            dataset = result['original_dataset'].ds
+            dataset = dataset.drop(list(result['original_dataset'].cat_cols), axis=1)
+        #df = dataset.drop(list(result['original_dataset'].cat_cols), axis=1)
+
+        result['new_dataset'] = pd.DataFrame(MinMaxScaler().fit_transform(dataset))
         return result
 
 class IRGenericPreprocessing(IROpOptions):
     def __init__(self):
-        super(IRGenericPreprocessing, self).__init__([IRLabelRemove(), IROneHotEncode(), IROutliersRemove()],
+        super(IRGenericPreprocessing, self).__init__([IRLabelRemove(), IROneHotEncode(), IROutliersRemove(), IRStandardization(), IRNormalization()],
                                                      "labelRemove")
 

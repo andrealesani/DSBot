@@ -7,6 +7,7 @@ from ir.ir_parameters import IRNumPar
 from sklearn.model_selection import RandomizedSearchCV
 from sklearn.ensemble import RandomForestClassifier
 from sklearn.linear_model import LogisticRegression
+from sklearn.preprocessing import label_binarize
 from sklearn.model_selection import train_test_split, KFold
 import numpy as np
 
@@ -49,12 +50,34 @@ class IRClassification(IROp):
         else:
             dataset = result['original_dataset'].ds
         labels = result['labels']
+        n_classes = set(result['labels'])
         print('PARAMETERSSSS', self.parameters)
         predicted = []
-        kf = KFold(n_splits=4)
+        #kf = KFold(n_splits=4)
         result['predicted_labels'] = []
-        result['y_test'] = []
         result['y_score'] = []
+        for x_train, x_test, y_train, y_test in zip(result['x_train'],result['x_test'],result['y_train'],result['y_test']):
+            print(x_train.shape, y_train.shape)
+            print(y_train)
+            #y_train = np.array([i[0] for i in label_binarize(y_train, classes=list(n_classes))])#.reshape(1, -1).T
+            #print(y_train.shape)
+            #print(y_train)
+            #aaaa
+            y_train = y_train.reshape((x_train.shape[0],1))
+            print(x_train.shape, y_train.shape)
+            try:
+                #print((self._model.fit(train_features, train_labels).predict(test_features)))
+                result['classifier']= self._model.fit(x_train, y_train)
+                predicted += list(self._model.fit(x_train, y_train).predict(x_test))
+            except:
+                predicted += list(self._model.fit(x_train, y_train).predict(x_test))
+
+            result['y_score'].append(self._model.predict_proba(x_test))
+        #result['y_test'] = y_test
+        #result['y_score'] = y_score
+        result['predicted_labels'].append(predicted)
+        result['original_dataset'].measures.update({p: self.parameters[p].value for p, v in self.parameters.items()})
+        '''
         for train_index, test_index in kf.split(dataset):
             train_features, test_features = dataset.values[train_index], dataset.values[test_index]
             train_labels, test_labels = labels.values[train_index], labels.values[test_index]
@@ -64,12 +87,9 @@ class IRClassification(IROp):
                 predicted += list(self._model.fit(train_features, train_labels).predict(test_features))
             except:
                 predicted += list(self._model.fit(train_features, train_labels).predict(test_features))
-        y_score = self._model.predict_proba(test_features)
+        '''
 
-        result['predicted_labels'].append(predicted)
-        result['y_test']= test_labels
-        result['y_score']= y_score
-        result['original_dataset'].measures.update({p:self.parameters[p].value for p,v in self.parameters.items()})
+
         return result
 
 
@@ -117,8 +137,10 @@ class IRRandomForest(IRClassification):
         # Fit the random search model
         print(dataset.shape)
         print(labels.shape)
-        print(set(labels.values))
-        rf_random.fit(dataset, labels.values)
+        #print(labels.values)
+
+        print(set(labels))
+        rf_random.fit(dataset, labels)
         print(rf_random.best_params_.items)
         for k in rf_random.best_params_:
             self.parameters[k].value = rf_random.best_params_[k]

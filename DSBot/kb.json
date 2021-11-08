@@ -3,4 +3,5 @@
 "classification" :  ["classification","randomForest","logisticRegression"],
 "correlation":  ["correlation","pearson", "spearman"],
 "featureSelection": ["featureSelection", "laplace", "varianceThreshold"],
-"associationRules":  ["associationRules","aPriori"]}
+"associationRules":  ["associationRules","aPriori"],
+"crossValidation":  ["crossValidation", "trainTestSplit", "kFold"]}
