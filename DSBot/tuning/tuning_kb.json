@@ -1,6 +1,6 @@
 {
   "kmeans": {
-    "name": "kmeans clustering",
+    "name": "Kmeans clustering",
     "params": {
       "n_clusters": {
         "name": "number of clusters",
@@ -9,11 +9,15 @@
     }
   },
   "dbscan": {
-    "name": "density based clustering",
+    "name": "Density based clustering",
     "params": {
       "eps": {
         "name": "epsilon",
         "desc": "The maximum distance between two samples"
+      },
+      "min_samples": {
+        "name": "Minimum samples",
+        "desc": "The number of samples (or total weight) in a neighborhood for a point to be considered as a core point. This includes the point itself"
       }
     }
   },
@@ -26,7 +30,7 @@
     "params": {}
   },
   "pca": {
-    "name": "pca",
+    "name": "Principal Component Analysis",
     "params": {
       "n_components": {
         "name": "number of components",
@@ -35,19 +39,122 @@
     }
   },
   "scatterplot": {
-    "name": "scatterplot",
+    "name": "Scatter-plot",
     "params": {}
   },
   "clustermap": {
-    "name": "clustermap",
+    "name": "Cluster map",
     "params": {}
   },
   "missingValuesRemove": {
-    "name": "missing values removal",
+    "name": "Missing values removal",
     "params": {}
   },
   "missingValuesFill": {
-    "name": "missing values fill",
+    "name": "Missing values fill",
+    "params": {}
+  },
+  "oneHotEncode": {
+    "name": "One hot encode",
+    "params": {}
+  },
+  "labelRemove": {
+    "name": "Remove label",
+    "params": {}
+  },
+  "outliersRemove": {
+    "name": "Remove outliers",
+    "params": {}
+  },
+  "laplace": {
+    "name": "Laplace",
+    "params": {
+      "percentage": {
+        "name": "Percentage",
+        "desc": "The percentage of features to consider"
+      }
+    }
+  },
+  "varianceThreshold": {
+    "name": "Variance threshold",
+    "params": {
+      "threshold": {
+        "name": "Threshold",
+        "desc": "Features with a training-set variance lower than this threshold will be removed"
+      }
+    }
+  },
+  "agglomerativeClustering": {
+    "name": "Agglomerative clustering",
+    "params": {
+      "n_clusters": {
+        "name": "Number of clusters",
+        "desc": "The number of clusters to find"
+      },
+      "linkage": {
+        "name": "Linkage",
+        "desc": "The linkage criterion determines which distance to use between sets of observation"
+      },
+      "affinity": {
+        "name": "Affinity",
+        "desc": "Metric used to compute the linkage"
+      }
+    }
+  },
+  "pca2": {
+    "name": "Principal Components Analysis 2",
+    "params": {
+      "n_components": {
+        "name": "number of components",
+        "desc": "The algorithm selects the number of components such that the amount of variance that needs to be explained is greater than the percentage specified by n_components"
+      }
+    }
+  },
+  "pca3": {
+    "name": "Principal Components Analysis 3",
+    "params": {
+      "n_components": {
+        "name": "Number of components",
+        "desc": "The algorithm selects the number of components such that the amount of variance that needs to be explained is greater than the percentage specified by n_components"
+      }
+    }
+  },
+  "mds2": {
+    "name": "Multidimensional Scaling 2",
+    "params": {
+      "n_components": {
+        "name": "Number of components",
+        "desc": "Number of dimensions in which to immerse the dissimilarities"
+      }
+    }
+  },
+  "ica2": {
+    "name": "Independent Component Analysis 2",
+    "params": {
+      "n_components": {
+        "name": "Number of components",
+        "desc": "Number of components to use"
+      }
+    }
+  },
+  "boxplot": {
+    "name": "Box-plot",
+    "params": {}
+  },
+  "barplot": {
+    "name": "Bar-plot",
+    "params": {}
+  },
+  "distplot": {
+    "name": "Dist-plot",
+    "params": {}
+  },
+  "roc": {
+    "name": "Receiver Operating Characteristic curve",
+    "params": {}
+  },
+  "scatterAssociationRules": {
+    "name": "Scatter association rules",
     "params": {}
   }
 }

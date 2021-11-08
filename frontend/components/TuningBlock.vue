@@ -40,12 +40,12 @@ import { mapActions, mapMutations } from 'vuex'
 export default {
   props: ['module'],
 
-  data() {
-    return {
-      available: this.module.models.map((i) => i.pretty_name),
-    }
-  },
   computed: {
+    available: {
+      get() {
+        return this.module.models.map((i) => i.pretty_name)
+      },
+    },
     activeMod: {
       get() {
         return this.module.pretty_name

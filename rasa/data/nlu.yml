@@ -40,6 +40,27 @@ nlu:
       - The groups are wrong
       - The clusters are wrong
       - I want to reduce the number of groups
+      - Points of the clusters are mixed
+      - Clusters overlap
+      - Clusters are overlapped
+      - Groups are too fragmented
+      - Groups are fragmented
+      - Too many clusters
+      - Clusters are not divided
+      - Too many colors
+      - Groups overlap
+      - The groups you found are different from the ones I see
+      - Red points are too spread
+      - Colors are mixed
+      - Blue points are all around the graph
+      - All the groups are overlapping
+      - I would represent the groups differently
+      - I clearly see some groups but they are not colored of the same color
+      - The clusters you found are different from the ones I see
+      - I clearly see some clusters but they are not colored of the same color
+      - Clusters I see are not the clusters the algorithm found
+      - You found different clusters with respect the one I see
+      - Groups are overlapped
       - There are too many groups
 
   - intent: bad_silhouette
@@ -48,22 +69,68 @@ nlu:
       - I don't like the silhouette
       - Improve the performances of clustering
       - Points in clusters are too far
-      - Make the distinction more clear
-      - I do not see a clear distinction between the clusters
-      - I want the data to be more separated
 
   - intent: not_interpretable_results
     examples: |
       - I don't understand the clusters' meaning
+      - I don't understand the groups' meaning
+      - I don't understand the dots' meaning
+      - What do these cluster mean?
+      - What do these groups mean?
+      - What do these dots mean?
+      - What do these sets mean?
+      - The dots are not meaningful
+      - The clusters are not meaningful
       - The sets are not meaningful
+      - The groups are not meaningful
+      - Groups seems confuse
+      - Clusters seem confuse
+      - Colors seem confuse
+      - Sets seem confuse
+      - What do these groups mean?
+      - What do these sets mean?
+      - What do these colors mean?
+      - What do these clusters mean?
       - I don't understand what I am looking at
+      - Groups make no sense
+      - Dots groups make no sense
+      - Sets make no sense
       - Clusters make no sense
 
   - intent: fitting
     examples: |
       - Performances sucks
       - Unseen data have terrible performances
+      - New data are labelled bad
+      - It doesn' t predict the label in a good way
+      - New data are labelled wrongly
+      - The score is very high on training set but low in testing 
+      - On new data predictions are wrong
+      - It doesn't guess the right label
+      - Predictions are bad
+      - Predictions are wrong
+      - The predictions are not good
+      - The label is not guessed
+      - It's useless
+      - Guessings are wrong most of the times
+      - It is not able to guess anything
+      - Predictions are wrong most of the times
+      - It seems to make the prediction wrong
+      - When I use it with new data the model makes wrong predictions
+      - Predictions are often wrong
+      - Any guessing is wrong
+      - It is useless
+      - Guessing are wrong
+      - The predictions are wrong too often
+      - The score is high, but the predictions are low
+      - Predictions are wrong
+      - It predicts wrong 
       - It doesn't work with new data
+      - I can't predict anything
+      - Preditictions are not working
+      - The predicion sucks
+      - All the predictions are wrong
+      - Too many predicitions are wrong
       - It doesn't predict anything
       - It doesn't work
 
