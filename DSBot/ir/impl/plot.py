@@ -398,4 +398,4 @@ class IRROC(IRPlot):
 # FIXME: this class was commented out because the implementation raises errors
 class IRGenericPlot(IROpOptions):
      def __init__(self):
-         super(IRGenericPlot, self).__init__([IRScatterplot(), IRClustermap(), IRDistplot(), IRBoxplot(), IRBarplot(), IRROC(), IRScatterAssociationRules()], "scatterplot")
+         super(IRGenericPlot, self).__init__([IRScatterplot(), IRDistplot(), IRBoxplot(), IRBarplot()], "scatterplot") # FIXME: IRClustermap(),IRROC(),, IRScatterAssociationRules()

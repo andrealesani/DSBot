@@ -96,6 +96,7 @@ nlu:
       - Dots groups make no sense
       - Sets make no sense
       - Clusters make no sense
+      - I do not like the results
 
   - intent: fitting
     examples: |
