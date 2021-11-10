@@ -83,15 +83,7 @@ class IRMissingValuesFill(IRMissingValues):
         super(IRMissingValuesFill, self).__init__("missingValuesFill", parameter)
 
     def parameter_tune(self, dataset):
-        imp = IterativeImputer(max_iter=10, random_state=0)
-        if len(dataset.col) > 0:
-            values_col = dataset.columns.difference(dataset.col)
-            values_dataset = pd.DataFrame(imp.fit_transform(dataset[values_col]))
-            values_dataset.columns = values_col
-            dataset = dataset.apply(lambda col: col.fillna(col.value_counts().index[0]))
-            values_dataset = pd.concat([dataset, values_dataset])
-        else:
-            values_dataset = pd.DataFrame(imp.fit_transform(dataset))
+
         return values_dataset
 
     def run(self, result, session_id):
@@ -99,11 +91,19 @@ class IRMissingValuesFill(IRMissingValues):
             dataset = result['new_dataset']
         else:
             dataset = result['original_dataset'].ds
-        if not self._param_setted:
-            self.parameter_tune(dataset)
+
+        imp = IterativeImputer(max_iter=10, random_state=0)
+        if len(dataset.cat_cols) > 0:
+            values_col = dataset.columns.difference(dataset.cat_cols)
+            values_dataset = pd.DataFrame(imp.fit_transform(dataset[values_col]))
+            values_dataset.columns = values_col
+            dataset = dataset.apply(lambda col: col.fillna(col.value_counts().index[0]))
+            values_dataset = pd.concat([dataset, values_dataset])
         else:
-            dataset = dataset.apply(lambda col: col.fillna(self.parameter))
-        result['new_dataset'] = dataset
+            values_dataset = pd.DataFrame(imp.fit_transform(dataset))
+
+        #dataset = dataset.apply(lambda col: col.fillna(self.parameter))
+        result['new_dataset'] = values_dataset
         print('missingvalfill', dataset.shape)
 
         return result

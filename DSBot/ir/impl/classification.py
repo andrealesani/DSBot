@@ -9,6 +9,7 @@ from sklearn.ensemble import RandomForestClassifier
 from sklearn.linear_model import LogisticRegression
 from sklearn.preprocessing import label_binarize
 from sklearn.model_selection import train_test_split, KFold
+from collections import Counter
 import numpy as np
 
 
@@ -28,7 +29,7 @@ class IRClassification(IROp):
         else:
             dataset = result['original_dataset'].ds
         labels = result['labels']
-        self.parameter_tune(dataset, labels)
+        self.parameter_tune(result, dataset, labels)
         for p,v in self.parameters.items():
             print(p,v)
             self._model.__setattr__(p,self.parameters[p].value)
@@ -41,55 +42,23 @@ class IRClassification(IROp):
 
     #TDB cosa deve restituire questa funzione?
     def run(self, result, session_id):
-        print(self._param_setted)
+
         if not self._param_setted:
             self.set_model(result)
 
-        if 'new_dataset' in result:
-            dataset = result['new_dataset']
-        else:
-            dataset = result['original_dataset'].ds
-        labels = result['labels']
-        n_classes = set(result['labels'])
         print('PARAMETERSSSS', self.parameters)
-        predicted = []
-        #kf = KFold(n_splits=4)
+
         result['predicted_labels'] = []
         result['y_score'] = []
-        for x_train, x_test, y_train, y_test in zip(result['x_train'],result['x_test'],result['y_train'],result['y_test']):
-            print(x_train.shape, y_train.shape)
-            print(y_train)
-            #y_train = np.array([i[0] for i in label_binarize(y_train, classes=list(n_classes))])#.reshape(1, -1).T
-            #print(y_train.shape)
-            #print(y_train)
-            #aaaa
-            y_train = y_train.reshape((x_train.shape[0],1))
-            print(x_train.shape, y_train.shape)
+        for x_train, x_test, y_train,y_test in zip(result['x_train'],result['x_test'],result['y_train'],result['y_test']):
             try:
-                #print((self._model.fit(train_features, train_labels).predict(test_features)))
-                result['classifier']= self._model.fit(x_train, y_train)
-                predicted += list(self._model.fit(x_train, y_train).predict(x_test))
+                result['predicted_labels'].append(list(self._model.fit(x_train, y_train).predict(x_test)))
+                result['y_score'].append(self._model.predict_proba(x_test))
             except:
-                predicted += list(self._model.fit(x_train, y_train).predict(x_test))
+                result['predicted_labels'].append(list(self._model.fit(x_train, y_train).predict(x_test)))
 
-            result['y_score'].append(self._model.predict_proba(x_test))
-        #result['y_test'] = y_test
-        #result['y_score'] = y_score
-        result['predicted_labels'].append(predicted)
         result['original_dataset'].measures.update({p: self.parameters[p].value for p, v in self.parameters.items()})
-        '''
-        for train_index, test_index in kf.split(dataset):
-            train_features, test_features = dataset.values[train_index], dataset.values[test_index]
-            train_labels, test_labels = labels.values[train_index], labels.values[test_index]
-            try:
-                #print((self._model.fit(train_features, train_labels).predict(test_features)))
-                self._model.fit(train_features, train_labels)
-                predicted += list(self._model.fit(train_features, train_labels).predict(test_features))
-            except:
-                predicted += list(self._model.fit(train_features, train_labels).predict(test_features))
-        '''
-
-
+        self._param_setted = False
         return result
 
 
@@ -99,12 +68,12 @@ class IRRandomForest(IRClassification):
         super(IRRandomForest, self).__init__("randomForest",
                                              [IRNumPar("n_estimators", 100, "int", 100, 150, 10),  # TODO: what is the maximum? Which first value give?
                                               IRNumPar("max_depth", 10, "int", 10, 22, 11),  # TODO: what is the maximum?
-                                              IRNumPar("min_samples_split", 2, "int", 2, 5, 3),
-                                              IRNumPar("min_samples_leaf", 1, "int", 1, 2, 1)],  # TODO: if I want to pass a list of values?
+                                              IRNumPar("min_samples_split", 2, "int", 2, 9, 3),
+                                              IRNumPar("min_samples_leaf", 1, "int", 1, 5, 1)],  # TODO: if I want to pass a list of values?
                                              RandomForestClassifier)
         self._param_setted = False
 
-    def parameter_tune(self, dataset, labels):
+    def parameter_tune(self, result, dataset, labels):
         # Number of trees in random forest
         n_estimators = [int(x) for x in np.linspace(start=self.parameters['n_estimators'].min_v, stop=self.parameters['n_estimators'].max_v, num=self.parameters['n_estimators'].step)]
         # Number of features to consider at every split
@@ -128,22 +97,27 @@ class IRRandomForest(IRClassification):
         # Use the random grid to search for best hyperparameters
         # First create the base model to tune
         rf = RandomForestClassifier()
-        # Random search of parameters, using 3 fold cross validation,
-        # search across 100 different combinations, and use all available cores
-        rf_random = RandomizedSearchCV(estimator=rf, param_distributions=random_grid, n_iter=100, cv=3, verbose=2,
-                                       random_state=42, n_jobs=-1)
-        print('ds', dataset)
-        print('labels', labels)
-        # Fit the random search model
-        print(dataset.shape)
-        print(labels.shape)
-        #print(labels.values)
+        best_param = {}
+        for x_train, y_train in zip(result['x_train'], result['y_train']):
+            # Random search of parameters, using 3 fold cross validation,
+            # search across 100 different combinations, and use all available cores
+            rf_random = RandomizedSearchCV(estimator=rf, param_distributions=random_grid, cv=3, verbose=2, random_state=42, n_jobs=-1)
+            # Fit the random search model
+            rf_random.fit(x_train, y_train)
+            for k,v in rf_random.best_params_.items():
+                if k in best_param:
+                    best_param[k].append(v)
+                else:
+                    best_param[k] = [v]
 
-        print(set(labels))
-        rf_random.fit(dataset, labels)
-        print(rf_random.best_params_.items)
         for k in rf_random.best_params_:
-            self.parameters[k].value = rf_random.best_params_[k]
+            if self.parameters[k].v_type == "int":
+                self.parameters[k].value = int(np.median(best_param[k]))
+            elif self.parameters[k].v_type == "float":
+                self.parameters[k].value = np.median(best_param[k])
+            elif self.parameters[k].v_type == "str":
+                c = Counter(best_param[k])
+                self.parameters[k].value = c.most_common(1)[0][0]
         return self.parameters
 
 

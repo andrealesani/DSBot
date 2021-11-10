@@ -131,14 +131,14 @@ pearson
 spearman
 correlation
 pearson
-aPriori
-aPriori
-aPriori
-aPriori
-aPriori
-aPriori
-aPriori
-aPriori
+associationRules
+associationRules
+associationRules
+associationRules
+associationRules
+associationRules
+associationRules
+associationRules
 correlation
 correlation
 distplot
@@ -149,3 +149,32 @@ distplot
 distplot
 distplot
 distplot
+featureSelection
+classification featureImportance
+associationRules
+correlation
+associationRules
+classification
+classification featureImportance
+correlation
+featureSelection
+associationRules
+correlation
+classification
+featureSelection classification
+correlation clustermap
+classification featureImportance
+featureSelection
+associationRules
+classification
+associationRules
+clustering
+correlation
+associationRules
+featureSelection classification
+correlation
+featureSelection
+associationRules
+featureSelection classification
+featureSelection clustering
+clustering

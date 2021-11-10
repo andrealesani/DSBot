@@ -149,3 +149,32 @@ can I visualize my data?
 can I visualize the distribution of my data?
 can I see the distribution?
 is it available the distribution?
+Which are the characteristics that mostly influence the quality of the wine?
+Which are the characteristics that mostly influence the quality of the wine?
+Which are the characteristics that mostly influence the quality of the wine?
+What is related to the coronary disease risk in the next ten years?
+What is related to the coronary disease risk in the next ten years?
+What is related to the coronary disease risk in the next ten years?
+Which are the characteristics that mostly influence the disease?
+Which are the characteristics that mostly influence the disease?
+Which are the characteristics that mostly influence the disease?
+Which are the characteristics that mostly influence the disease?
+If a person smokes, is she prone to have illnesses?
+Can you predict if a patient will suffer from coronary disease in the next 10 years based on all the available data?
+Can you predict if a patient will suffer from coronary disease in the next 10 years considering only the most important characteristics?
+Can you visualize which are the characteristics that a person has if she get sick in the next 10 years?
+Figure out which are the factors responsible for an employee to leave the company
+Figure out which are the factors responsible for an employee to leave the company
+Figure out which are the factors responsible for an employee to leave the company
+Predict whether an emplyee will leave the company
+how can I find the employee that want to leave the company?
+how can I find the employee that want to leave the company?
+Is there a relation between joining year and willness to leave?
+Is there a relation between joining year and willness to leave?
+Can you define which are the features that can tell me if an employee wants to stay in the company or leave it and define a way in order to understand in advance if she wants to stay
+Which are the factors that disappoint a customer?
+Which are the factors that disappoint a customer?
+Which are the factors that disappoint a customer?
+How can I understand if I have to modify the products according to the needs of a client?
+How can I understand if I have to modify the products according to the needs of a client?
+Find if there are groups of clients that can I exploit to sell more
