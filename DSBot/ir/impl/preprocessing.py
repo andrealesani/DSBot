@@ -33,13 +33,13 @@ class IRPreprocessing(IROp):
     def run(self, result, session_id):
         pass
 
-class IRMissingValues(IROp):
+class IRMissingValuesHandle(IROp):
     def __init__(self, name, parameters=None, model = None):
-        super(IRMissingValues, self).__init__(name, parameters if parameters is not None else [])
+        super(IRMissingValuesHandle, self).__init__(name, parameters if parameters is not None else [])
         #self.parameter = parameters['value']  # FIXME: use self.get_param('value'), but it will raise UnknownParameter
         self.labels = None
 
-    @abstractmethod
+
     def parameter_tune(self, dataset):
         pass
 
@@ -56,9 +56,19 @@ class IRMissingValues(IROp):
 
     #TDB cosa deve restituire questa funzione?
     def run(self, result, session_id):
-        pass
+        if 'new_dataset' in result:
+            dataset = result['new_dataset']
+        else:
+            dataset = result['original_dataset'].ds
+        if len(dataset)>100:
+            if (dataset.isna().sum(axis=1)>0).sum()>0.05*len(dataset):
+                result = IRMissingValuesRemove().run(result, session_id)
+            else:
+                result = IRMissingValuesFill().run(result, session_id)
+        return result
 
-class IRMissingValuesRemove(IRMissingValues):
+
+class IRMissingValuesRemove(IRMissingValuesHandle):
     def __init__(self):
         super(IRMissingValuesRemove, self).__init__("missingValuesRemove")
 
@@ -76,15 +86,15 @@ class IRMissingValuesRemove(IRMissingValues):
         dataset = dataset.dropna()
         result['new_dataset'] = dataset
         print('missingvalremove', dataset.shape)
+        print(dataset.head())
         return result
 
-class IRMissingValuesFill(IRMissingValues):
-    def __init__(self, parameter):
-        super(IRMissingValuesFill, self).__init__("missingValuesFill", parameter)
+class IRMissingValuesFill(IRMissingValuesHandle):
+    def __init__(self):
+        super(IRMissingValuesFill, self).__init__("missingValuesFill")
 
     def parameter_tune(self, dataset):
-
-        return values_dataset
+        pass
 
     def run(self, result, session_id):
         if 'new_dataset' in result:
@@ -93,25 +103,25 @@ class IRMissingValuesFill(IRMissingValues):
             dataset = result['original_dataset'].ds
 
         imp = IterativeImputer(max_iter=10, random_state=0)
-        if len(dataset.cat_cols) > 0:
-            values_col = dataset.columns.difference(dataset.cat_cols)
+        if len(result['original_dataset'].cat_cols) > 0:
+            values_col = dataset.columns.difference(result['original_dataset'].cat_cols)
             values_dataset = pd.DataFrame(imp.fit_transform(dataset[values_col]))
             values_dataset.columns = values_col
-            dataset = dataset.apply(lambda col: col.fillna(col.value_counts().index[0]))
-            values_dataset = pd.concat([dataset, values_dataset])
+            cat_dataset = dataset[result['original_dataset'].cat_cols].apply(lambda col: col.fillna(col.value_counts().index[0]))
+            dataset = pd.concat([cat_dataset, values_dataset],axis=1)
         else:
-            values_dataset = pd.DataFrame(imp.fit_transform(dataset))
+            dataset = pd.DataFrame(imp.fit_transform(dataset))
 
         #dataset = dataset.apply(lambda col: col.fillna(self.parameter))
-        result['new_dataset'] = values_dataset
+        result['new_dataset'] = dataset
         print('missingvalfill', dataset.shape)
 
         return result
 
 class IRGenericMissingValues(IROpOptions):
     def __init__(self):
-        super(IRGenericMissingValues, self).__init__([IRMissingValuesRemove(), IRMissingValuesFill([])],
-                                                     "missingValuesRemove")
+        super(IRGenericMissingValues, self).__init__([IRMissingValuesHandle('missingValuesHandle'), IRMissingValuesRemove(), IRMissingValuesFill()],
+                                                     "missingValuesHandle")
 
 
 class IROneHotEncode(IRPreprocessing):
@@ -149,15 +159,22 @@ class IRLabelRemove(IRPreprocessing):
         #print('labels', label.shape)
         if 'new_dataset' in result:
             dataset = result['new_dataset']
-            label = dataset[label]
+            dataset = dataset.drop(label, axis=1)
+            print(dataset.shape)
+            label = result['new_dataset'][label]
             print(len(dataset))
             print(len(label))
+
             if len(dataset)<len(label):
                 label = label[set(dataset.index.values)]
                 print('hola',len(label))
+
         else:
+
             dataset = result['original_dataset'].ds
-            label = dataset[label]
+            print(dataset.shape)
+            dataset = dataset.drop(label, axis=1)
+            label = result['original_dataset'].ds[label]
         #if not is_numeric_dtype(label):
         #    label = pd.get_dummies(label)
         #label = label.dropna()
@@ -165,6 +182,7 @@ class IRLabelRemove(IRPreprocessing):
 
         #result['new_dataset'] = dataset.T[set(label.index.values)].T
         result['labels']=label
+        result['new_dataset'] = dataset
 
 
         #columns=list(set(dataset.columns) - set(label))
@@ -184,11 +202,13 @@ class IROutliersRemove(IRPreprocessing):
             dataset = result['new_dataset']
         else:
             dataset = result['original_dataset'].ds
-            dataset = dataset.drop(list(result['original_dataset'].cat_cols), axis=1)
+        dataset = dataset.drop(list(result['original_dataset'].cat_cols), axis=1)
         #df = dataset.drop(list(result['original_dataset'].cat_cols), axis=1)
         df = dataset.T
         mean = df.mean()
         std = df.std()
+        print(df.index)
+        print(df.columns)
         ds = df[(np.abs(df - mean) <= (5 * std)).all(axis=1)].T
         if ds.shape[1]!=0 and ds.shape[0]!=0:
             print('len', ds.shape)

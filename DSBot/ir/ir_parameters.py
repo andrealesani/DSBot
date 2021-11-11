@@ -120,7 +120,7 @@ class IRNumPar(IRPar):
         :param max_v: the maximum value that can be set
         :param step: the granularity of the value
         """
-        assert min_v <= value <= max_v, 'The value must be inside the min_v max_v range'
+        #assert min_v <= value <= max_v, 'The value must be inside the min_v max_v range'
         super().__init__(name, value, v_type)
         self.min_v = min_v
         self.max_v = max_v

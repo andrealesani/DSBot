@@ -64,7 +64,7 @@ class IRTrainTest(IRCrossValidation):
         result['y_train'] = []
         result['y_test'] = []
 
-        x_train, x_test, y_train, y_test = self._model__(dataset, labels, self.parameters['test_size'].value)
+        x_train, x_test, y_train, y_test = self._model(dataset, labels, self.parameters['test_size'].value)
         result['x_train'].append(x_train)
         result['x_test'].append(x_test)
         result['y_train'].append(y_train)
@@ -73,16 +73,14 @@ class IRTrainTest(IRCrossValidation):
 
 class IRKFold(IRCrossValidation):
     def __init__(self):
-        super(IRKFold, self).__init__("kFold",[IRNumPar("n_splits", 4, "int", 2, 10, 1)],  # TODO: if I want to pass a list of values?
+        super(IRKFold, self).__init__("kFold",[IRNumPar("n_splits", 2, "int", 2, 10, 1)],  # TODO: if I want to pass a list of values?
                                       KFold)
         self._param_setted = False
 
     def parameter_tune(self, dataset):
         pass
 
-    # TDB cosa deve restituire questa funzione?
     def run(self, result, session_id):
-        print(self._param_setted)
         if not self._param_setted:
             self.set_model(result)
 
@@ -93,8 +91,6 @@ class IRKFold(IRCrossValidation):
         labels = result['labels']
 
         print('PARAMETERSSSS', self.parameters)
-        predicted = []
-
         cv = self._model
         result['x_train'] = []
         result['x_test'] = []

@@ -4,6 +4,7 @@ import numpy as np
 import pandas as pd
 import matplotlib.pyplot as plt
 import matplotlib
+import plotly
 matplotlib.use('Agg')
 from seaborn import clustermap
 from matplotlib.pyplot import scatter, plot, boxplot
@@ -13,7 +14,9 @@ from sklearn.metrics import roc_curve, auc
 from ir.ir_exceptions import LabelsNotAvailable, PCADataNotAvailable, CorrelationNotAvailable, RulesNotAvailable
 from ir.ir_operations import IROp, IROpOptions
 from itertools import cycle
+import plotly.express as px
 from sklearn.preprocessing import label_binarize
+from plotly.express import bar_polar
 from ir.ir_parameters import IRNumPar
 #from autoviz.AutoViz_Class import AutoViz_Class#Instantiate the AutoViz class
 
@@ -281,12 +284,11 @@ class IRROC(IRPlot):
 
     def run(self, result, session_id):
         n_classes = set(result['labels'])
-        pred = []
-        y = []
-        for y_test, score in zip(result['y_test'], result['y_score']):
-            pred.extend(score)
-            y.extend(y_test)
-        pred = np.array(pred)
+        print(n_classes)
+
+        pred = np.array(result['y_score'])
+        y = np.array(result['y_test']).flatten()
+
         #for i, j in zip(pred,y):
          #   print(i,j)
         if len(n_classes) > 2:
@@ -305,7 +307,9 @@ class IRROC(IRPlot):
                                ''.format(i, roc_auc[i]))
         else:
             plt.figure()
-            fpr, tpr, _ = roc_curve(y, pred[:, 1])
+            for z in zip(y, pred):
+                print(z)
+            fpr, tpr, _ = roc_curve(y, pred[:,1])
             roc_auc = auc(fpr, tpr)
             plt.plot(fpr, tpr, lw=2,
                      label='ROC curve of class 0 (area = {0:0.2f})'
@@ -327,9 +331,31 @@ class IRROC(IRPlot):
         return result
 
 
+class IRFeatureImportancePlot(IRPlot):
+    def __init__(self):
+        super(IRFeatureImportancePlot, self).__init__("featureImportancePlot",[], bar_polar)
+
+    def parameter_tune(self, dataset):
+        pass
+
+    def run(self, result, session_id):
+        print('FEAT IMP PLOT')
+        print(result['feature_importance'])
+        fig=px.bar_polar(result['feature_importance'], r="FI", theta="Cols",
+                           color="Cols", template="plotly_dark",
+                           color_discrete_sequence=px.colors.sequential.Plasma_r)
+        fig.write_image('./temp/temp_' + str(session_id) + '/featureImportancePlot.png')
+        #plotly.offline.plot(fig, filename='./temp/temp_' + str(session_id) + '/featureImportancePlot.html')
+        #plt.savefig('./temp/temp_' + str(session_id) + '/featureImportancePlot.png')
+        if 'plot' not in result:
+            result['plot'] = ['./temp/temp_' + str(session_id) + '/featureImportancePlot.png']
+        else:
+            result['plot'].append('./temp/temp_' + str(session_id) + '/featureImportancePlot.png')
+        result['original_dataset'].name_plot = './temp/temp_' + str(session_id) + '/featureImportancePlot.png'
+        return result
 
 
 # FIXME: this class was commented out because the implementation raises errors
 class IRGenericPlot(IROpOptions):
      def __init__(self):
-         super(IRGenericPlot, self).__init__([IRScatterplot(), IRClustermap(), IRDistplot(), IRBoxplot(), IRBarplot(), IRROC(), IRScatterAssociationRules()], "scatterplot")
+         super(IRGenericPlot, self).__init__([IRScatterplot(), IRClustermap(), IRDistplot(), IRBoxplot(), IRBarplot(), IRROC(), IRScatterAssociationRules(), IRFeatureImportancePlot()], "scatterplot")

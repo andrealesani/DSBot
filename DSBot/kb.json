@@ -1,7 +1,10 @@
 {"clustering": ["clustering","kmeans","hierarchicalClust","dbscan", "agglomerativeClustering"],
-"plot":  ["plot","scatterplot","heatmap","clustermap", "distplot", "barplot"],
+"plot":  ["plot","scatterplot","heatmap","clustermap", "distplot", "barplot", "featureImportancePlot", "scatterAssociationRules"],
 "classification" :  ["classification","randomForest","logisticRegression"],
 "correlation":  ["correlation","pearson", "spearman"],
 "featureSelection": ["featureSelection", "laplace", "varianceThreshold"],
 "associationRules":  ["associationRules","aPriori"],
-"crossValidation":  ["crossValidation", "trainTestSplit", "kFold"]}
+"crossValidation":  ["crossValidation", "trainTestSplit", "kFold"],
+"featureImportance":  ["featureImportance"],
+"performance":  ["roc"],
+"regression": ["regression", "linearRegression"]}

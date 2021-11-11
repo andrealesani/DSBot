@@ -1,6 +1,7 @@
 from abc import abstractmethod
 
 import numpy as np
+import pandas as pd
 from ir.ir_exceptions import LabelsNotAvailable
 from ir.ir_operations import IROp, IROpOptions
 from ir.ir_parameters import IRNumPar
@@ -88,3 +89,66 @@ class IRLaplace(IRFeatureSelection):
 class IRGenericFeatureSelection(IROpOptions):
     def __init__(self):
         super(IRGenericFeatureSelection, self).__init__([IRVarianceThreshold(), IRLaplace()], "varianceThreshold")
+
+
+class IRFeatureImportanceOp(IROp):
+    def __init__(self, name, parameters, model=None):
+        super(IRFeatureImportanceOp, self).__init__(name, parameters)
+        self._model = model(**{v.name: v.value for v in parameters})
+        self.labels = None
+
+    @abstractmethod
+    def parameter_tune(self, dataset):
+        pass
+
+    def set_model(self, result):
+        if 'new_dataset' in result:
+            dataset = result['new_dataset']
+        else:
+            dataset = result['original_dataset'].ds
+        labels = result['labels']
+
+        self.parameter_tune(result, dataset, labels)
+        for p, v in self.parameters.items():
+            self._model.__setattr__(p, self.parameters[p].value)
+        self._param_setted = True
+
+    def get_labels(self):
+        if self.labels is None:
+            raise LabelsNotAvailable
+        return self.labels
+
+    def run(self, result, session_id):
+        pass
+
+
+class IRFeatureImportance(IRFeatureImportanceOp):
+    def __init__(self):
+        super(IRFeatureImportance, self).__init__("featureImportance",
+                                                     [], VarianceThreshold)
+        self._param_setted = False
+
+    def parameter_tune(self, dataset):
+        pass
+
+    def run(self, result, session_id):
+        if 'new_dataset' in result:
+            dataset = result['new_dataset']
+        else:
+            dataset = result['original_dataset'].ds
+        try:
+            fi = result['classifier'].feature_importances_
+        except:
+            fi = np.array(len(dataset.columns))
+        d = {'Cols': dataset.columns, 'FI': fi}
+        df = pd.DataFrame(d)
+        df = df.sort_values(by='FI', ascending=0)
+        result['feature_importance'] = df
+        print('featIMp')
+        return result
+
+class IRGenericFeatureImportance(IROpOptions):
+    def __init__(self):
+        super(IRGenericFeatureImportance, self).__init__(
+            [IRFeatureImportance()],
+            "featureImportance")

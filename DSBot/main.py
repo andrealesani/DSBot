@@ -34,7 +34,7 @@ class Dataset:
 
     def set_characteristics(self):
         if self.ds is not None:
-            self.missingValues, self.categorical, self.zeroVariance, self.outliers = self.check_ds()
+            self.missingValues, self.categorical, self.onlyCategorical, self.zeroVariance, self.outliers = self.check_ds()
         self.moreFeatures = self.more_features()
         print('mv',self.missingValues, 'cat',self.categorical,'zv', self.zeroVariance, 'mf',self.moreFeatures, 'outliers', self.outliers)
 
@@ -48,7 +48,7 @@ class Dataset:
     def categorical_columns(self):
         cols = self.ds.columns
         num_cols = self.ds._get_numeric_data().columns
-        return len(list(set(cols) - set(num_cols))) > 0, list(set(cols) - set(num_cols))
+        return len(list(set(cols) - set(num_cols))) > 0, len(num_cols)==0, list(set(cols) - set(num_cols))
 
     def has_outliers(self):
         df = self.ds.drop(list(self.cat_cols), axis=1)
@@ -72,15 +72,15 @@ class Dataset:
 
     def check_ds(self):
         missing_val = self.missing_values()
-        categorical, self.cat_cols = self.categorical_columns()
+        categorical, only_categorical, self.cat_cols = self.categorical_columns()
         zero_var = self.zero_variance()
         outliers = self.has_outliers()
-        return missing_val, categorical, zero_var, outliers
+        return missing_val, categorical, only_categorical, zero_var, outliers
 
     def filter_kb(self, kb):
         drop = []
         for i in self.__dict__:
-            if (str(i) in ['missingValues','categorical','zeroVariance','hasLabel','moreFeatures', 'outliers']):
+            if (str(i) in ['missingValues','categorical','onlyCategorical','zeroVariance','hasLabel','moreFeatures', 'outliers']):
                 if getattr(self, i):
                     for j in range(len(kb)):
                         kb_val = [i.strip() for i in kb.values[j,0].split(',')]

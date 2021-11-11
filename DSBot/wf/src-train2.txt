@@ -165,16 +165,59 @@ Can you predict if a patient will suffer from coronary disease in the next 10 ye
 Can you visualize which are the characteristics that a person has if she get sick in the next 10 years?
 Figure out which are the factors responsible for an employee to leave the company
 Figure out which are the factors responsible for an employee to leave the company
-Figure out which are the factors responsible for an employee to leave the company
 Predict whether an emplyee will leave the company
 how can I find the employee that want to leave the company?
-how can I find the employee that want to leave the company?
-Is there a relation between joining year and willness to leave?
 Is there a relation between joining year and willness to leave?
 Can you define which are the features that can tell me if an employee wants to stay in the company or leave it and define a way in order to understand in advance if she wants to stay
-Which are the factors that disappoint a customer?
 Which are the factors that disappoint a customer?
 Which are the factors that disappoint a customer?
 How can I understand if I have to modify the products according to the needs of a client?
 How can I understand if I have to modify the products according to the needs of a client?
 Find if there are groups of clients that can I exploit to sell more
+Are there anomalies in my data?
+show me the strange data
+show me if there are data that can be considered strange
+i want to visualize if there are anomalies in the data
+do you see outliers in my data?
+can you perform anomalies detection?
+are there strange stuff in these data?
+can you find if there are strange penguins?
+can you see if there are outliers?
+do you find anomalies?
+find strange data
+predict if there is someone that has a characteristic
+can you predict the disease?
+can you predict if there is a person that will have a cancer?
+can you predict if there is a person that will take covid?
+predict who is a covid patient
+can you find the data that are considered strange from the others
+can you find the data that are considered outliers?
+can you find the data that are strange
+please extrapolate the outliers
+please extract samples that are strange
+please find the data strange
+select feature age and gender
+i want you to predict according to the features sex and age
+see which are the most important features according to the classification
+see which are the most important features
+classify the data and extract the most important features
+forecast short term returns in 14 popular cryptocurrencies
+Use your ML expertise to predict real crypto market data
+Use your ML expertise to predict real crypto market data
+detect and delineate distinct objects of interest in biological images
+score a set of about fourteen thousand comments
+accurately determine a pet photo’s appeal and even suggest improvements
+build a machine learning model that predicts which Tweets are about real disasters and which one’s aren’t.
+assigns labels of 0, 1, or 2 (corresponding to entailment, neutral, and contradiction) to pairs of premises and hypotheses
+correctly identify digits from a dataset of tens of thousands of handwritten images
+predict customer behavior
+organize and visualize the scientific literature on or related to COVID-19 using machine learning techniques so that papers on similar topics are grouped together
+identify outliers / Anomalous transactions before hand unless reported by the customer
+One of our main challenges comprise of monitoring and analyzing our client's business metrics in real time for instant detection of the incidents that may impact their revenue.
+which features are most important in determining the forecast
+identifying which variables are important to understand if an employee will stay in the company
+please  i would like to visualize which are the columns that influence the fact that a person has a disease
+My objective is to classify COVID patients , with 5 levels of severity ( no sympthoms , mild, intense care , incubated , dead ) and understand which factors most determine them , including sex , age , and main comorbidities
+My objective is to understand the COVID determinants. I have collected Covid’s severity ( graded as no sympthoms , mild , intense care , incubated , dead ) , the patient’s age , sex and main comorbidities
+extract the most important features after having classify the data
+show the most important features after the classification
