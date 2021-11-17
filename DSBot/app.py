@@ -101,9 +101,9 @@ def receive_utterance():
             f.write(args['message'])
 
         os.system('onmt_translate -model wf/run/model_step_1000.pt -src temp/temp_'+str(session_id)+'/message'+str(session_id)+'.txt -output ./temp/temp_'+str(session_id)+'/pred'+str(session_id)+'.txt -gpu -1 -verbose')
-
-        with open('./temp/temp_' + str(session_id) + '/pred' + str(session_id) + '.txt', 'r') as f:
-            wf = f.readlines()[0].strip().split(' ')
+        #doppione --> non fa nulla
+        #with open('./temp/temp_' + str(session_id) + '/pred' + str(session_id) + '.txt', 'r') as f:
+            #wf = f.readlines()[0].strip().split(' ')
 
         with open('./temp/temp_' + str(session_id) + '/pred' + str(session_id) + '.txt', 'r') as f:
             wf = f.readlines()[0].strip().split(' ')
@@ -189,4 +189,4 @@ def re_execute_algorithm(ir, session_id):
     threading.Thread(target=execute_algorithm, kwargs={'ir': ir, 'session_id': session_id}).start()
 
 
-app.run(host='0.0.0.0', port=5000, debug=True)
+app.run(host='localhost', port=5000, debug=True)
