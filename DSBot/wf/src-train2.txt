@@ -221,3 +221,13 @@ My objective is to classify COVID patients , with 5 levels of severity ( no symp
 My objective is to understand the COVID determinants. I have collected Covid’s severity ( graded as no sympthoms , mild , intense care , incubated , dead ) , the patient’s age , sex and main comorbidities
 extract the most important features after having classify the data
 show the most important features after the classification
+select the important characteristics that influence the tumor appereance
+define which are the features that predict mostly the emloyees that will stay
+can you filter the features and only after it find the typical pattern in the data
+can you filter the features and only after it predict the illness of a sample
+first select the appropriate characteristics, then show me the important ones that are able to say if a customer will buy a product or not
+see the most relevant features according to the classification
+i want to select the features, then classify the data and extract the most important features from the dataset
+predict the data
+predict the next value according to the past time values
+find maximum variance plan

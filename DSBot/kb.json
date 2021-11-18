@@ -2,7 +2,7 @@
 "plot":  ["plot","scatterplot","heatmap","clustermap", "distplot", "barplot", "featureImportancePlot", "scatterAssociationRules"],
 "classification" :  ["classification","randomForest","logisticRegression"],
 "correlation":  ["correlation","pearson", "spearman"],
-"featureSelection": ["featureSelection", "laplace", "varianceThreshold"],
+"featureSelection": ["featureSelection", "laplace", "varianceThreshold", "selectKBest", "selectPercentile"],
 "associationRules":  ["associationRules","aPriori"],
 "crossValidation":  ["crossValidation", "trainTestSplit", "kFold"],
 "featureImportance":  ["featureImportance"],

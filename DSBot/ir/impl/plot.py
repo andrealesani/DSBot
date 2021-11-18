@@ -6,8 +6,10 @@ import matplotlib.pyplot as plt
 import matplotlib
 import plotly
 matplotlib.use('Agg')
+import dataframe_image as dfi
 from seaborn import clustermap
 from matplotlib.pyplot import scatter, plot, boxplot
+from pandas.plotting import table
 from sklearn.metrics import RocCurveDisplay
 from seaborn import barplot
 from sklearn.metrics import roc_curve, auc
@@ -32,7 +34,9 @@ class IRPlot(IROp):
         pass
 
     def set_model(self, result):
-        if 'new_dataset' in result:
+        if 'transformed_ds' in result:
+            dataset = result['transformed_ds']
+        elif 'new_dataset' in result:
             dataset = result['new_dataset']
         else:
             dataset = result['original_dataset'].ds
@@ -49,7 +53,9 @@ class IRPlot(IROp):
     #TDB cosa deve restituire questa funzione?
     def run(self, result, session_id):
         #AV = AutoViz_Class()
-        if 'new_dataset' in result:
+        if 'transformed_ds' in result:
+            dataset = result['transformed_ds']
+        elif 'new_dataset' in result:
             dataset = result['new_dataset']
         else:
             dataset = result['original_dataset'].ds
@@ -139,6 +145,37 @@ class IRScatterAssociationRules(IRPlot):
             #result['plot'].append("u_labels = np.unique(result['labels'])\nfor i in u_labels:\n\tax = plt.scatter(result['transformed_ds'][result['labels'] == i, 0], result['transformed_ds'][result['labels'] == i, 1], label=i)")
 
         result['original_dataset'].name_plot = './temp/temp_' + str(session_id) + '/scatter_associationRules.png'
+
+        # plt.show()
+        return  result
+
+class IRTableAssociationRules(IRPlot):
+    def __init__(self):
+        super(IRTableAssociationRules, self).__init__("tableAssociationRules",
+                                            [],
+                                            table)
+
+    def parameter_tune(self, dataset):
+        pass
+
+    def run(self, result, session_id):
+        if 'associationRules' not in result:
+            raise RulesNotAvailable
+        else:
+            rules = result['associationRules']
+        print('tableAssRules')
+
+        df = rules[['antecedents','consequents','support','confidence']]
+        df_styled = df.style.background_gradient() #adding a gradient based on values in cell
+        dfi.export(df_styled, './temp/temp_' + str(session_id) + '/table_associationRules.png')
+        if 'plot' not in result:
+            result['plot'] = ['./temp/temp_' + str(session_id) + '/table_associationRules.png']
+            #result['plot'] = ["u_labels = np.unique(result['labels'])\nfor i in u_labels:\n\tax = plt.scatter(result['transformed_ds'][result['labels'] == i, 0], result['transformed_ds'][result['labels'] == i, 1], label=i)"]
+        else:
+            result['plot'].append('./temp/temp_' + str(session_id) + '/table_associationRules.png')
+            #result['plot'].append("u_labels = np.unique(result['labels'])\nfor i in u_labels:\n\tax = plt.scatter(result['transformed_ds'][result['labels'] == i, 0], result['transformed_ds'][result['labels'] == i, 1], label=i)")
+
+        result['original_dataset'].name_plot = './temp/temp_' + str(session_id) + '/table_associationRules.png'
 
         # plt.show()
         return  result
@@ -354,8 +391,32 @@ class IRFeatureImportancePlot(IRPlot):
         result['original_dataset'].name_plot = './temp/temp_' + str(session_id) + '/featureImportancePlot.png'
         return result
 
+class IRFeatureImportanceBarPlot(IRPlot):
+    def __init__(self):
+        super(IRFeatureImportanceBarPlot, self).__init__("Feature importance barplot",[], bar_polar)
+
+    def parameter_tune(self, dataset):
+        pass
+
+    def run(self, result, session_id):
+        print('FEAT IMP PLOT')
+        print(result['feature_importance'])
+        df = result['feature_importance'].sort_values(by='FI', ascending=1)
+        plt.figure(figsize=(12, 8))
+        plt.title('Feature Importances')
+        plt.barh(range(len(df)), df['fi'].values, color='lightblue', align='center')
+        plt.yticks(range(len(df)), df['cols'].values)
+        plt.xlabel('Relative Importance')
+        #plotly.offline.plot(fig, filename='./temp/temp_' + str(session_id) + '/featureImportancePlot.html')
+        plt.savefig('./temp/temp_' + str(session_id) + '/featureImportancePlot.png')
+        if 'plot' not in result:
+            result['plot'] = ['./temp/temp_' + str(session_id) + '/featureImportancePlot.png']
+        else:
+            result['plot'].append('./temp/temp_' + str(session_id) + '/featureImportancePlot.png')
+        result['original_dataset'].name_plot = './temp/temp_' + str(session_id) + '/featureImportancePlot.png'
+        return result
 
 # FIXME: this class was commented out because the implementation raises errors
 class IRGenericPlot(IROpOptions):
      def __init__(self):
-         super(IRGenericPlot, self).__init__([IRScatterplot(), IRClustermap(), IRDistplot(), IRBoxplot(), IRBarplot(), IRROC(), IRScatterAssociationRules(), IRFeatureImportancePlot()], "scatterplot")
+         super(IRGenericPlot, self).__init__([IRScatterplot(), IRClustermap(), IRDistplot(), IRBoxplot(), IRBarplot(), IRROC(), IRScatterAssociationRules(), IRTableAssociationRules(), IRFeatureImportancePlot(), IRFeatureImportanceBarPlot()], "scatterplot")

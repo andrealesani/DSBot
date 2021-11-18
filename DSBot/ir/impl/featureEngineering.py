@@ -31,7 +31,9 @@ class IRFeatureEngineering(IROp):
 
     #TDB cosa deve restituire questa funzione?
     def run(self, result, session_id):
-        if 'new_dataset' in result:
+        if 'transformed_ds' in result:
+            dataset = result['transformed_ds']
+        elif 'new_dataset' in result:
             dataset = result['new_dataset']
         else:
             dataset = result['original_dataset'].ds
@@ -84,7 +86,9 @@ class IRFeatureEngineeringForViz(IROp):
 
     #TDB cosa deve restituire questa funzione?
     def run(self, result, session_id):
-        if 'new_dataset' in result:
+        if 'transformed_ds' in result:
+            dataset = result['transformed_ds']
+        elif 'new_dataset' in result:
             dataset = result['new_dataset']
         else:
             dataset = result['original_dataset'].ds
@@ -119,7 +123,9 @@ class IRMDS2(IRFeatureEngineeringForViz):
         pass
 
     def run(self, result, session_id):
-        if 'new_dataset' in result:
+        if 'transformed_ds' in result:
+            dataset = result['transformed_ds']
+        elif 'new_dataset' in result:
             dataset = result['new_dataset']
         else:
             dataset = result['original_dataset'].ds

@@ -17,10 +17,10 @@ ds
 clustering plot
 ds
 ds
-range logisticRegression plot
+logisticRegression plot
 preprocessing
 preprocessing classification
-range kmeans plot
+kmeans plot
 plot
 classification performance plot
 range clustering plot
@@ -189,7 +189,7 @@ classification
 classification
 classification
 classification
-classifcation
+classification
 outliersDetection
 outliersDetection
 outliersDetection
@@ -221,3 +221,13 @@ featureSelection classification featureImportance
 classification featureImportance
 classification featureImportance
 classification featureImportance plot
+classification featureImportance
+classification featureImportance
+featureSelection clustering
+featureSelection classification
+featureSelection classification featureImportance plot
+classification featureImportance plot
+featureSelection classification featureImportance
+prediction
+regression
+pca

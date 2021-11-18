@@ -22,7 +22,9 @@ class IRCrossValidation(IROp):
         pass
 
     def set_model(self, result):
-        if 'new_dataset' in result:
+        if 'transformed_ds' in result:
+            dataset = result['transformed_ds']
+        elif 'new_dataset' in result:
             dataset = result['new_dataset']
         else:
             dataset = result['original_dataset'].ds
@@ -54,7 +56,9 @@ class IRTrainTest(IRCrossValidation):
 
 
     def run(self, result, session_id):
-        if 'new_dataset' in result:
+        if 'transformed_ds' in result:
+            dataset = result['transformed_ds']
+        elif 'new_dataset' in result:
             dataset = result['new_dataset']
         else:
             dataset = result['original_dataset'].ds
@@ -84,10 +88,13 @@ class IRKFold(IRCrossValidation):
         if not self._param_setted:
             self.set_model(result)
 
-        if 'new_dataset' in result:
+        if 'transformed_ds' in result:
+            dataset = result['transformed_ds']
+        elif 'new_dataset' in result:
             dataset = result['new_dataset']
         else:
             dataset = result['original_dataset'].ds
+
         labels = result['labels']
 
         print('PARAMETERSSSS', self.parameters)

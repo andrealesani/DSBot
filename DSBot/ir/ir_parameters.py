@@ -4,7 +4,6 @@ from abc import ABC, abstractmethod
 from ir.ir_exceptions import IncorrectValue
 from tuning import TuningParMixin
 
-
 class IRPar(TuningParMixin, ABC):
     """Represents a parameter of an operation.
 

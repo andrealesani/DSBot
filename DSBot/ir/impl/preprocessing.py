@@ -105,10 +105,15 @@ class IRMissingValuesFill(IRMissingValuesHandle):
         imp = IterativeImputer(max_iter=10, random_state=0)
         if len(result['original_dataset'].cat_cols) > 0:
             values_col = dataset.columns.difference(result['original_dataset'].cat_cols)
-            values_dataset = pd.DataFrame(imp.fit_transform(dataset[values_col]))
-            values_dataset.columns = values_col
-            cat_dataset = dataset[result['original_dataset'].cat_cols].apply(lambda col: col.fillna(col.value_counts().index[0]))
-            dataset = pd.concat([cat_dataset, values_dataset],axis=1)
+            if len(values_col)>0:
+                values_dataset = pd.DataFrame(imp.fit_transform(dataset[values_col]))
+                values_dataset.columns = values_col
+                cat_dataset = dataset[result['original_dataset'].cat_cols].apply(lambda col: col.fillna(col.value_counts().index[0]))
+                dataset = pd.concat([cat_dataset, values_dataset],axis=1)
+            else:
+                cat_dataset = dataset[result['original_dataset'].cat_cols].apply(
+                    lambda col: col.fillna(col.value_counts().index[0]))
+                dataset = cat_dataset
         else:
             dataset = pd.DataFrame(imp.fit_transform(dataset))
 

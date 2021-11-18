@@ -1,0 +1,41 @@
+# en_wf.yaml
+
+## Where the samples will be written
+save_data: wf/run/example
+## Where the vocab(s) will be written
+src_vocab: wf/run/example.vocab.src
+tgt_vocab: wf/run/example.vocab.tgt
+# Prevent overwriting existing files in the folder
+overwrite: False
+
+# Corpus opts:
+data:
+    corpus_1:
+        path_src: wf/src-train2.txt
+        path_tgt: wf/tgt-train2.txt
+    valid:
+        path_src: wf/src-val.txt
+        path_tgt: wf/tgt-val.txt
+# Vocabulary files that were just created
+src_vocab: wf/run/example.vocab.src
+tgt_vocab: wf/run/example.vocab.tgt
+
+# this means embeddings will be used for both encoder and decoder sides
+both_embeddings: ./wf/glove_new_300.txt
+# to set src and tgt embeddings separately:
+#src_embeddings: ./wf/try_glove_new.txt
+#tgt_embeddings: ./wf/try_glove_new.txt
+
+# supported types: GloVe, word2vec
+embeddings_type: "word2vec"
+
+# word_vec_size need to match with the pretrained embeddings dimensions
+word_vec_size: 100
+
+# Train on a single GPU
+world_size: 1
+#gpu_ranks: [0]
+
+# Where to save the checkpoints
+save_model: wf/run/model3
+save_checkpoint_steps: 500

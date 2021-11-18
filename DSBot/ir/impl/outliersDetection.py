@@ -22,7 +22,9 @@ class IROutliersDetection(IROp):
         pass
 
     def set_model(self, result):
-        if 'new_dataset' in result:
+        if 'transformed_ds' in result:
+            dataset = result['transformed_ds']
+        elif 'new_dataset' in result:
             dataset = result['new_dataset']
         else:
             dataset = result['original_dataset'].ds
@@ -43,7 +45,9 @@ class IROutliersDetection(IROp):
         if not self._param_setted:
             self.set_model(result)
 
-        if 'new_dataset' in result:
+        if 'transformed_ds' in result:
+            dataset = result['transformed_ds']
+        elif 'new_dataset' in result:
             dataset = result['new_dataset']
         else:
             dataset = result['original_dataset'].ds
