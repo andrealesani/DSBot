@@ -176,4 +176,26 @@ export const actions = {
       })
     return res
   },
+
+  async sendChatMessage(context, data) {
+    // The data can be {destination: '/yourDestination', payload: userUtterance}
+
+    // Add the message to the chat panel
+    context.commit('sendChat', data.payload)
+
+    // This is the data sent to the backend
+    const bodyRequest = {
+      payload: data.payload,
+    }
+    const res = await this.$axios
+      .post(data.destination, bodyRequest)
+      .then(function (response) {
+        // Add the response to the chat panel
+        context.commit('receiveChat', response.data)
+
+        // Do something with the response if necessary, for example:
+        // console.log(response)
+      })
+    return res
+  },
 }
