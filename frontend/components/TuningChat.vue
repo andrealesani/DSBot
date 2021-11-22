@@ -82,7 +82,9 @@ export default {
   methods: {
     ...mapActions(['toFramework', 'sendChatMessage']),
     sendText() {
+      // check that the user has effectively written something
       if (this.utterance.trim() !== '' && this.utterance !== '\n') {
+        // if the chat component is being used to communicate with mmcc
         if (this.destination === 'mmcc') this.toFramework(this.utterance)
         else
           this.sendChatMessage({

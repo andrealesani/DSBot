@@ -177,6 +177,7 @@ export const actions = {
     return res
   },
 
+  // Sends the message to the backend and add the message to the chat panel
   async sendChatMessage(context, data) {
     // The data can be {destination: '/yourDestination', payload: userUtterance}
 
