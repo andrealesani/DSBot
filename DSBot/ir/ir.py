@@ -7,6 +7,7 @@ import ir.impl
 from ir.ir_operations import IROpOptions
 
 
+#######   chiamata ricorsiva per eseguira i blocchetti della pipeline     #########
 def run(ir, dataset, session_id):
     if len(ir) == 1:
         return ir[0].run(dataset, session_id)
