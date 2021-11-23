@@ -62,6 +62,12 @@ import { mapActions, mapState } from 'vuex'
 
 export default {
   components: {},
+  props: {
+    destination: {
+      type: String,
+      default: 'mmcc',
+    },
+  },
   data() {
     return {
       utterance: '',
@@ -74,10 +80,17 @@ export default {
     this.scrollToEnd()
   },
   methods: {
-    ...mapActions(['toFramework']),
+    ...mapActions(['toFramework', 'sendChatMessage']),
     sendText() {
+      // check that the user has effectively written something
       if (this.utterance.trim() !== '' && this.utterance !== '\n') {
-        this.toFramework(this.utterance)
+        // if the chat component is being used to communicate with mmcc
+        if (this.destination === 'mmcc') this.toFramework(this.utterance)
+        else
+          this.sendChatMessage({
+            destination: this.destination,
+            payload: this.utterance,
+          })
         this.utterance = ''
       }
     },
@@ -94,7 +107,7 @@ export default {
 
 <style scoped>
 .chat-container {
-  height: 600px; /* This component is 450px tall. Deal with it. */
+  height: 600px; /* This component is this tall. Deal with it. */
   overflow-y: auto;
   overflow-x: hidden;
 }

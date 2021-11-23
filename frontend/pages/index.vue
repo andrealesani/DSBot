@@ -32,7 +32,15 @@
           </v-stepper-content>
 
           <v-stepper-content step="2" class="px-10 pb-8">
-            <insert-sentence></insert-sentence>
+            <v-row>
+              <v-col>
+                <tuning-chat destination="/echo"></tuning-chat>
+              </v-col>
+              <v-col>
+                <chat-helper></chat-helper>
+                <insert-sentence></insert-sentence>
+              </v-col>
+            </v-row>
           </v-stepper-content>
 
           <v-stepper-content step="3" class="px-10 pb-8">

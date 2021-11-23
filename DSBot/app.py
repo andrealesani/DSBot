@@ -188,5 +188,14 @@ def re_execute_algorithm(ir, session_id):
     data[session_id]['dataset'].name_plot = None
     threading.Thread(target=execute_algorithm, kwargs={'ir': ir, 'session_id': session_id}).start()
 
+@app.route('/echo', methods=['POST'])
+def echo():
+    json_data = request.get_json(force=True)
+
+    # Do stuff with the data received
+    print(json_data)
+
+    # Return a response
+    return f"echo -> {json_data['payload']}"
 
 app.run(host='localhost', port=5000, debug=True)
