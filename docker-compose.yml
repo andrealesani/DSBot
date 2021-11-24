@@ -26,3 +26,25 @@ services:
       run
       --enable-api
       -m models/nlu-20211111-165837.tar.gz
+
+  rasaaui:
+    image: rasa/rasa:2.8.6-full
+    ports:
+      - 5006:5005
+    volumes:
+      - ./rasaaui:/app
+
+    # To train rasa:
+    # - uncomment the following two lines
+    # - remove the 'command' section
+    # - connect to the container
+    # - run 'rasa train nlu'
+    # - take note of the output and replace it in the command below
+
+    # entrypoint: /bin/bash
+    # tty: true
+
+    command: >
+      run
+      --enable-api
+      -m models/20211124-141535.tar.gz
