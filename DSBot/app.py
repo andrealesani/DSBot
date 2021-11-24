@@ -198,7 +198,7 @@ def re_execute_algorithm(ir, session_id):
 def echo():
     json_data = request.get_json(force=True)
     connection = HTTPConnection(host=os.getenv("RASA_IP", "localhost"), port=int(os.getenv("RASA_PORT", "5006")))
-    connection.request("POST", "/model/parse", json.dumps({"text": "goodbye"}))
+    connection.request("POST", "/model/parse", json.dumps({"text": json_data['payload']}))
     response = json.loads(connection.getresponse().read())
 
     logging.getLogger(__name__).debug('Detected intent: %s', response)
