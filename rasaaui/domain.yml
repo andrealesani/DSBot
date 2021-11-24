@@ -33,6 +33,16 @@ responses:
   utter_iamabot:
   - text: "I am a bot, powered by Rasa."
 
+  utter_superunsuper:
+  - text: "Do you want to get information about how your data is distributed according to some features
+           (unsupervised) or would you rather build a model that can learn from the current dataset and then make predictions on new data (supervised)?"
+
+  utter_assciotionclustering:
+  - text: "Would you like to see relationships between features or gather similar <rows> together in groups? "
+
+
+
+
 session_config:
   session_expiration_time: 60
   carry_over_slots_to_new_session: true

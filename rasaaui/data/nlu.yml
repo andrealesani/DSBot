@@ -99,3 +99,22 @@ nlu:
     - are you a human?
     - am I talking to a bot?
     - am I talking to a human?
+
+- intent: supervised
+  examples : |
+    - supervised
+    - I want to make predictons on new data
+    - learn from current data
+
+- intent: unsupervised
+  examples : |
+    - unsupervised
+    - i want to learn how data is distributed
+    - learn how data is distributed
+    - learn distribution of features
+
+- intent: clustering
+  examples : |
+    - clustering
+    - I want to group my data
+    - I want to segment my data
