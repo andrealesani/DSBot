@@ -28,3 +28,11 @@ stories:
   - action: utter_did_that_help
   - intent: deny
   - action: utter_goodbye
+
+- story: dsbot
+  steps:
+  - action: utter_greet
+  - intent: greet
+  - action: utter_superunsuper
+  - intent: supervised
+  - action: utter_assciotionclustering

@@ -47,4 +47,4 @@ services:
     command: >
       run
       --enable-api
-      -m models/20211124-141535.tar.gz
+      -m models/20211124-154148.tar.gz

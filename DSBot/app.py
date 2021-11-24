@@ -1,6 +1,12 @@
 import threading
 from functools import partial
 
+##aui
+from http.client import HTTPConnection
+import json
+import logging
+
+
 import flask
 from flask import Flask, jsonify, request, send_file, session
 from flask_cors import CORS
@@ -191,11 +197,16 @@ def re_execute_algorithm(ir, session_id):
 @app.route('/echo', methods=['POST'])
 def echo():
     json_data = request.get_json(force=True)
+    connection = HTTPConnection(host=os.getenv("RASA_IP", "localhost"), port=int(os.getenv("RASA_PORT", "5006")))
+    connection.request("POST", "/model/parse", json.dumps({"text": "goodbye"}))
+    response = json.loads(connection.getresponse().read())
 
+    logging.getLogger(__name__).debug('Detected intent: %s', response)
+    #return response
     # Do stuff with the data received
-    print(json_data)
+    #print(json_data)
 
     # Return a response
-    return f"echo -> {json_data['payload']}"
+    return response
 
 app.run(host='localhost', port=5000, debug=True)

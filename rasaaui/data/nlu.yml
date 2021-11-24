@@ -17,6 +17,15 @@ nlu:
     - goodevening
     - good afternoon
 
+- intent: help
+  examples: |
+    - i didn't understand
+    - don't know
+    - help
+    - can i have some examples
+    - examples
+    - i want examples
+
 - intent: goodbye
   examples: |
     - good afternoon
