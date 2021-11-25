@@ -1,8 +1,9 @@
 import threading
 from functools import partial
 
-#aui
-from aui.fsm.rasa import Rasa
+#conversation
+from conversation.fsm.conv import Conv
+from conversation.fsm.rasa import Rasa
 
 
 import logging
@@ -51,6 +52,7 @@ app.config['CORS_SUPPORTS_CREDENTIALS']  = True
 session_serializer = SecureCookieSessionInterface().get_signing_serializer(app)
 data = {}
 
+conv = Conv()
 
 @app.route('/receiveds', methods=['POST'])
 def receive_ds():
@@ -200,13 +202,14 @@ def re_execute_algorithm(ir, session_id):
 def echo():
     json_data = request.get_json(force=True)
     rasa = Rasa()
+
     #gets the most probable intent
     intent = rasa.parse(json_data['payload'])
 
     #call the fsm and get a response
-
+    response = conv.get_response(intent)
     # Return a response
 
-    return intent
+    return response
 
 app.run(host='localhost', port=5000, debug=True)
