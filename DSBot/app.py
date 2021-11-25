@@ -1,9 +1,10 @@
 import threading
 from functools import partial
 
-##aui
-from http.client import HTTPConnection
-import json
+#aui
+from aui.fsm.rasa import Rasa
+
+
 import logging
 
 
@@ -11,6 +12,7 @@ import flask
 from flask import Flask, jsonify, request, send_file, session
 from flask_cors import CORS
 from flask_restful import reqparse
+
 
 from ir.ir import create_IR, run
 from log_helpers import setup_logger
@@ -197,16 +199,14 @@ def re_execute_algorithm(ir, session_id):
 @app.route('/echo', methods=['POST'])
 def echo():
     json_data = request.get_json(force=True)
-    connection = HTTPConnection(host=os.getenv("RASA_IP", "localhost"), port=int(os.getenv("RASA_PORT", "5006")))
-    connection.request("POST", "/model/parse", json.dumps({"text": json_data['payload']}))
-    response = json.loads(connection.getresponse().read())
+    rasa = Rasa()
+    #gets the most probable intent
+    intent = rasa.parse(json_data['payload'])
 
-    logging.getLogger(__name__).debug('Detected intent: %s', response)
-    #return response
-    # Do stuff with the data received
-    #print(json_data)
+    #call the fsm and get a response
 
     # Return a response
-    return response
+
+    return intent
 
 app.run(host='localhost', port=5000, debug=True)
