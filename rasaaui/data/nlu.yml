@@ -25,6 +25,8 @@ nlu:
     - can i have some examples
     - examples
     - i want examples
+    - can you show me a use case?
+    - what are the main use cases for this?
 
 - intent: goodbye
   examples: |
@@ -48,6 +50,8 @@ nlu:
     - of course
     - that sounds good
     - correct
+    - exactly
+    - for sure
 
 - intent: deny
   examples: |
@@ -58,6 +62,7 @@ nlu:
     - don't like that
     - no way
     - not really
+    - nope
 
 - intent: mood_great
   examples: |
@@ -104,17 +109,24 @@ nlu:
   examples : |
     - supervised
     - I want to make predictons on new data
-    - learn from current data
+    - I'd like to learn from current data
 
 - intent: unsupervised
   examples : |
     - unsupervised
-    - i want to learn how data is distributed
-    - learn how data is distributed
-    - learn distribution of features
+    - I want to learn how data is distributed
+    - I'd like to learn how data is distributed
+    - I want to learn distribution of features
 
 - intent: clustering
   examples : |
     - clustering
     - I want to group my data
     - I want to segment my data
+    - I want to know the main types
+    - I'd like to find similarities between clients
+    - I want to divide my data into groups
+
+- intent: association
+  examples : |
+    - I want to see relatioships between features
