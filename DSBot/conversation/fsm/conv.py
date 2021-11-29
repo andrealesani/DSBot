@@ -17,9 +17,9 @@ class Conv:
             if intent == "greet":
                 self.state = "sup_unsup"
                 return "Would you like to do supervised or unsupervised learning?"
-            elif intent == "clustering":
+            elif intent == "clustering" or intent == "association" or intent == "classification" or intent == "regression":
                 self.state = "start_pipeline"
-                return "Ok, clustering! Let's set some parameters"
+                return "Ok," + intent + ". Let's set some parameters."
             else:
                 return "I'm sorry, i couldn't get what you said. Would you repeat?"
 
@@ -30,15 +30,20 @@ class Conv:
             elif intent == "unsupervised":
                 self.state = "unsupervised"
                 return "Do you want to gather together in groups similar data or find some pattern in their features"
+            elif intent == "clustering" or intent == "association" or intent == "classification" or intent == "regression":
+                self.state = "start_pipeline"
+                return "Ok," + intent + ". Let's set some parameters."
+
 
         elif self.state == "unsupervised":
             if intent == "clustering" or intent == "association":
-                self.state = intent
+                self.state = "start_pipeline"
                 return "Ok," + intent + ". Let's set some parameters."
+
 
         elif self.state == "supervised":
             if intent == "classification" or intent == "regression":
-                self.state = intent
+                self.state = "start_pipeline"
                 return "Ok," + intent + ". Let's set some parameters."
 
     # TODO read help sentences from JSON
@@ -58,3 +63,7 @@ class Conv:
             return "help6"
         elif (self.state == "regression"):
             return "help7"
+
+
+
+

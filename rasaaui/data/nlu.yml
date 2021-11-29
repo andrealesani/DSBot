@@ -120,7 +120,8 @@ nlu:
 
 - intent: clustering
   examples : |
-    - clustering
+    - I want do clustering on my data
+    - I want clusters my data
     - I want to group my data
     - I want to segment my data
     - I want to know the main types
@@ -129,4 +130,26 @@ nlu:
 
 - intent: association
   examples : |
+    - association
     - I want to see relatioships between features
+
+- intent: regression
+  examples: |
+    - regression
+
+- intent: dbscan
+  examples: |
+    - dbscan
+
+- intent: kmeans
+  examples: |
+    - kmeans
+
+- intent: agglomerative
+  examples: |
+    -agglomerative
+
+- intent: first_sentence
+  examples: |
+      - the first
+
