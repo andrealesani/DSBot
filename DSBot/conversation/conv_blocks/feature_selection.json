@@ -1,0 +1,12 @@
+{
+  "name": "feature_selection",
+  "description": "Conversation block used to decide the feature selection algorithm to use",
+  "parameters": [
+    {
+      "is_special": "no",
+      "question": "Should we give more importance to features with a higher variance score?",
+      "answer_type": "string",
+      "help": "In order to make a better analysis, we have to reduce the number of features of your dataset. Usually, features with a higher variance score can better emphasise the differences between groups and can give the best results, but if you think that there are features with low variance score that should be taken into consideration we can use Laplace method to select the better features"
+    }
+  ]
+}

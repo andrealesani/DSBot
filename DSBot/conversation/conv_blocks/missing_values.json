@@ -1,0 +1,12 @@
+{
+  "name": "missing_values",
+  "description": "Conversation block used to decide how to handle rows with missing values inside",
+  "parameters": [
+    {
+      "is_special": "no",
+      "question": "Should we fill missing values with default values or just not consider them for the analysis?",
+      "answer_type": "string",
+      "help": "Rows with missing values cannot be used during the analysis. You can choose to either remove them or fill them with the most common value for that specific feature inside the dataset. Keep in mind that this could considerably affect performance"
+    }
+  ]
+}

@@ -1,0 +1,20 @@
+{
+  "name": "variance_threshold",
+  "description": "Conversation block used to tune the hyperparameters for feature selection's Variance Threshold algorithm",
+  "parameters": [
+    {
+      "is_special": "yes",
+      "question": "Type a decimal value between 0 and 10 that will be the minimum variance for a feature not to be removed for the analysis",
+      "answer_type": "float",
+      "help": "!! We could show which features would be removed and which would be kept !!",
+      "media_path": "src/ecc/features-to-be-removed.png",
+      "media_type": "img"
+    },
+    {
+      "is_special": "no",
+      "question": "What is the step?? Should the user choose it?",
+      "answer_type": "int",
+      "help": "Pwease send hewp"
+    }
+  ]
+}
