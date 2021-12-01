@@ -52,7 +52,10 @@ app.config['CORS_SUPPORTS_CREDENTIALS']  = True
 session_serializer = SecureCookieSessionInterface().get_signing_serializer(app)
 data = {}
 
+
 conv = Conv()
+
+
 
 @app.route('/receiveds', methods=['POST'])
 def receive_ds():
@@ -200,11 +203,32 @@ def re_execute_algorithm(ir, session_id):
 
 @app.route('/echo', methods=['POST'])
 def echo():
+
     json_data = request.get_json(force=True)
     rasa = Rasa()
 
     #gets the most probable intent
     intent = rasa.parse(json_data['payload'])
+
+
+
+    if intent == "clustering":
+        """scores = {}
+        
+        kb = data[session_id]['kb']
+        print(kb)
+        for i in range(len(kb)):
+            sent = [x for x in kb.values[i, 1:] if str(x) != 'nan']
+            print(sent)
+            scores[i] = NW("clustering", sent, kb.voc) / len(sent)
+            print(scores[i])
+
+        print(scores)
+        max_key = max(scores, key=scores.get)
+        max_key = [x for x in kb.kb.values[max_key, 1:] if str(x) != 'nan']
+        print('MAX', max_key)"""""
+
+        ir_tuning = create_IR(["dbscan","labelRemove","oneHotEncode","outliersRemove","laplace","missingValuesRemove", "pca2", "scatterplot", "normalization"])
 
     #call the fsm and get a response
     response = conv.get_response(intent)
