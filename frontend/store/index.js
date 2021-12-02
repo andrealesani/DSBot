@@ -33,6 +33,9 @@ export const mutations = {
   sendChat(state, msg) {
     state.tuningChat.push({ isBot: false, message: msg })
   },
+  clearChat(state) {
+    state.tuningChat = []
+  },
   receiveChat(state, msg) {
     if (msg) state.tuningChat.push({ isBot: true, message: msg })
   },
@@ -198,5 +201,8 @@ export const actions = {
         // console.log(response)
       })
     return res
+  },
+  clearChat(context) {
+    context.commit('clearChat')
   },
 }
