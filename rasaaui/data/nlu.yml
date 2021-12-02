@@ -128,6 +128,7 @@ nlu:
     - I'd like to find similarities between clients
     - I want to divide my data into groups
 
+
 - intent: association
   examples : |
     - association
@@ -140,16 +141,40 @@ nlu:
 - intent: dbscan
   examples: |
     - dbscan
+    - I want to use dbscan algorithm
+    - I want a minimum sample of [3] {"entity": "min_samples", "value":3} datapoints
+    - I want a minimum sample of [4] {"entity": "min_samples", "value":4} datapoints
+    - I want a minimum sample of [5] {"entity": "min_samples", "value":5} datapoints
+    - I want a minimum sample of [2] {"entity": "min_samples", "value":2} datapoints
+    - I want a minimum sample of [6] {"entity": "min_samples", "value":6} datapoints
+    - I want a minimum sample of [7] {"entity": "min_samples", "value":7} datapoints
+    - I want a minimum sample of [8] {"entity": "min_samples", "value":8} datapoints
+    - I want a minimum sample of [9] {"entity": "min_samples", "value":9} datapoints
+    - I want a minimum sample of [10] {"entity": "min_samples", "value":10} datapoints
+
 
 - intent: kmeans
   examples: |
     - kmeans
+    - I want to use kmeans algorithm
+    - I want [5] {"entity": "n_clusters", "value":5} clusters
+    - I want [4] {"entity": "n_clusters", "value":4} clusters
+    - I want [3] {"entity": "n_clusters", "value":3} clusters
+    - I want [2] {"entity": "n_clusters", "value":2} clusters
+    - I want [6] {"entity": "n_clusters", "value":6} clusters
+    - I want [7] {"entity": "n_clusters", "value":7} clusters
+    - I want [8] {"entity": "n_clusters", "value":8} clusters
+    - I want [9] {"entity": "n_clusters", "value":9} clusters
+    - I want [10] {"entity": "n_clusters", "value":10} clusters
+
 
 - intent: agglomerative
   examples: |
     -agglomerative
+    -hierarchical
+    -I want to use agglomerative algorithm
 
 - intent: first_sentence
   examples: |
-      - the first
+    - the first
 
