@@ -189,6 +189,7 @@ export const actions = {
 
     // This is the data sent to the backend
     const bodyRequest = {
+      session_id: this.state.sessionId,
       payload: data.payload,
     }
     const res = await this.$axios

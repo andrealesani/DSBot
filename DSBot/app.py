@@ -206,14 +206,17 @@ def echo():
 
     json_data = request.get_json(force=True)
     rasa = Rasa()
-
+    parser = reqparse.RequestParser()
+    parser.add_argument('session_id', required=True, help='No session provided')
+    args = parser.parse_args()
+    session_id = args['session_id']
+    if session_id in data:
     #gets the most probable intent
-    intent = rasa.parse(json_data['payload'])
+        intent = rasa.parse(json_data['payload'])
 
-
-
+    """
     if intent == "clustering":
-        """scores = {}
+        scores = {}
         
         kb = data[session_id]['kb']
         print(kb)
@@ -226,12 +229,14 @@ def echo():
         print(scores)
         max_key = max(scores, key=scores.get)
         max_key = [x for x in kb.kb.values[max_key, 1:] if str(x) != 'nan']
-        print('MAX', max_key)"""""
+        print('MAX', max_key)""
 
         ir_tuning = create_IR(["dbscan","labelRemove","oneHotEncode","outliersRemove","laplace","missingValuesRemove", "pca2", "scatterplot", "normalization"])
+"""
 
+    if session_id in data:
     #call the fsm and get a response
-    response = conv.get_response(intent)
+        response = conv.get_response(intent)
     # Return a response
 
     return response
