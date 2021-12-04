@@ -11,6 +11,21 @@ intents:
   - unsupervised
   - clustering
   - help
+  - kmeans
+  - association
+  - regression
+  - dbscan
+  - agglomerative
+
+entities:
+  - n_clusters
+  - value
+  - min_samples
+
+
+
+
+
 responses:
   utter_assciotionclustering:
     - 
