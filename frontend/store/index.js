@@ -33,6 +33,17 @@ export const mutations = {
   sendChat(state, msg) {
     state.tuningChat.push({ isBot: false, message: msg })
   },
+  removeWait(state) {
+    state.tuningChat.pop()
+    /* const chat = state.tuningChat
+    for (const element in chat) {
+      if (element.isBot && element.message === '#wait') {
+        const deletedElement = state.tuningChat.splice(chat.indexOf(element), 1)
+        if (deletedElement.len < 1) alert("couldn't deletedElement")
+        else alert('element deleted')
+      }
+    } */
+  },
   clearChat(state) {
     state.tuningChat = []
   },
@@ -196,8 +207,11 @@ export const actions = {
       .post(data.destination, bodyRequest)
       .then(function (response) {
         // Add the response to the chat panel
-        context.commit('receiveChat', response.data)
-
+        context.commit('receiveChat', '#wait')
+        setTimeout(() => {
+          context.commit('removeWait')
+          context.commit('receiveChat', response.data)
+        }, 1500)
         // Do something with the response if necessary, for example:
         // console.log(response)
       })
