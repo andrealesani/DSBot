@@ -142,22 +142,21 @@ nlu:
   examples: |
     - dbscan
     - I want to use dbscan algorithm
-    - I want a minimum sample of [3] {"entity": "min_samples", "value":3} datapoints
-    - I want a minimum sample of [4] {"entity": "min_samples", "value":4} datapoints
-    - I want a minimum sample of [5] {"entity": "min_samples", "value":5} datapoints
-    - I want a minimum sample of [2] {"entity": "min_samples", "value":2} datapoints
-    - I want a minimum sample of [6] {"entity": "min_samples", "value":6} datapoints
-    - I want a minimum sample of [7] {"entity": "min_samples", "value":7} datapoints
-    - I want a minimum sample of [8] {"entity": "min_samples", "value":8} datapoints
-    - I want a minimum sample of [9] {"entity": "min_samples", "value":9} datapoints
-    - I want a minimum sample of [10] {"entity": "min_samples", "value":10} datapoints
+    - I want a minimum sample of [3]{"entity": "min_samples", "value":3} datapoints
+    - I want a minimum sample of [4]{"entity": "min_samples", "value":4} datapoints
+    - I want a minimum sample of [5]{"entity": "min_samples", "value":5} datapoints
+    - I want a minimum sample of [2]{"entity": "min_samples", "value":2} datapoints
+    - I want a minimum sample of [6]{"entity": "min_samples", "value":6} datapoints
+    - I want a minimum sample of [7]{"entity": "min_samples", "value":7} datapoints
+    - I want a minimum sample of [8]{"entity": "min_samples", "value":8} datapoints
+    - I want a minimum sample of [9]{"entity": "min_samples", "value":9} datapoints
+    - I want a minimum sample of [10]{"entity": "min_samples", "value":10} datapoints
 
 
 - intent: kmeans
   examples: |
     - kmeans
     - I want to use kmeans algorithm
-    - I want [5](n_clusters) clusters
     - I want [5]{"entity": "n_clusters", "value":5} clusters
     - I want [4]{"entity": "n_clusters", "value":4} clusters
     - I want [3]{"entity": "n_clusters", "value":3} clusters
