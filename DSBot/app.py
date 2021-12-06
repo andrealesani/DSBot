@@ -2,6 +2,7 @@ import threading
 from functools import partial
 
 # conversation
+from DSBot.conversation.fsm.pipelineDrivenConv import pipelineDrivenConv
 from conversation.fsm.conv import Conv
 from conversation.fsm.rasa import Rasa
 
@@ -220,16 +221,40 @@ def echo():
     json_data = request.get_json(force=True)
     intent = rasa.parse(json_data['payload'])
 
+    conv2 = None
+
     # call fsm and update conv-state
     if part == "1":
         fsm_response = conv.get_response(intent, state)
         conv.updatestate(fsm_response["state"], session_id)
         # fsm 1 ended
         if conv.getstate(session_id) == "start_pipeline":
+
             conv.updatepart(session_id)
+
+            """scores = {}
+            kb = data[session_id]['kb']
+            print(kb)
+            for i in range(len(kb)):
+                sent = [x for x in kb.values[i, 1:] if str(x) != 'nan']
+                print(sent)
+                scores[i] = NW("clustering", sent, kb.voc) / len(sent)
+                print(scores[i])
+
+            print(scores)
+            max_key = max(scores, key=scores.get)
+            max_key = [x for x in kb.kb.values[max_key, 1:] if str(x) != 'nan']
+            print('MAX', max_key)"""
+
+            ir_tuning = create_IR(["dbscan","labelRemove","oneHotEncode","outliersRemove","laplace","missingValuesRemove", "pca2", "scatterplot", "normalization"])
+            conv2 = pipelineDrivenConv(ir_tuning)
+            conv2.miniManager()
+
+
     elif part == "2":
+
         # call mini/maxi manager
-        pass
+        conv2.conversationHandler()
 
     # Return the Bot response to the client
     return fsm_response["response"]
@@ -238,22 +263,4 @@ def echo():
 
 
 app.run(host='localhost', port=5000, debug=True)
-"""
-if intent == "clustering":
-    scores = {}
 
-    kb = data[session_id]['kb']
-    print(kb)
-    for i in range(len(kb)):
-        sent = [x for x in kb.values[i, 1:] if str(x) != 'nan']
-        print(sent)
-        scores[i] = NW("clustering", sent, kb.voc) / len(sent)
-        print(scores[i])
-
-    print(scores)
-    max_key = max(scores, key=scores.get)
-    max_key = [x for x in kb.kb.values[max_key, 1:] if str(x) != 'nan']
-    print('MAX', max_key)""
-
-    ir_tuning = create_IR(["dbscan","labelRemove","oneHotEncode","outliersRemove","laplace","missingValuesRemove", "pca2", "scatterplot", "normalization"])
-"""
