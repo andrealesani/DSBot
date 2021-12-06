@@ -157,20 +157,21 @@ nlu:
   examples: |
     - kmeans
     - I want to use kmeans algorithm
-    - I want [5] {"entity": "n_clusters", "value":5} clusters
-    - I want [4] {"entity": "n_clusters", "value":4} clusters
-    - I want [3] {"entity": "n_clusters", "value":3} clusters
-    - I want [2] {"entity": "n_clusters", "value":2} clusters
-    - I want [6] {"entity": "n_clusters", "value":6} clusters
-    - I want [7] {"entity": "n_clusters", "value":7} clusters
-    - I want [8] {"entity": "n_clusters", "value":8} clusters
-    - I want [9] {"entity": "n_clusters", "value":9} clusters
-    - I want [10] {"entity": "n_clusters", "value":10} clusters
-    - I want [5] {"entity": "n_clusters", "value":5} groups
-    - I want [5] {"entity": "n_clusters", "value":5} segments
-    - [5] {"entity": "n_clusters", "value":5} clusters should be fine
-    - [5] {"entity": "n_clusters", "value":5} groups are enough
-    - I need [5] {"entity": "n_clusters", "value":5} segments
+    - I want [5](n_clusters) clusters
+    - I want [5]{"entity": "n_clusters", "value":5} clusters
+    - I want [4]{"entity": "n_clusters", "value":4} clusters
+    - I want [3]{"entity": "n_clusters", "value":3} clusters
+    - I want [2]{"entity": "n_clusters", "value":2} clusters
+    - I want [6]{"entity": "n_clusters", "value":6} clusters
+    - I want [7]{"entity": "n_clusters", "value":7} clusters
+    - I want [8]{"entity": "n_clusters", "value":8} clusters
+    - I want [9]{"entity": "n_clusters", "value":9} clusters
+    - I want [10]{"entity": "n_clusters", "value":10} clusters
+    - I want [5]{"entity": "n_clusters", "value":5} groups
+    - I want [5]{"entity": "n_clusters", "value":5} segments
+    - [5]{"entity": "n_clusters", "value":5} clusters should be fine
+    - [5]{"entity": "n_clusters", "value":5} groups are enough
+    - I need [5]{"entity": "n_clusters", "value":5} segments
 
 
 

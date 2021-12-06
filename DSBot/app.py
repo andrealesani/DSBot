@@ -1,24 +1,21 @@
 import threading
 from functools import partial
 
-#conversation
+# conversation
 from conversation.fsm.conv import Conv
 from conversation.fsm.rasa import Rasa
 
-
 import logging
-
 
 import flask
 from flask import Flask, jsonify, request, send_file, session
 from flask_cors import CORS
 from flask_restful import reqparse
 
-
 from ir.ir import create_IR, run
 from log_helpers import setup_logger
 from main import Dataset
-#from flask_session import Session
+# from flask_session import Session
 from needleman_wunsch import NW
 from kb import KnowledgeBase
 import os
@@ -41,51 +38,51 @@ app = Flask(__name__)
 cors = CORS(app, supports_credentials=True)
 app.config['SECRET_KEY'] = 'secret!'
 app.config['CORS_HEADERS'] = 'application/json'
-app.config['CORS_SUPPORTS_CREDENTIALS']  = True
+app.config['CORS_SUPPORTS_CREDENTIALS'] = True
 
-#app.config['SESSION_TYPE'] = 'filesystem'
-#session config
-#app.config['SESSION_FILE_DIR'] = 'flask_session'
+# app.config['SESSION_TYPE'] = 'filesystem'
+# session config
+# app.config['SESSION_FILE_DIR'] = 'flask_session'
 # DEFAULT 31 days
-#app.config['PERMANENT_SESSION_LIFETIME'] = timedelta(days=31)
-#Session(app)
+# app.config['PERMANENT_SESSION_LIFETIME'] = timedelta(days=31)
+# Session(app)
 session_serializer = SecureCookieSessionInterface().get_signing_serializer(app)
 data = {}
 
-
 conv = Conv()
-
+rasa = Rasa()
 
 
 @app.route('/receiveds', methods=['POST'])
 def receive_ds():
     session_id = session_serializer.dumps(dict(session))
     data[session_id] = {}
-    has_index = 0 if request.form['has_index']=='true' else None
-    has_columns_name = 0 if request.form['has_column_names']=='true' else None
+    has_index = 0 if request.form['has_index'] == 'true' else None
+    has_columns_name = 0 if request.form['has_column_names'] == 'true' else None
     sep = request.form['separator']
     label = request.form['label']
-    #format = request.form['format']
-    #print('sep', sep)
+    # format = request.form['format']
+    # print('sep', sep)
     uploaded_file = request.files['ds']
     if uploaded_file.filename != '':
-        #uploaded_file.save(uploaded_file.filename)
+        # uploaded_file.save(uploaded_file.filename)
         try:
-            os.makedirs('./temp/temp_'+str(session_id))
+            os.makedirs('./temp/temp_' + str(session_id))
         except:
             pass
-        uploaded_file.save('./temp/temp_'+str(session_id)+'/' + uploaded_file.filename)
-        dataset = pd.read_csv('./temp/temp_'+str(session_id)+'/'+str(uploaded_file.filename), header=has_columns_name, index_col=has_index,  sep=sep, engine='python')
-        #print(dataset)
-        dataset.to_csv('./temp/temp_'+str(session_id)+'/' + uploaded_file.filename)
+        uploaded_file.save('./temp/temp_' + str(session_id) + '/' + uploaded_file.filename)
+        dataset = pd.read_csv('./temp/temp_' + str(session_id) + '/' + str(uploaded_file.filename),
+                              header=has_columns_name, index_col=has_index, sep=sep, engine='python')
+        # print(dataset)
+        dataset.to_csv('./temp/temp_' + str(session_id) + '/' + uploaded_file.filename)
         dataset = Dataset(dataset)
         dataset.session = session_id
         print(label)
 
         if label is not None and label != '':
             dataset.set_label(label)
-            #dataset.label = label
-            #dataset.hasLabel = True
+            # dataset.label = label
+            # dataset.hasLabel = True
             print('dslabel', dataset.label, dataset.hasLabel)
         dataset.set_characteristics()
         kb = KnowledgeBase()
@@ -95,28 +92,31 @@ def receive_ds():
 
     print(kb.kb)
     print("SESSION ID", session_id)
-    #print('label', label, dataset.label, dataset.hasLabel)
+    # print('label', label, dataset.label, dataset.hasLabel)
     return jsonify({"session_id": session_id})
 
 
 @app.route('/utterance', methods=['POST'])
 def receive_utterance():
-    #print(dataset.dataset)
+    # print(dataset.dataset)
 
-    #ds = copy.deepcopy(dataset)
+    # ds = copy.deepcopy(dataset)
     parser = reqparse.RequestParser()
     parser.add_argument('session_id', required=True, help='No session provided')
     parser.add_argument('message', required=True)
     args = parser.parse_args()
     session_id = args['session_id']
     if session_id in data:
-        with open('./temp/temp_'+str(session_id)+'/message'+str(session_id)+'.txt', 'w') as f:
+        with open('./temp/temp_' + str(session_id) + '/message' + str(session_id) + '.txt', 'w') as f:
             f.write(args['message'])
 
-        os.system('onmt_translate -model wf/run/model_step_1000.pt -src temp/temp_'+str(session_id)+'/message'+str(session_id)+'.txt -output ./temp/temp_'+str(session_id)+'/pred'+str(session_id)+'.txt -gpu -1 -verbose')
-        #doppione --> non fa nulla
-        #with open('./temp/temp_' + str(session_id) + '/pred' + str(session_id) + '.txt', 'r') as f:
-            #wf = f.readlines()[0].strip().split(' ')
+        os.system(
+            'onmt_translate -model wf/run/model_step_1000.pt -src temp/temp_' + str(session_id) + '/message' + str(
+                session_id) + '.txt -output ./temp/temp_' + str(session_id) + '/pred' + str(
+                session_id) + '.txt -gpu -1 -verbose')
+        # doppione --> non fa nulla
+        # with open('./temp/temp_' + str(session_id) + '/pred' + str(session_id) + '.txt', 'r') as f:
+        # wf = f.readlines()[0].strip().split(' ')
 
         with open('./temp/temp_' + str(session_id) + '/pred' + str(session_id) + '.txt', 'r') as f:
             wf = f.readlines()[0].strip().split(' ')
@@ -127,7 +127,7 @@ def receive_utterance():
         for i in range(len(kb.kb)):
             sent = [x for x in kb.kb.values[i, 1:] if str(x) != 'nan']
             print(sent)
-            scores[i] = NW(wf, sent, kb.voc)/len(sent)
+            scores[i] = NW(wf, sent, kb.voc) / len(sent)
             print(scores[i])
 
         print(scores)
@@ -137,7 +137,7 @@ def receive_utterance():
 
         ir_tuning = create_IR(max_key)
         data[session_id]['ir_tuning'] = ir_tuning
-        threading.Thread(target=execute_algorithm, kwargs={'ir': ir_tuning, 'session_id':session_id}).start()
+        threading.Thread(target=execute_algorithm, kwargs={'ir': ir_tuning, 'session_id': session_id}).start()
         return jsonify({"session_id": session_id,
                         "request": wf})
     return jsonify({"message": "Errore"})
@@ -189,7 +189,7 @@ def execute_algorithm(ir, session_id):
     app.logger.info('Executing pipeline: %s', [i.to_json() for i in ir])
     dataset = data[session_id]['dataset']
     if hasattr(dataset, 'label'):
-        results = {'original_dataset': dataset, 'labels':dataset.label}
+        results = {'original_dataset': dataset, 'labels': dataset.label}
     else:
         results = {'original_dataset': dataset}
     result = run(ir, results, session_id)
@@ -201,44 +201,59 @@ def re_execute_algorithm(ir, session_id):
     data[session_id]['dataset'].name_plot = None
     threading.Thread(target=execute_algorithm, kwargs={'ir': ir, 'session_id': session_id}).start()
 
+
 @app.route('/echo', methods=['POST'])
 def echo():
-
-    json_data = request.get_json(force=True)
-    rasa = Rasa()
+    # get session-id from HTTP request
     parser = reqparse.RequestParser()
     parser.add_argument('session_id', required=True, help='No session provided')
     args = parser.parse_args()
     session_id = args['session_id']
-    if session_id in data:
-    #gets the most probable intent
-        intent = rasa.parse(json_data['payload'])
 
-    """
-    if intent == "clustering":
-        scores = {}
-        
-        kb = data[session_id]['kb']
-        print(kb)
-        for i in range(len(kb)):
-            sent = [x for x in kb.values[i, 1:] if str(x) != 'nan']
-            print(sent)
-            scores[i] = NW("clustering", sent, kb.voc) / len(sent)
-            print(scores[i])
+    # get user's conversation data, if new user creates one
+    if not conv.userConvExists(session_id):
+        conv.createConv(session_id)
+    state = conv.getstate(session_id)
+    part = conv.getpart(session_id)
 
-        print(scores)
-        max_key = max(scores, key=scores.get)
-        max_key = [x for x in kb.kb.values[max_key, 1:] if str(x) != 'nan']
-        print('MAX', max_key)""
+    # get the most probable intent
+    json_data = request.get_json(force=True)
+    intent = rasa.parse(json_data['payload'])
 
-        ir_tuning = create_IR(["dbscan","labelRemove","oneHotEncode","outliersRemove","laplace","missingValuesRemove", "pca2", "scatterplot", "normalization"])
-"""
+    # call fsm and update conv-state
+    if part == "1":
+        fsm_response = conv.get_response(intent, state)
+        conv.updatestate(fsm_response["state"], session_id)
+        # fsm 1 ended
+        if conv.getstate(session_id) == "start_pipeline":
+            conv.updatepart(session_id)
+    elif part == "2":
+        # call mini/maxi manager
+        pass
 
-    if session_id in data:
-    #call the fsm and get a response
-        response = conv.get_response(intent)
-    # Return a response
+    # Return the Bot response to the client
+    return fsm_response["response"]
 
-    return response
+
+
 
 app.run(host='localhost', port=5000, debug=True)
+"""
+if intent == "clustering":
+    scores = {}
+
+    kb = data[session_id]['kb']
+    print(kb)
+    for i in range(len(kb)):
+        sent = [x for x in kb.values[i, 1:] if str(x) != 'nan']
+        print(sent)
+        scores[i] = NW("clustering", sent, kb.voc) / len(sent)
+        print(scores[i])
+
+    print(scores)
+    max_key = max(scores, key=scores.get)
+    max_key = [x for x in kb.kb.values[max_key, 1:] if str(x) != 'nan']
+    print('MAX', max_key)""
+
+    ir_tuning = create_IR(["dbscan","labelRemove","oneHotEncode","outliersRemove","laplace","missingValuesRemove", "pca2", "scatterplot", "normalization"])
+"""
