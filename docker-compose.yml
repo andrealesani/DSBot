@@ -44,7 +44,10 @@ services:
     #entrypoint: /bin/bash
     #tty: true
 
+
+
+    #-m models/20211129-181850.tar.gz quello del commit
     command: >
       run
       --enable-api
-      -m models/20211129-181850.tar.gz
+      -m models/20211206-100115.tar.gz

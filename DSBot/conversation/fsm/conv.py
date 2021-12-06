@@ -19,7 +19,7 @@ class Conv:
                 return "Would you like to do supervised or unsupervised learning?"
             elif intent == "clustering" or intent == "association" or intent == "classification" or intent == "regression":
                 self.state = "start_pipeline"
-                return "Ok," + intent + ". Let's set some parameters."
+                return "Ok, you want to do" + intent + ". Let's set some parameters."
             else:
                 return "I'm sorry, i couldn't get what you said. Would you repeat?"
 
@@ -32,19 +32,19 @@ class Conv:
                 return "Do you want to gather together in groups similar data or find some pattern in their features"
             elif intent == "clustering" or intent == "association" or intent == "classification" or intent == "regression":
                 self.state = "start_pipeline"
-                return "Ok," + intent + ". Let's set some parameters."
+                return "Ok, you want to do" + intent + ". Let's set some parameters."
 
 
         elif self.state == "unsupervised":
             if intent == "clustering" or intent == "association":
                 self.state = "start_pipeline"
-                return "Ok," + intent + ". Let's set some parameters."
+                return "Ok, you want to do" + intent + ". Let's set some parameters."
 
 
         elif self.state == "supervised":
             if intent == "classification" or intent == "regression":
                 self.state = "start_pipeline"
-                return "Ok," + intent + ". Let's set some parameters."
+                return "Ok, you want to do" + intent + ". Let's set some parameters."
 
     # TODO read help sentences from JSON
     def send_help(self):
