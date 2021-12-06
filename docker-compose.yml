@@ -50,4 +50,4 @@ services:
     command: >
       run
       --enable-api
-      -m models/20211206-100115.tar.gz
+      -m models/nlu-20211205-183513.tar.gz
