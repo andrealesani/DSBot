@@ -247,14 +247,15 @@ def echo():
             print('MAX', max_key)"""
 
             ir_tuning = create_IR(["dbscan","labelRemove","oneHotEncode","outliersRemove","laplace","missingValuesRemove", "pca2", "scatterplot", "normalization"])
-            conv2 = pipelineDrivenConv(ir_tuning)
-            conv2.miniManager()
+            conv2 = pipelineDrivenConv(ir_tuning, session_id)
+
+
 
 
     elif part == "2":
 
         # call mini/maxi manager
-        conv2.conversationHandler()
+        #conv2.convHandler(intent, entities, sessio_id)
 
     # Return the Bot response to the client
     return fsm_response["response"]
