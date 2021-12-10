@@ -4,6 +4,7 @@ from functools import partial
 # conversation
 from DSBot.conversation.fsm.pipelineDrivenConv import pipelineDrivenConv
 from conversation.fsm.conv import Conv
+from conversation.fsm.json_helper import Json_helper
 from conversation.fsm.rasa import Rasa
 
 import logging
@@ -51,6 +52,7 @@ session_serializer = SecureCookieSessionInterface().get_signing_serializer(app)
 data = {}
 
 conv = Conv()
+jh = Json_helper()
 rasa = Rasa()
 
 
@@ -212,25 +214,22 @@ def echo():
     session_id = args['session_id']
 
     # get user's conversation data, if new user creates one
-    if not conv.userConvExists(session_id):
-        conv.createConv(session_id)
-    state = conv.getstate(session_id)
-    part = conv.getpart(session_id)
+    if not jh.userConvExists(session_id):
+        jh.createConv(session_id)
+    state = jh.getstate(session_id)
+    part = jh.getpart(session_id)
 
     # get the most probable intent
     json_data = request.get_json(force=True)
     intent = rasa.parse(json_data['payload'])
 
-    conv2 = None
-
     # call fsm and update conv-state
     if part == "1":
-        fsm_response = conv.get_response(intent, state)
-        conv.updatestate(fsm_response["state"], session_id)
+        fsm_response = conv.get_response(intent, session_id, state)
         # fsm 1 ended
-        if conv.getstate(session_id) == "start_pipeline":
+        if jh.getstate(session_id) == "start_pipeline":
 
-            conv.updatepart(session_id)
+            jh.updatepart(session_id)
 
             """scores = {}
             kb = data[session_id]['kb']
@@ -247,15 +246,22 @@ def echo():
             print('MAX', max_key)"""
 
             ir_tuning = create_IR(["dbscan","labelRemove","oneHotEncode","outliersRemove","laplace","missingValuesRemove", "pca2", "scatterplot", "normalization"])
-            conv2 = pipelineDrivenConv(ir_tuning, session_id)
+            #stampa il tipo di oggetto del primo blocco della pipeline
+            print(type(ir_tuning[0]))
+            x = ir_tuning[0]
+            y = x.parameters['eps']
+            z = y.value(0.4)
+
+
+            conv2 = pipelineDrivenConv(session_id, ir_tuning)
 
 
 
 
     elif part == "2":
-
-        # call mini/maxi manager
-        #conv2.convHandler(intent, entities, sessio_id)
+        pass
+        #call mini/maxi manager
+        #conv2.convHandler(intent, entities, session_id)
 
     # Return the Bot response to the client
     return fsm_response["response"]
