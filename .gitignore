@@ -1,6 +1,5 @@
 .DS_Store
 .idea/
-DSBot/conversation/temp
 
 # Byte-compiled / optimized / DLL files
 __pycache__/
@@ -134,3 +133,4 @@ dmypy.json
 
 DSBot/temp/
 frontend/package-lock.json
+DSBot/conversation/temp
