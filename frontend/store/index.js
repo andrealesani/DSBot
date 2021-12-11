@@ -5,7 +5,18 @@ export const state = () => ({
   resultsReady: false,
   imageBase64: null,
   resultsDetails: '',
-  tuningChat: [],
+  tuningChat: [
+    {
+      isBot: true,
+      message:
+        'Welcome to Data Analysis Advisor! We can help you getting relevant information from your data.',
+    },
+    {
+      isBot: true,
+      message:
+        'Don’t hesitate to ask for more explanation during every step of the conversation.',
+    },
+  ],
   tuningPipeline: [],
   backendAvailable: true,
   pipelineEdited: false,

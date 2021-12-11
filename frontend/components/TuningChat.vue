@@ -135,7 +135,7 @@ export default {
   padding: 5pt 12pt;
   block-size: fit-content;
   inline-size: fit-content;
-  border-radius: 50px !important;
+  border-radius: 30px !important;
   font-family: 'Open Sans', Verdana, sans-serif;
 }
 
