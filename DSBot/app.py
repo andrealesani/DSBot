@@ -55,8 +55,10 @@ session_serializer = SecureCookieSessionInterface().get_signing_serializer(app)
 data = {}
 
 conv = Conv()
+conv2 = pipelineDrivenConv()
 jh = Json_helper()
 rasa = Rasa()
+
 
 
 @app.route('/receiveds', methods=['POST'])
@@ -215,7 +217,7 @@ def echo():
     parser.add_argument('session_id', required=True, help='No session provided')
     args = parser.parse_args()
     session_id = args['session_id']
-    conv2 = None
+
 
     # get user's conversation data, if new user creates one
     if not jh.userConvExists(session_id):
@@ -257,12 +259,10 @@ def echo():
             y = x.parameters['eps']
             y.tune_value(0.4)"""
 
-            conv2 = pipelineDrivenConv(session_id, ir_tuning)
+            conv2.addPipeline(ir_tuning)
             intro = conv2.maxiManager(session_id)
 
             fsm_response["response"] = fsm_response["response"] + "\n We can start to " + intro
-
-
 
 
     elif part == "2":
