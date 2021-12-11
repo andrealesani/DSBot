@@ -127,6 +127,22 @@ nlu:
     - I want to know the main types
     - I'd like to find similarities between clients
     - I want to divide my data into groups
+    - I want to use kmeans algorithm
+    - I want [5]{"entity": "n_clusters", "value":5} clusters
+    - I want [4]{"entity": "n_clusters", "value":4} clusters
+    - I want [3]{"entity": "n_clusters", "value":3} clusters
+    - I want [2]{"entity": "n_clusters", "value":2} clusters
+    - I want [6]{"entity": "n_clusters", "value":6} clusters
+    - I want [7]{"entity": "n_clusters", "value":7} clusters
+    - I want [8]{"entity": "n_clusters", "value":8} clusters
+    - I want [9]{"entity": "n_clusters", "value":9} clusters
+    - I want [10]{"entity": "n_clusters", "value":10} clusters
+    - I want [5]{"entity": "n_clusters", "value":5} groups
+    - I want [5]{"entity": "n_clusters", "value":5} segments
+    - [5]{"entity": "n_clusters", "value":5} clusters should be fine
+    - [5]{"entity": "n_clusters", "value":5} groups are enough
+    - I need [5]{"entity": "n_clusters", "value":5} segments
+    - set n_clusters to [3]{"entity": "n_clusters", "value":3}
 
 
 - intent: association
@@ -151,29 +167,16 @@ nlu:
     - I want a minimum sample of [8]{"entity": "min_samples", "value":8} datapoints
     - I want a minimum sample of [9]{"entity": "min_samples", "value":9} datapoints
     - I want a minimum sample of [10]{"entity": "min_samples", "value":10} datapoints
+    - at least [3]{"entity": "min_samples", "value":3} points per each cluster
+    - at least [6]{"entity": "min_samples", "value":6} points per each group
+    - set minPts to [8]{"entity": "min_samples", "value":8}
+
 
 
 - intent: kmeans
   examples: |
     - kmeans
     - I want to use kmeans algorithm
-    - I want [5]{"entity": "n_clusters", "value":5} clusters
-    - I want [4]{"entity": "n_clusters", "value":4} clusters
-    - I want [3]{"entity": "n_clusters", "value":3} clusters
-    - I want [2]{"entity": "n_clusters", "value":2} clusters
-    - I want [6]{"entity": "n_clusters", "value":6} clusters
-    - I want [7]{"entity": "n_clusters", "value":7} clusters
-    - I want [8]{"entity": "n_clusters", "value":8} clusters
-    - I want [9]{"entity": "n_clusters", "value":9} clusters
-    - I want [10]{"entity": "n_clusters", "value":10} clusters
-    - I want [5]{"entity": "n_clusters", "value":5} groups
-    - I want [5]{"entity": "n_clusters", "value":5} segments
-    - [5]{"entity": "n_clusters", "value":5} clusters should be fine
-    - [5]{"entity": "n_clusters", "value":5} groups are enough
-    - I need [5]{"entity": "n_clusters", "value":5} segments
-
-
-
 
 - intent: agglomerative
   examples: |
@@ -184,4 +187,7 @@ nlu:
 - intent: first_sentence
   examples: |
     - the first
+
+
+
 

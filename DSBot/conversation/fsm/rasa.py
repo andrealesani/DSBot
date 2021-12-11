@@ -10,9 +10,16 @@ class Rasa:
         self.host = os.getenv("RASA_IP", "localhost")
         self.port = int(os.getenv("RASA_PORT", "5006"))
 
-    def parse(self, utterance: str):
+    def parseIntent(self, utterance: str):
         connection = HTTPConnection(host=self.host, port=self.port)
         connection.request("POST", "/model/parse", json.dumps({"text": utterance}))
         response = json.loads(connection.getresponse().read())
         logging.getLogger(__name__).debug('Detected intent: %s', response)
         return response["intent"]["name"]
+
+    def parseEntities(self, utterance: str):
+        connection = HTTPConnection(host=self.host, port=self.port)
+        connection.request("POST", "/model/parse", json.dumps({"text": utterance}))
+        response = json.loads(connection.getresponse().read())
+        logging.getLogger(__name__).debug('Detected intent: %s', response)
+        return response["entities"]

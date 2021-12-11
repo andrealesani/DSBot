@@ -215,6 +215,7 @@ def echo():
     parser.add_argument('session_id', required=True, help='No session provided')
     args = parser.parse_args()
     session_id = args['session_id']
+    conv2 = None
 
     # get user's conversation data, if new user creates one
     if not jh.userConvExists(session_id):
@@ -224,7 +225,8 @@ def echo():
 
     # get the most probable intent
     json_data = request.get_json(force=True)
-    intent = rasa.parse(json_data['payload'])
+    intent = rasa.parseIntent(json_data['payload'])
+    entities = rasa.parseEntities(json_data['payload'])
 
     # call fsm and update conv-state
     if part == "1":
@@ -248,28 +250,24 @@ def echo():
             max_key = [x for x in kb.kb.values[max_key, 1:] if str(x) != 'nan']
             print('MAX', max_key)"""
 
-            ir_tuning = create_IR(["dbscan","labelRemove","oneHotEncode","outliersRemove","laplace","missingValuesRemove", "pca2", "scatterplot", "normalization"])
-            #stampa il tipo di oggetto del primo blocco della pipeline
+            ir_tuning = create_IR(["kmeans","labelRemove","oneHotEncode","outliersRemove","varianceThreshold","missingValuesRemove", "pca2", "scatterplot", "normalization"])
+            """#stampa il tipo di oggetto del primo blocco della pipeline
             print(type(ir_tuning[0]))
             x = ir_tuning[0]
             y = x.parameters['eps']
-            y.tune_value(0.4)
-
-
-
-
-
-
+            y.tune_value(0.4)"""
 
             conv2 = pipelineDrivenConv(session_id, ir_tuning)
+            intro = conv2.maxiManager(session_id)
+
+            fsm_response["response"] = fsm_response["response"] + "\n We can start to " + intro
 
 
 
 
     elif part == "2":
-        pass
-        #call mini/maxi manager
-        #conv2.convHandler(intent, entities, session_id)
+
+        conv2.convHandler(intent, entities, session_id)
 
     # Return the Bot response to the client
     return fsm_response["response"]

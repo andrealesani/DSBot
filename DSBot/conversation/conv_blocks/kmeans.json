@@ -1,6 +1,6 @@
 {
   "name": "kmeans",
-  "description": "Conversation block used to tune the hyperparameters for clustering kmeans algorithm",
+  "description": "tune the hyperparameters for clustering kmeans algorithm.",
   "parameters": [
     {
       "is_special": "no",
