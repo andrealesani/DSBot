@@ -248,17 +248,15 @@ def echo():
             max_key = [x for x in kb.kb.values[max_key, 1:] if str(x) != 'nan']
             print('MAX', max_key)"""
 
-            ir_tuning = create_IR(["kmeans","labelRemove","oneHotEncode","outliersRemove","laplace","missingValuesRemove", "pca2", "scatterplot", "normalization"])
+            ir_tuning = create_IR(["dbscan","labelRemove","oneHotEncode","outliersRemove","laplace","missingValuesRemove", "pca2", "scatterplot", "normalization"])
             #stampa il tipo di oggetto del primo blocco della pipeline
             print(type(ir_tuning[0]))
             x = ir_tuning[0]
+            y = x.parameters['eps']
+            y.tune_value(0.4)
 
-            f = x.to_json()
 
 
-            f["parameters"][0]["value"] = 0.4
-
-            print(f)
 
 
 
