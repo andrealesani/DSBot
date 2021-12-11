@@ -38,6 +38,7 @@ class Json_helper:
             conv = json.load(f)
             part = conv["part"]
             return part
+
     def addPipeline(self,id:str, pipeline):
         pipeline = json.dumps(pipeline)
         with open('./conversation/temp/conv_' + str(id), 'r') as f:
@@ -59,3 +60,4 @@ class Json_helper:
             updated["block"] = block
         with open('./conversation/temp/conv_' + str(id), 'w') as f:
             f.write(json.dumps(updated))
+

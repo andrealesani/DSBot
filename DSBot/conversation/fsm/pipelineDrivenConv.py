@@ -35,10 +35,13 @@ class pipelineDrivenConv:
             with open('./conversation/conv_blocks/' + self.pipeline[self.blockIndex].name + ".json", 'r') as f:
                 block = json.load(f)
             if block["name"] == "kmeans":
-                if intent == "clustering":
-                    pass
+                if (intent == "clustering" or intent == "kmeans") and entities[0]["entity"] == "n_clusters":
+                    self.pipeline[self.blockIndex].parameters['n_clusters'].tune_value(int(entities[0]["value"]))
+                    self.js.updatestate(session_id, "endBlock")
+                else:
+                    return {"response": "Sorry, I didn't understand"}
 
-
+            return self.maxiManager(session_id)
 
 
 
@@ -65,11 +68,14 @@ class pipelineDrivenConv:
             self.param = 0
             self.js.updatestate(session_id, "parametersSetting")
 
-        while(self.pipeline[self.blockIndex].name != "dbscan" and self.pipeline[self.blockIndex].name != "kmeans" and
-                  self.pipeline[self.blockIndex].name != "laplace"):
+        try:
+            while(self.pipeline[self.blockIndex].name != "dbscan" and self.pipeline[self.blockIndex].name != "kmeans" and
+                      self.pipeline[self.blockIndex].name != "laplace"):
 
-            self.blockIndex += 1
-            self.param = 0
+                self.blockIndex += 1
+                self.param = 0
+        except IndexError:
+            return  {"response": "Ok, parameter tuning is completed, in a moment you should see the results"}
 
             # send_introduction
         if (self.blockIndex < len(self.pipeline)):
@@ -79,7 +85,8 @@ class pipelineDrivenConv:
 
             return toReturn
         else:
-            pass
+            return {"response": "Ok, parameter tuning is completed, in a moment you will see the results"}
+
 
 
 
