@@ -43,8 +43,9 @@ services:
 
     #entrypoint: /bin/bash
     #tty: true
+    #-m models/nlu-20211205-183513.tar.gz
 
     command: >
       run
       --enable-api
-      -m models/nlu-20211205-183513.tar.gz
+      -m models/nlu-20211211-223805.tar.gz'

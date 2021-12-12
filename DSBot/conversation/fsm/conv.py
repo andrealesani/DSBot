@@ -9,6 +9,8 @@ import os
 
 from conversation.fsm.json_helper import Json_helper
 
+from DSBot.conversation.fsm.pipelineDrivenConv import pipelineDrivenConv
+
 """ structure of the JSON file:
 file name: conv_<session_id>.json
 file content:
@@ -36,7 +38,7 @@ class Conv:
         elif state == "greeting":
             if intent == "greet":
                 state = "sup_unsup"
-                response = {"response": "Welcome to AUI. Would you like to do supervised or unsupervised learning?"}
+                response = {"response": "Hello! Would you like to do supervised or unsupervised learning?"}
             elif intent == "clustering" or intent == "association" or intent == "classification" or intent == "regression":
                 state = "start_pipeline"
                 response = {"response": "Ok," + intent + ". Let's set some parameters."}
@@ -85,6 +87,13 @@ class Conv:
             return "help6"
         elif (state == "regression"):
             return "help7"
+
+    def setConv2(self, session_id, pipeline):
+        self.conv2 = pipelineDrivenConv(session_id, pipeline)
+
+    def getConv2(self):
+        return self.conv2
+
 
 
 

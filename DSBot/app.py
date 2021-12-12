@@ -55,10 +55,9 @@ session_serializer = SecureCookieSessionInterface().get_signing_serializer(app)
 data = {}
 
 conv = Conv()
-conv2 = pipelineDrivenConv()
+
 jh = Json_helper()
 rasa = Rasa()
-
 
 
 @app.route('/receiveds', methods=['POST'])
@@ -258,17 +257,21 @@ def echo():
             x = ir_tuning[0]
             y = x.parameters['eps']
             y.tune_value(0.4)"""
-
-            conv2.addPipeline(ir_tuning)
+            conv.setConv2(session_id, ir_tuning)
+            conv2 = conv.getConv2()
             intro = conv2.maxiManager(session_id)
 
             fsm_response["response"] = fsm_response["response"] + "\n We can start to " + intro
 
 
+
+
     elif part == "2":
+        conv2 = conv.getConv2()
+        fsm_response = conv2.conversationHandler(intent, entities, session_id)
 
-        conv2.convHandler(intent, entities, session_id)
-
+    if fsm_response["response"] == "Ok, parameter tuning is completed, in a moment you will see the results":
+        threading.Thread(target=execute_algorithm, kwargs={'ir': conv2.pipeline, 'session_id': session_id}).start()
     # Return the Bot response to the client
     return fsm_response["response"]
 
