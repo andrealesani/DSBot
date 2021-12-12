@@ -61,3 +61,15 @@ class Json_helper:
         with open('./conversation/temp/conv_' + str(id), 'w') as f:
             f.write(json.dumps(updated))
 
+    def getParamIndex(self, id: str):
+        with open('./conversation/temp/conv_' + str(id), 'r') as f:
+            conv = json.load(f)
+            param = int(conv["param"])
+            return param
+
+    def getBlockIndex(self, id: str):
+        with open('./conversation/temp/conv_' + str(id), 'r') as f:
+            conv = json.load(f)
+            block = int(conv["block"])
+            return block
+

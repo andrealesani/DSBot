@@ -3,6 +3,7 @@
   "description": "tune the hyperparameters for clustering kmeans algorithm.",
   "parameters": [
     {
+      "name": "n_clusters",
       "is_special": "no",
       "question": "How many groups are you looking for? [Type a number between 2 and 10, or ask for help if you don't know]",
       "answer_type": "int",

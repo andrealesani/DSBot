@@ -3,18 +3,21 @@
   "description": "Conversation block used to tune the hyperparameters for clustering agglomerative algorithm",
   "parameters": [
     {
+      "name": "n_clusters",
       "is_special": "no",
       "question": "What's the number of groups are you looking for? [Type '0' if you don't know]",
       "answer_type": "int",
       "help": "It is usually hard to read a graph with more than 7-8 clusters and it might not give useful information, but there might be specific cases where you need to find more"
     },
     {
+      "name": "linkage",
       "is_special": "no",
       "question": "What linkage type do you want to use? You can choose between Single or Complete",
       "answer_type": "string",
       "help": "Linkage method tends to produce long thin clusters in which nearby elements of the same cluster have small distances, but elements at opposite ends of a cluster may be much farther from each other than two elements of other clusters. On the other side, complete-linkage clustering calculates similarity of the farthest away pair of elements. One disadvantage to this method is that outliers can cause less-than-optimal merging"
     },
     {
+      "name": "affinity",
       "is_special": "no",
       "question": "What affinity measure do you want to use? You can choose between Euclidean (default), Cosine or Manhattan",
       "answer_type": "string",

@@ -88,11 +88,7 @@ class Conv:
         elif (state == "regression"):
             return "help7"
 
-    def setConv2(self, session_id, pipeline):
-        self.conv2 = pipelineDrivenConv(session_id, pipeline)
 
-    def getConv2(self):
-        return self.conv2
 
 
 

@@ -3,12 +3,14 @@
   "description": "Conversation block used to tune the hyperparameters for clustering dbscan algorithm",
   "parameters": [
     {
+      "name": "eps",
       "is_special": "no",
       "question": "What value should we use as epsilon? [Type a decimal number between 0 and 1, or ask for help if you don't know]",
       "answer_type": "float",
       "help": "Epsilon is a fixed value for the maximum distance between two points. Thus, increasing it will result in much larger and sparse clusters, while decreasing it will result in probably a probably higher number of more dense clusters"
     },
     {
+      "name": "min_samples",
       "is_special": "no",
       "question": "What's the minimum number of groups are you looking for? [Type a number between 2 and 10, or ask for help if you don't know]",
       "answer_type": "int",

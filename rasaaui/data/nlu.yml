@@ -171,7 +171,13 @@ nlu:
     - at least [6]{"entity": "min_samples", "value":6} points per each group
     - set minPts to [8]{"entity": "min_samples", "value":8}
 
+- intent: varianceTreshold
+  examples: |
+    -
 
+- intent: laplace
+  examples: |
+    -
 
 - intent: kmeans
   examples: |
@@ -183,10 +189,20 @@ nlu:
     -agglomerative
     -hierarchical
     -I want to use agglomerative algorithm
+    -I want [single]{"entity": "linkage", "value": "single"} linkage
+    -I want [complete]{"entity": "linkage", "value": "complete"} linkage
+    -I want [euclidean]{"entity": "affinity", "value": "euclidean"} affinity
+    -I want [l1]{"entity": "affinity", "value": "l1"} affinity
+    -I want [l2]{"entity": "affinity", "value": "l2"} affinity
+    -I want [l2]{"entity": "affinity", "value": "l2"} affinity
+    -I want [manhattan]{"entity": "affinity", "value": "manhattan"} affinity
+    -I want [cosine]{"entity": "affinity", "value": "cosine"} affinity
 
 - intent: first_sentence
   examples: |
     - the first
+
+    intent numer
 
 
 
