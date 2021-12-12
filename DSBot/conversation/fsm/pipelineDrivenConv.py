@@ -11,17 +11,18 @@ class pipelineDrivenConv:
     # stati-> (introduction,) parametersSetting, endBlock
 
 
-    def __init__(self):
+    def __init__(self, session_id, pipeline):
+        self.js.updatestate(session_id, "parametersSetting")
+        self.pipeline = pipeline  # metti pipeline in dizionario
+        self.param = 0 # metti in json indice parametro =0
         pass
+
         #danno errore, perché la pipeline non è serializzabile
         #self.js.addPipeline(session_id, pipeline)
         #self.js.setCurrentBlock(session_id, 0)
         #self.js.setParamIndex(session_id, 0)
 
-    def addPipeline(self,session_id, pipeline):
-        self.param = 0 # metti in json indice parametro =0
-        self.js.updatestate(session_id, "parametersSetting")
-        self.pipeline = pipeline  # metti pipeline in dizionario
+
 
     def conversationHandler(self, intent, entities, session_id):
 
@@ -60,7 +61,7 @@ class pipelineDrivenConv:
 
     def maxiManager(self, session_id):
         # verifica che il blocchetto sia utile e che lo stato non sia fine blocchetto altrimetni prende  # quello dopo (fa anche il check dei parametri)
-        #da aggiungere agglomerative variance threshold e outliers(?)
+        #da aggiungere agglomerative variance treshold e outliers(?)
 
         if self.js.getstate(session_id) == "endBlock":
             self.blockIndex += 1
