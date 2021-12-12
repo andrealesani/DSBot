@@ -13,7 +13,7 @@ from conversation.fsm.rasa import Rasa
 import logging
 
 import flask
-from flask import Flask, jsonify, request, send_file, session
+from flask import Flask, jsonify, request, send_file, session, send_from_directory
 from flask_cors import CORS
 from flask_restful import reqparse
 
@@ -274,8 +274,11 @@ def echo():
 
     if fsm_response["response"] == "Ok, parameter tuning is completed, in a moment you will see the results":
         threading.Thread(target=execute_algorithm, kwargs={'ir': conv2.pipeline, 'session_id': session_id}).start()
+
+        # test send image
+    fsm_response["image"] = send_from_directory(r'C:\Users\user\PycharmProjects\DSBot\DSBot\conversation\conv_blocks', 'conv_blocks.png')
     # Return the Bot response to the client
-    return fsm_response["response"]
+    return fsm_response
 
 
 
