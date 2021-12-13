@@ -217,7 +217,7 @@ def echo():
     parser.add_argument('session_id', required=True, help='No session provided')
     args = parser.parse_args()
     session_id = args['session_id']
-
+    fsm_response = {}
     # get user's conversation data, if new user creates one
     if not jh.userConvExists(session_id):
         jh.createConv(session_id)
@@ -253,6 +253,8 @@ def echo():
             """ir_tuning = create_IR(
                 ["kmeans", "labelRemove", "oneHotEncode", "outliersRemove", "varianceThreshold", "missingValuesRemove",
                  "pca2", "scatterplot", "normalization"])"""
+
+            #####problema: discrepanza tra alcuni blocchetti (tra json e implementazione) sia nome che parametri diversi
             ir_tuning = create_IR(
                 ["missingValuesRemove", "oneHotEncode", "outliersRemove", "varianceThreshold", "kmeans", "pca2", "scatterplot"])
 
@@ -266,7 +268,7 @@ def echo():
             conv2 = conv.getConv2()"""
             intro = conv2.maxiManager(session_id)
 
-            fsm_response["response"] = fsm_response["response"] + "\n We can start to " + intro
+            fsm_response["response"] = fsm_response["response"] + "\n We can start to " + intro["response"]
 
 
 

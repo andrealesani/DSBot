@@ -1,5 +1,5 @@
 {
-  "name": "variance_threshold",
+  "name": "varianceThreshold",
   "description": "Conversation block used to tune the hyperparameters for feature selection's Variance Threshold algorithm",
   "parameters": [
     {
