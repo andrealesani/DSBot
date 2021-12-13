@@ -24,6 +24,7 @@ file content:
 class Conv:
     def __init__(self):
         self.jh = Json_helper()
+
         try:
             os.makedirs('./conversation/temp')
         except:
@@ -33,7 +34,7 @@ class Conv:
     def get_response(self, intent: str, session_id, state="greeting"):
         """fsm manager"""
         if intent == "help":
-            return self.send_help()
+            return self.send_help(state)
 
         elif state == "greeting":
             if intent == "greet":
@@ -73,20 +74,22 @@ class Conv:
     # TODO read help sentences from JSON
     def send_help(self, state: str):
         """returns a hint for each state the user can be in"""
+        if (state == "greeting"):
+            return {"response":"I'm sorry, I don't know how to help you right now"}
         if (state == "sup_unsup"):
-            return "help1"
+            return {"response":"help1"}
         elif (state == "unsupervised"):
-            return "help2"
+            return {"response":"help1"}
         elif (state == "supervised"):
-            return "help3"
+            return {"response":"help1"}
         elif (state == "clustering"):
-            return "help4"
+            return {"response":"help1"}
         elif (state == "association"):
-            return "help5"
+            return {"response":"help1"}
         elif (state == "classification"):
-            return "help6"
+            return {"response":"help1"}
         elif (state == "regression"):
-            return "help7"
+            return {"response":"help1"}
 
 
 
