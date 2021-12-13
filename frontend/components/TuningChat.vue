@@ -19,7 +19,7 @@
                 />
               </v-col>
               <v-col
-                :cols="7"
+                :cols="8"
                 :class="
                   item.isBot ? 'd-flex justify-start' : 'd-flex justify-end'
                 "
