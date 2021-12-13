@@ -1,24 +1,33 @@
 export const state = () => ({
+  // Variable used by the v-stepper component to know which section of the webapp to show
   e1: 1,
+  // Variable that is going to be filled with the sessionId
   sessionId: 1,
+  // No idea
   requestDescription: '',
+  // It becomes true when the backend has run the analysis and has sent the graph image
   resultsReady: false,
+  // Graph that has to be shown, AKA results of the analysis
   imageBase64: null,
+  // No idea
   resultsDetails: '',
+  // Object used to store the chat messages and their sender. Initialized with welcome message
   tuningChat: [
     {
       isBot: true,
       message:
-        'Welcome to Data Analysis Advisor! We can help you getting relevant information from your data.',
+        'Welcome to Data Analysis Advisor! We can help you getting relevant information from your data. Don’t hesitate to ask for more explanation during every step of the conversation.',
     },
     {
       isBot: true,
-      message:
-        'Don’t hesitate to ask for more explanation during every step of the conversation.',
+      message: 'Would you like to do supervised or unsupervised learning?',
     },
   ],
+  // Analysis pipeline used in the last section of the webapp to tune the hyperparameters
   tuningPipeline: [],
+  // No idea why it's needed
   backendAvailable: true,
+  // I guess it's used in the last section of the webapp
   pipelineEdited: false,
 })
 
@@ -202,7 +211,7 @@ export const actions = {
     return res
   },
 
-  // Sends the message to the backend and add the message to the chat panel
+  // Sends the message to the backend, then adds the user message to the chat panel, waits for server response and adds it to chat panel too
   async sendChatMessage(context, data) {
     // The data can be {destination: '/yourDestination', payload: userUtterance}
 
@@ -217,14 +226,16 @@ export const actions = {
     const res = await this.$axios
       .post(data.destination, bodyRequest)
       .then(function (response) {
-        // Add the response to the chat panel
+        // Adds the 3 dots to the chat panel
         context.commit('receiveChat', '#wait')
         setTimeout(() => {
+          // Removes the 3 dots and adds the actual message to the chat panel
           context.commit('removeWait')
-          context.commit('receiveChat', response.data)
+          context.commit('receiveChat', response.data.response)
+          if (response.data.image !== null) {
+            context.commit('setImage', response.data.image)
+          }
         }, 1500)
-        // Do something with the response if necessary, for example:
-        // console.log(response)
       })
     return res
   },

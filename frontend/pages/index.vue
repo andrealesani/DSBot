@@ -38,7 +38,6 @@
               </v-col>
               <v-col>
                 <chat-helper></chat-helper>
-                <insert-sentence></insert-sentence>
               </v-col>
             </v-row>
           </v-stepper-content>
