@@ -218,7 +218,6 @@ def echo():
     args = parser.parse_args()
     session_id = args['session_id']
 
-
     # get user's conversation data, if new user creates one
     if not jh.userConvExists(session_id):
         jh.createConv(session_id)
@@ -235,7 +234,6 @@ def echo():
         fsm_response = conv.get_response(intent, session_id, state)
         # fsm 1 ended
         if jh.getstate(session_id) == "start_pipeline":
-
             jh.updatepart(session_id)
 
             """scores = {}
@@ -252,7 +250,9 @@ def echo():
             max_key = [x for x in kb.kb.values[max_key, 1:] if str(x) != 'nan']
             print('MAX', max_key)"""
 
-            ir_tuning = create_IR(["kmeans","labelRemove","oneHotEncode","outliersRemove","varianceThreshold","missingValuesRemove", "pca2", "scatterplot", "normalization"])
+            ir_tuning = create_IR(
+                ["kmeans", "labelRemove", "oneHotEncode", "outliersRemove", "varianceThreshold", "missingValuesRemove",
+                 "pca2", "scatterplot", "normalization"])
             """#stampa il tipo di oggetto del primo blocco della pipeline
             print(type(ir_tuning[0]))
             x = ir_tuning[0]
@@ -269,19 +269,23 @@ def echo():
 
 
     elif part == "2":
-        #conv2 = conv.getConv2()
+        # conv2 = conv.getConv2()
         fsm_response = conv2.conversationHandler(intent, entities, session_id)
 
     if fsm_response["response"] == "Ok, parameter tuning is completed, in a moment you will see the results":
         threading.Thread(target=execute_algorithm, kwargs={'ir': conv2.pipeline, 'session_id': session_id}).start()
 
-        # test send image
-    fsm_response["image"] = send_from_directory(r'C:\Users\user\PycharmProjects\DSBot\DSBot\conversation\conv_blocks', 'conv_blocks.png')
+    ## TEST SEND IMAGE ##
+
+    # codifico il file in bytecode
+    with open("./conversation/conv_blocks/conv_blocks.png", "rb") as img_file:
+        my_string = base64.b64encode(img_file.read())
+        # trasformo il bytecode in stringa
+        base64_string = my_string.decode('utf-8')
+    fsm_response["image"] = str(base64_string)
+
     # Return the Bot response to the client
     return fsm_response
 
 
-
-
 app.run(host='localhost', port=5000, debug=True)
-
