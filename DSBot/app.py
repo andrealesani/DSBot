@@ -278,6 +278,8 @@ def echo():
     if fsm_response["response"] == "Ok, parameter tuning is completed, in a moment you will see the results":
         data[session_id]['ir_tuning'] = conv2.pipelines[session_id]
         threading.Thread(target=execute_algorithm, kwargs={'ir': conv2.pipelines[session_id], 'session_id': session_id}).start()
+        fsm_response["wf"] = "clustering"
+        fsm_response["session_id"] = session_id
 
     ## TEST SEND IMAGE ##
 
@@ -290,6 +292,15 @@ def echo():
 
     # Return the Bot response to the client
     return fsm_response
+
+@app.route('/get-help', methods=['POST'])
+def get_help():
+    # codifico il file in bytecode
+    with open("./conversation/conv_blocks/conv_blocks.png", "rb") as img_file:
+        my_string = base64.b64encode(img_file.read())
+        # trasformo il bytecode in stringa
+        base64_string = my_string.decode('utf-8')
+    return str(base64_string)
 
 
 app.run(host='localhost', port=5000, debug=True)

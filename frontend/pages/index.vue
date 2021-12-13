@@ -38,6 +38,7 @@
               </v-col>
               <v-col>
                 <chat-helper></chat-helper>
+                <v-btn @click="getHelp">Help</v-btn>
               </v-col>
             </v-row>
           </v-stepper-content>
@@ -90,7 +91,7 @@ export default {
   },
   methods: {
     ...mapMutations(['setStep', 'setResultsReady', 'setAvailable']),
-    ...mapActions(['toFramework', 'waitForResults']),
+    ...mapActions(['toFramework', 'waitForResults', 'getHelp']),
     restart() {
       this.setAvailable(true)
       this.setResultsReady(false)

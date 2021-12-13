@@ -132,8 +132,11 @@ export const actions = {
   },
 
   async waitForResults(context) {
-    console.log('WAIT FOR RESULTS', this.state.e1)
-    if (this.state.e1 === 3 && !this.state.resultsReady) {
+    console.log(
+      'WAIT FOR RESULTS with sessionID ' + this.state.sessionId,
+      this.state.e1
+    )
+    if (!this.state.resultsReady) {
       console.log('GET RESULTS CALLED')
       const pollingResponse = await this.$axios
         .get(`/results/${this.state.sessionId}`)
@@ -241,5 +244,19 @@ export const actions = {
   },
   clearChat(context) {
     context.commit('clearChat')
+  },
+  async getHelp(context, data) {
+    const bodyRequest = {
+      session_id: this.state.sessionId,
+    }
+
+    const res = await this.$axios
+      .post('/get-help', bodyRequest)
+      .then(function (response) {
+        if (response.data.image !== null) {
+          context.commit('setImage', response.data.image)
+        }
+      })
+    return res
   },
 }

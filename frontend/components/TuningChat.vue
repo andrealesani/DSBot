@@ -126,7 +126,9 @@ export default {
 
 <style scoped>
 .chat-container {
-  height: 600px; /* This component is this tall. Deal with it. */
+  min-height: 500px;
+  max-height: 700px;
+  height: fit-content; /* This component is this tall. Deal with it. */
   overflow-y: auto;
   overflow-x: hidden;
 }
@@ -136,6 +138,7 @@ export default {
   block-size: fit-content;
   inline-size: fit-content;
   border-radius: 30px !important;
+  font-size: medium;
   font-family: 'Open Sans', Verdana, sans-serif;
 }
 
