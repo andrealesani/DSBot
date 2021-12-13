@@ -297,12 +297,14 @@ def echo():
 
 @app.route('/get-help', methods=['POST'])
 def get_help():
+    img_container = {}
     # codifico il file in bytecode
     with open("./conversation/conv_blocks/conv_blocks.png", "rb") as img_file:
         my_string = base64.b64encode(img_file.read())
         # trasformo il bytecode in stringa
         base64_string = my_string.decode('utf-8')
-    return str(base64_string)
+        img_container["image"] = str(base64_string)
+    return img_container
 
 
 app.run(host='localhost', port=5000, debug=True)
