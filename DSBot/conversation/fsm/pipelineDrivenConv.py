@@ -88,6 +88,7 @@ class pipelineDrivenConv:
 
         if self.js.getstate(session_id) == "endBlock":
             blockIndex += 1
+            self.js.setBlockIndex(session_id, blockIndex)
             self.js.setParamIndex(session_id, 0)
             self.js.updatestate(session_id, "parametersSetting")
 
@@ -96,9 +97,10 @@ class pipelineDrivenConv:
                       pipeline[blockIndex].name != "laplace"):
 
                 blockIndex += 1
+                self.js.setBlockIndex(session_id, blockIndex)
                 self.js.setParamIndex(session_id, 0)
         except IndexError:
-            return  {"response": "Ok, parameter tuning is completed, in a moment you should see the results"}
+            return  {"response": "Ok, parameter tuning is completed, in a moment you will see the results"}
 
             # send_introduction
         if (blockIndex < len(pipeline)):

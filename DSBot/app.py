@@ -250,9 +250,12 @@ def echo():
             max_key = [x for x in kb.kb.values[max_key, 1:] if str(x) != 'nan']
             print('MAX', max_key)"""
 
-            ir_tuning = create_IR(
+            """ir_tuning = create_IR(
                 ["kmeans", "labelRemove", "oneHotEncode", "outliersRemove", "varianceThreshold", "missingValuesRemove",
-                 "pca2", "scatterplot", "normalization"])
+                 "pca2", "scatterplot", "normalization"])"""
+            ir_tuning = create_IR(
+                ["missingValuesRemove", "oneHotEncode", "outliersRemove", "varianceThreshold", "kmeans", "pca2", "scatterplot"])
+
             """#stampa il tipo di oggetto del primo blocco della pipeline
             print(type(ir_tuning[0]))
             x = ir_tuning[0]
@@ -273,7 +276,8 @@ def echo():
         fsm_response = conv2.conversationHandler(intent, entities, session_id)
 
     if fsm_response["response"] == "Ok, parameter tuning is completed, in a moment you will see the results":
-        threading.Thread(target=execute_algorithm, kwargs={'ir': conv2.pipeline, 'session_id': session_id}).start()
+        data[session_id]['ir_tuning'] = conv2.pipelines[session_id]
+        threading.Thread(target=execute_algorithm, kwargs={'ir': conv2.pipelines[session_id], 'session_id': session_id}).start()
 
     ## TEST SEND IMAGE ##
 
