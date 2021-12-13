@@ -136,7 +136,10 @@ export const actions = {
       'WAIT FOR RESULTS with sessionID ' + this.state.sessionId,
       this.state.e1
     )
-    if (!this.state.resultsReady) {
+    if (
+      (this.state.e1 === 2 || this.state.e1 === 3) &&
+      !this.state.resultsReady
+    ) {
       console.log('GET RESULTS CALLED')
       const pollingResponse = await this.$axios
         .get(`/results/${this.state.sessionId}`)
