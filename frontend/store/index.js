@@ -250,6 +250,10 @@ export const actions = {
     context.commit('clearChat')
   },
   async getHelp(context) {
+    if (this.state.step !== 2) {
+      alert('Help function is only available in step 2')
+      return
+    }
     const bodyRequest = {
       session_id: this.state.sessionId,
     }
