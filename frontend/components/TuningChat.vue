@@ -46,14 +46,14 @@
 
       <!-- Area where u write the message -->
       <v-row dense>
-        <v-col xl="10" lg="9" md="8" sm="7">
+        <v-col xl="9" lg="9" md="8" sm="7">
           <v-textarea
             v-model="utterance"
             solo
             flat
             no-resize
             label="Write here to chat"
-            rows="3"
+            rows="2"
             background-color="#d4d4d4"
             hide-details="true"
             @keyup.enter="sendText"
@@ -61,7 +61,7 @@
         </v-col>
 
         <!-- 'Send message' button -->
-        <v-col cols="2" class="align-self-stretch">
+        <v-col cols="1" class="align-self-stretch">
           <v-btn
             height="100%"
             color="primary"
@@ -69,6 +69,18 @@
             @click="sendText"
           >
             <font-awesome-icon icon="chevron-right" size="2x" color="white" />
+          </v-btn>
+        </v-col>
+
+        <!-- 'HELP' button -->
+        <v-col cols="1">
+          <v-btn
+            height="100%"
+            color="primary"
+            :depressed="true"
+            @click="userHelp"
+          >
+            <font-awesome-icon icon="question" size="2x" color="white" />
           </v-btn>
         </v-col>
       </v-row>
@@ -99,7 +111,10 @@ export default {
     this.scrollToEnd()
   },
   methods: {
-    ...mapActions(['toFramework', 'sendChatMessage']),
+    ...mapActions(['toFramework', 'sendChatMessage', 'getHelp']),
+    userHelp() {
+      this.getHelp()
+    },
     sendText() {
       // check that the user has effectively written something
       if (this.utterance.trim() !== '' && this.utterance !== '\n') {
@@ -128,7 +143,8 @@ export default {
 .chat-container {
   min-height: 500px;
   max-height: 700px;
-  height: fit-content; /* This component is this tall. Deal with it. */
+  min-width: 500px;
+  height: fit-content;
   overflow-y: auto;
   overflow-x: hidden;
 }

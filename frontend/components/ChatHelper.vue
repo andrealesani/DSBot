@@ -1,21 +1,25 @@
 <template>
-  <v-row justify="center">
-    <v-col>
-      <!--      <v-img :src="require('@/assets/clusters_img.png')" aspect-ratio="1.8" />-->
-      <transition name="bounce">
-        <img
-          v-if="imageBase64 !== null"
-          :src="`data:image/png;base64,${imageBase64}`"
-          alt=""
-        />
-        <div v-else class="GUIHelper">
-          <font-awesome-icon icon="question" size="2x" color="#115e63ff" />
-          <br />
-          <p>This section is dedicated to helping you with your choices</p>
-        </div>
-      </transition>
-    </v-col>
-  </v-row>
+  <v-col>
+    <v-row justify="center">
+      <v-col>
+        <!--      <v-img :src="require('@/assets/clusters_img.png')" aspect-ratio="1.8" />-->
+        <transition name="bounce">
+          <img
+            v-if="imageBase64 !== null"
+            :src="`data:image/png;base64,${imageBase64}`"
+            alt=""
+          />
+          <div v-else class="GUIHelper">
+            <p>
+              <font-awesome-icon icon="question" size="2x" color="#115e63ff" />
+            </p>
+            <br />
+            <p>This section is dedicated to helping you with your choices</p>
+          </div>
+        </transition>
+      </v-col>
+    </v-row>
+  </v-col>
 </template>
 
 <script>

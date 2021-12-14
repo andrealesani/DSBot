@@ -284,27 +284,27 @@ def echo():
         fsm_response["session_id"] = session_id
 
     ## TEST SEND IMAGE ##
-
     # codifico il file in bytecode
-    with open("./conversation/conv_blocks/conv_blocks.png", "rb") as img_file:
-        my_string = base64.b64encode(img_file.read())
-        # trasformo il bytecode in stringa
-        base64_string = my_string.decode('utf-8')
-    fsm_response["image"] = str(base64_string)
+    # with open("./conversation/conv_blocks/conv_blocks.png", "rb") as img_file:
+    #    my_string = base64.b64encode(img_file.read())
+    #    # trasformo il bytecode in stringa
+    #    base64_string = my_string.decode('utf-8')
+    #fsm_response["image"] = str(base64_string)
 
     # Return the Bot response to the client
     return fsm_response
 
 @app.route('/get-help', methods=['POST'])
 def get_help():
-    img_container = {}
+    help_message = {}
     # codifico il file in bytecode
-    with open("./conversation/conv_blocks/conv_blocks.png", "rb") as img_file:
+    with open("./conversation/conv_blocks/clusters_transformation.png", "rb") as img_file:
         my_string = base64.b64encode(img_file.read())
         # trasformo il bytecode in stringa
         base64_string = my_string.decode('utf-8')
-        img_container["image"] = str(base64_string)
-    return img_container
+        help_message["image"] = str(base64_string)
+        help_message["response"] = "Gathering similar data in groups is also known as clustering and it let's you see similarities between your population, while finding patterns in their features is also known as association and focuses on the correlations between the characteristics of your population. You can see an image of what clustering does on the right panel."
+    return help_message
 
 
 app.run(host='localhost', port=5000, debug=True)

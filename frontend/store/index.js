@@ -140,12 +140,13 @@ export const actions = {
       (this.state.e1 === 2 || this.state.e1 === 3) &&
       !this.state.resultsReady
     ) {
-      console.log('GET RESULTS CALLED')
+      console.log('/results/sessionId CALLED')
       const pollingResponse = await this.$axios
         .get(`/results/${this.state.sessionId}`)
         .then(function (response) {
           console.log(response)
           if (response.data.ready) {
+            context.commit('setStep', 3)
             context.commit('setImage', response.data.img)
             context.commit('setResultsDetails', response.data.details)
             context.commit('setResultsReady', response.data.ready)
@@ -248,7 +249,7 @@ export const actions = {
   clearChat(context) {
     context.commit('clearChat')
   },
-  async getHelp(context, data) {
+  async getHelp(context) {
     const bodyRequest = {
       session_id: this.state.sessionId,
     }
@@ -256,6 +257,15 @@ export const actions = {
     const res = await this.$axios
       .post('/get-help', bodyRequest)
       .then(function (response) {
+        if (response.data.response !== null) {
+          // Adds the 3 dots to the chat panel
+          context.commit('receiveChat', '#wait')
+          setTimeout(() => {
+            // Removes the 3 dots and adds the actual message to the chat panel
+            context.commit('removeWait')
+            context.commit('receiveChat', response.data.response)
+          }, 1500)
+        }
         if (response.data.image !== null) {
           context.commit('setImage', response.data.image)
         }
