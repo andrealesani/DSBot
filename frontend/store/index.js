@@ -250,7 +250,7 @@ export const actions = {
     context.commit('clearChat')
   },
   async getHelp(context) {
-    if (this.state.step !== 2) {
+    if (this.state.e1 !== 2) {
       alert('Help function is only available in step 2')
       return
     }
