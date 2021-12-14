@@ -157,7 +157,9 @@ def get_results(received_id):
     app.logger.info('Polling results for session: %s', session_id)
 
     # recupero il file
-    filename = data[session_id]['dataset'].name_plot
+    filename = None
+    if data[session_id] is not None:
+        filename = data[session_id]['dataset'].name_plot
     if filename is None:
         return jsonify({"ready": False, "session_id": session_id, 'img': None, 'tuning': None})
 
