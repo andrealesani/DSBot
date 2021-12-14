@@ -40,6 +40,13 @@ class Conv:
             if intent == "greet":
                 state = "sup_unsup"
                 response = {"response": "Hello! Would you like to do supervised or unsupervised learning?"}
+            elif intent == "supervised":
+                state = "supervised"
+                response = {"response": "Are you trying to predict a label or a categorical attribute?"}
+            elif intent == "unsupervised":
+                state = "unsupervised"
+                response = {"response": "Do you want to gather together in groups similar data or find some pattern "
+                                        "in their features"}
             elif intent == "clustering" or intent == "association" or intent == "classification" or intent == "regression":
                 state = "start_pipeline"
                 response = {"response": "Ok," + intent + ". Let's set some parameters."}
