@@ -1,11 +1,11 @@
 {
   "name": "kmeans",
-  "description": "tune the hyperparameters for clustering kmeans algorithm.",
+  "description": "I'm using kmeans algorithm to group yor data.",
   "parameters": [
     {
       "name": "n_clusters",
       "is_special": "no",
-      "question": "How many groups are you looking for? [Type a number between 2 and 10, or ask for help if you don't know]",
+      "question": "How many groups are you looking for? [Type a number between 2 and 10, or press HELP if you don't know]",
       "answer_type": "int",
       "help": "It is usually hard to read a graph with more than 7-8 clusters and it might not give useful information, but there might be specific cases where you need to find more"
     }

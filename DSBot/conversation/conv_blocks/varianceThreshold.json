@@ -1,6 +1,6 @@
 {
   "name": "varianceThreshold",
-  "description": "Conversation block used to tune the hyperparameters for feature selection's Variance Threshold algorithm",
+  "description": "I saw that there are a lot of features in your dataset, I can remove the less significant ones to make the dataset lighter and so to make the analysis quicker, to do so I'm using Variance Threshold algorithm.",
   "parameters": [
     {
       "name": "threshold",

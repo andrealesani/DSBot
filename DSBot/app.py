@@ -268,7 +268,7 @@ def echo():
             conv2 = conv.getConv2()"""
             intro = conv2.maxiManager(session_id)
 
-            fsm_response["response"] = fsm_response["response"] + "\n We can start to " + intro["response"]
+            fsm_response["response"] = fsm_response["response"] + " " + intro["response"]
 
 
 
