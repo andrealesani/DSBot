@@ -7,7 +7,7 @@ export const state = () => ({
   requestDescription: '',
   // It becomes true when the backend has run the analysis and has sent the graph image
   resultsReady: false,
-  // Graph that has to be shown, AKA results of the analysis
+  // Variable that stores an image received from the backend, for example the results of the analysis
   imageBase64: null,
   // No idea
   resultsDetails: '',
@@ -136,10 +136,7 @@ export const actions = {
       'WAIT FOR RESULTS with sessionID ' + this.state.sessionId,
       this.state.e1
     )
-    if (
-      (this.state.e1 === 2 || this.state.e1 === 3) &&
-      !this.state.resultsReady
-    ) {
+    if (this.state.e1 === 3 && !this.state.resultsReady) {
       console.log('/results/sessionId CALLED')
       const pollingResponse = await this.$axios
         .get(`/results/${this.state.sessionId}`)
@@ -239,6 +236,12 @@ export const actions = {
           // Removes the 3 dots and adds the actual message to the chat panel
           context.commit('removeWait')
           context.commit('receiveChat', response.data.response)
+          if (
+            response.data.response ===
+            'Ok, parameter tuning is completed, in a moment you will see the results'
+          ) {
+            context.commit('setStep', 3)
+          }
           if (response.data.image !== null) {
             context.commit('setImage', response.data.image)
           }

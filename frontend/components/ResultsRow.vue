@@ -1,10 +1,10 @@
 <template>
   <v-row justify="center">
-    <v-col :cols="9" :xl="7">
-      <img :src="`data:image/png;base64,${imageBase64}`" alt="" height="700" />
-    </v-col>
     <v-col :cols="3" :xl="5">
       <tuning-chat />
+    </v-col>
+    <v-col :cols="9" :xl="7">
+      <img :src="`data:image/png;base64,${imageBase64}`" alt="" height="700" />
     </v-col>
     <v-col v-if="resultsDetails !== ''">
       <v-card class="mx-2 pa-2">
