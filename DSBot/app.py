@@ -54,10 +54,13 @@ app.config['CORS_SUPPORTS_CREDENTIALS'] = True
 session_serializer = SecureCookieSessionInterface().get_signing_serializer(app)
 data = {}
 
+#manages first part of conversation: select the type of algorithm (clustering, linear regression, association, ...)
 conv = Conv()
+#manages second part of conversation: set parameters for each pipeline block
 conv2 = pipelineDrivenConv()
-
+#interface to json files where conversations' state is saved
 jh = Json_helper()
+#helper to interact with Rasa's server end points
 rasa = Rasa()
 
 
@@ -220,24 +223,25 @@ def echo():
     args = parser.parse_args()
     session_id = args['session_id']
     fsm_response = {}
-    # get user's conversation data, if new user creates one
+    # get user's conversation data. If new user, creates one
     if not jh.userConvExists(session_id):
         jh.createConv(session_id)
     state = jh.getstate(session_id)
     part = jh.getpart(session_id)
 
-    # get the most probable intent
+    # get user input
     json_data = request.get_json(force=True)
+    # get intent
     intent = rasa.parseIntent(json_data['payload'])
+    # get entity
     entities = rasa.parseEntities(json_data['payload'])
 
-    # call fsm and update conv-state
+    # call fsm (1 or 2) and update conv-state
     if part == "1":
-        fsm_response = conv.get_response(intent, session_id, state)
-        # fsm 1 ended
+        fsm_response = conv.get_response(intent, session_id, state)  # fsm_response is a dictionary with 1 "response" field
+        # check if fsm 1 ended
         if jh.getstate(session_id) == "start_pipeline":
             jh.updatepart(session_id)
-
             """scores = {}
             kb = data[session_id]['kb']
             print(kb)
@@ -250,16 +254,13 @@ def echo():
             print(scores)
             max_key = max(scores, key=scores.get)
             max_key = [x for x in kb.kb.values[max_key, 1:] if str(x) != 'nan']
-            print('MAX', max_key)"""
+            print('MAX', max_key)
 
-            """ir_tuning = create_IR(
+            ir_tuning = create_IR(
                 ["kmeans", "labelRemove", "oneHotEncode", "outliersRemove", "varianceThreshold", "missingValuesRemove",
                  "pca2", "scatterplot", "normalization"])"""
-
             #####problema: discrepanza tra alcuni blocchetti (tra json e implementazione) sia nome che parametri diversi
-            ir_tuning = create_IR(
-                ["missingValuesRemove", "oneHotEncode", "outliersRemove", "varianceThreshold", "kmeans", "pca2", "scatterplot"])
-
+            ir_tuning = create_IR(["missingValuesRemove", "oneHotEncode", "outliersRemove", "varianceThreshold", "kmeans", "pca2", "scatterplot"])
             """#stampa il tipo di oggetto del primo blocco della pipeline
             print(type(ir_tuning[0]))
             x = ir_tuning[0]
@@ -269,16 +270,9 @@ def echo():
             """conv.setConv2(session_id, ir_tuning)
             conv2 = conv.getConv2()"""
             intro = conv2.maxiManager(session_id)
-
             fsm_response["response"] = fsm_response["response"] + " " + intro["response"]
-
-
-
-
     elif part == "2":
-        # conv2 = conv.getConv2()
         fsm_response = conv2.conversationHandler(intent, entities, session_id)
-
     if fsm_response["response"] == "Ok, parameter tuning is completed, in a moment you will see the results":
         data[session_id]['ir_tuning'] = conv2.pipelines[session_id]
         threading.Thread(target=execute_algorithm, kwargs={'ir': conv2.pipelines[session_id], 'session_id': session_id}).start()
@@ -309,4 +303,4 @@ def get_help():
     return help_message
 
 
-app.run(host='localhost', port=5000, debug=True)
+app.run(host='127.0.0.1', port=5000, debug=True)

@@ -31,6 +31,7 @@ class Conv:
             pass
 
     # TODO clean code, make it read from JSON file
+    """returns a dictionary with 1 "response" field"""
     def get_response(self, intent: str, session_id, state="greeting"):
         """fsm manager"""
         if intent == "help":
@@ -42,7 +43,10 @@ class Conv:
                 response = {"response": "Hello! Would you like to do supervised or unsupervised learning?"}
             elif intent == "supervised":
                 state = "supervised"
-                response = {"response": "Are you trying to predict a label or a categorical attribute?"}
+                response = {"response": ["Are you trying to predict a label or a categorical attribute?"]}
+                #   TODO sistema il formato della risposta
+                response["response"].append("Capito Gigio?")
+                print(response["response"][0], response["response"][1])
             elif intent == "unsupervised":
                 state = "unsupervised"
                 response = {"response": "Do you want to gather together in groups similar data or find some pattern in their features?"}
@@ -76,6 +80,7 @@ class Conv:
 
         self.jh.updatestate(session_id, state)
         return response
+
     # TODO read help sentences from JSON
     def send_help(self, state: str):
         """returns a hint for each state the user can be in"""

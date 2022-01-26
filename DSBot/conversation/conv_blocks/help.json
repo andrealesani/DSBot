@@ -1,0 +1,16 @@
+{
+  "greeting": {
+    "response": ["Supervised learning is used to learn how the label depends from the other variables and try predict it on new data!", "On the other hand, ...", "Unsupervised learning is used to understand how the data is distributed when there is no target "],
+    "response2": ["If you have already collected some data (address, size, no. rooms, garden, renovation year, energy class) about the house sales in the neighborhood we can help you finding the right price for the house you are trying to sell. That’s a typical supervised learning task.","If you are a business owner and you’ve got the history of sales, we can help you finding the main types of customers that visit your website. That’s a typical unsupervised learning task.", "Instead, ...","If you are a business owner and you’ve got the history of sales, we can help you finding the main types of customers that visit your website. That’s a typical unsupervised learning task."],
+    "image": "./conversation/conv_blocks/supvsunsup.png"
+  },
+  "supervised": {
+    "response": ["frase1","frase2"],
+    "response2": [],
+    "image": "filepath"
+  },
+  "unsupervised": {
+    "response": ["frase1","frase2"],
+    "response2": [],
+    "image": "filepath"
+}
