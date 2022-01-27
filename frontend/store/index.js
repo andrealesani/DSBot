@@ -24,7 +24,7 @@ export const state = () => ({
     },
   ],
   // When true, chatHelper component shows the help message
-  showHelp: true,
+  showHelp: false,
   // Analysis pipeline used in the last section of the webapp to tune the hyperparameters
   tuningPipeline: [],
   // No idea why it's needed
@@ -248,7 +248,10 @@ export const actions = {
           ) {
             context.commit('setStep', 3)
           }
-          if (response.data.image !== null) {
+          if (
+            response.data.image !== null &&
+            response.data.image !== undefined
+          ) {
             context.commit('setImage', response.data.image)
           }
         }, 1500)

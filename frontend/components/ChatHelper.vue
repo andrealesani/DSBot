@@ -24,7 +24,7 @@
             </p>
             <div v-else>
               <img
-                v-if="imageBase64 !== null"
+                v-if="imageBase64 !== null && imageBase64 !== undefined"
                 :src="`data:image/png;base64,${imageBase64}`"
                 alt=""
               />
