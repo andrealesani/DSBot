@@ -34,7 +34,7 @@
           <v-stepper-content step="2" class="px-10 pb-8">
             <v-row>
               <v-col>
-                <tuning-chat destination="/echo"></tuning-chat>
+                <tuning-chat destination="/send-message"></tuning-chat>
               </v-col>
               <v-col>
                 <chat-helper></chat-helper>

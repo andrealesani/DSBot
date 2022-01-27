@@ -215,8 +215,8 @@ def re_execute_algorithm(ir, session_id):
     threading.Thread(target=execute_algorithm, kwargs={'ir': ir, 'session_id': session_id}).start()
 
 
-@app.route('/echo', methods=['POST'])
-def echo():
+@app.route('/send-message', methods=['POST'])
+def answer_message():
     # get session-id from HTTP request
     parser = reqparse.RequestParser()
     parser.add_argument('session_id', required=True, help='No session provided')
@@ -290,6 +290,7 @@ def echo():
     # Return the Bot response to the client
     return fsm_response
 
+# TODO delete it
 @app.route('/get-help', methods=['POST'])
 def get_help():
     help_message = {}
