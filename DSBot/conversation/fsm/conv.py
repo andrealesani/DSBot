@@ -39,7 +39,7 @@ class Conv:
         elif state == "greeting":
             if intent == "greet":
                 state = "sup_unsup"
-                response = {"response": "Hello! Would you like to do supervised or unsupervised learning?"}
+                response = {"response": ["Hello! Would you like to do supervised or unsupervised learning?"]}
             elif intent == "supervised":
                 state = "supervised"
                 response = {"response": ["Are you trying to predict a label or a categorical attribute?"]}
@@ -48,34 +48,34 @@ class Conv:
                 print(response["response"][0], response["response"][1])
             elif intent == "unsupervised":
                 state = "unsupervised"
-                response = {"response": "Do you want to gather together in groups similar data or find some pattern in their features?"}
+                response = {"response": ["Do you want to gather together in groups similar data or find some pattern in their features?"]}
             elif intent == "clustering" or intent == "association" or intent == "classification" or intent == "regression":
                 state = "start_pipeline"
-                response = {"response": "Ok, " + intent + ". Let's set some parameters."}
+                response = {"response": ["Ok, " + intent + ". Let's set some parameters."]}
 
         elif state == "sup_unsup":
             if intent == "supervised":
                 state = "supervised"
-                response = {"response": "Are you trying to predict a label or a categorical attribute?"}
+                response = {"response": ["Are you trying to predict a label or a categorical attribute?"]}
             elif intent == "unsupervised":
                 state = "unsupervised"
-                response = {"response": "Do you want to gather together in groups similar data or find some pattern in their features?"}
+                response = {"response": ["Do you want to gather together in groups similar data or find some pattern in their features?"]}
             elif intent == "clustering" or intent == "association" or intent == "classification" or intent == "regression":
                 state = "start_pipeline"
-                response = {"response": "Ok, " + intent + ". Let's set some parameters."}
+                response = {"response": ["Ok, " + intent + ". Let's set some parameters."]}
 
         elif state == "unsupervised":
             if intent == "clustering" or intent == "association":
                 state = "start_pipeline"
-                response = {"response": "Ok, " + intent + ". Let's set some parameters."}
+                response = {"response": ["Ok, " + intent + ". Let's set some parameters."]}
 
         elif state == "supervised":
             if intent == "classification" or intent == "regression":
                 state = "start_pipeline"
-                response = {"response": "Ok, " + intent + ". Let's set some parameters."}
+                response = {"response": ["Ok, " + intent + ". Let's set some parameters."]}
 
         else:
-            response = {"response": "I'm sorry, i couldn't get what you said. Would you repeat?"}
+            response = {"response": ["I'm sorry, i couldn't get what you said. Would you repeat?"]}
 
         self.jh.updatestate(session_id, state)
         return response

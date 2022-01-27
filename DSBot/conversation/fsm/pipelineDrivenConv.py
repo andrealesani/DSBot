@@ -94,7 +94,7 @@ class pipelineDrivenConv:
                 while not self.hasParameters(pipeline[blockIndex]):
                     blockIndex += 1
             except IndexError:
-                return {"response": "Ok, parameter tuning is completed, in a moment you will see the results"}
+                return {"response": ["Ok, parameter tuning is completed, in a moment you will see the results"]}
             self.js.setBlockIndex(session_id, blockIndex)
             self.js.setParamIndex(session_id, 0)
 
@@ -104,13 +104,13 @@ class pipelineDrivenConv:
                     block = json.load(f)
                     # TODO divide description and question in 2 responses, the "response" will be an array of strings
                     toReturn = block["description"] + " " + block["parameters"][paramIndex]["question"]
-                return {"response": toReturn}
+                return {"response": [toReturn]}
             else:
-                return {"response": "Ok, parameter tuning is completed, in a moment you will see the results"}
+                return {"response": ["Ok, parameter tuning is completed, in a moment you will see the results"]}
         elif self.hasParameters(pipeline[blockIndex]):
             with open('./conversation/conv_blocks/' + pipeline[blockIndex].name + ".json", 'r') as f:
                 block = json.load(f)
-                return {"response": "Good! And" + block["parameters"][paramIndex]["question"]}
+                return {"response": ["Good! And" + block["parameters"][paramIndex]["question"]]}
         else:
             return "BUBUBUB"
 
