@@ -8,7 +8,7 @@ class Json_helper:
         return os.path.exists('./conversation/temp/conv_' + str(id))
 
     def createConv(self, id: str):
-        conv_dict = {"part": "1", "state": "greeting"}
+        conv_dict = {"part": "1", "state": "greeting", "precState": "greeting"}
         with open('./conversation/temp/conv_' + str(id), 'x') as f:
             json.dump(conv_dict, f)
 
@@ -16,6 +16,12 @@ class Json_helper:
         with open('./conversation/temp/conv_' + str(id), 'r') as f:
             updated = json.load(f)
             updated["state"] = state
+        with open('./conversation/temp/conv_' + str(id), 'w') as f:
+            f.write(json.dumps(updated))
+    def updatePredState(self, id: str, predState: str):
+        with open('./conversation/temp/conv_' + str(id), 'r') as f:
+            updated = json.load(f)
+            updated["predState"] = predState
         with open('./conversation/temp/conv_' + str(id), 'w') as f:
             f.write(json.dumps(updated))
 
@@ -32,7 +38,11 @@ class Json_helper:
             conv = json.load(f)
             state = conv["state"]
             return state
-
+    def getPredState(self, id: str):
+        with open('./conversation/temp/conv_' + str(id), 'r') as f:
+            conv = json.load(f)
+            predState = conv["predState"]
+            return predState
     def getpart(self, id: str):
         with open('./conversation/temp/conv_' + str(id), 'r') as f:
             conv = json.load(f)
@@ -73,3 +83,8 @@ class Json_helper:
             block = int(conv["block"])
             return block
 
+    def getHelp(selfself, state: str):
+        with open('./conversation/conv_blocks/help.json') as f:
+            helps = json.load(f)
+            help = helps[state]
+            return help

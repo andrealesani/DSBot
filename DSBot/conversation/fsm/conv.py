@@ -35,8 +35,7 @@ class Conv:
     def get_response(self, intent: str, session_id, state="greeting"):
         """fsm manager"""
         if intent == "help":
-            return self.send_help(state)
-
+            return self.send_help(session_id, state)
         elif state == "greeting":
             if intent == "greet":
                 state = "sup_unsup"
@@ -82,9 +81,13 @@ class Conv:
         return response
 
     # TODO read help sentences from JSON
-    def send_help(self, state: str):
+    def send_help(self, session_id, state: str):
         """returns a hint for each state the user can be in"""
-        if (state == "greeting"):
+        self.jh.updatePredState(session_id, state)
+        help = self.jh.getHelp(state)
+        del help["response2"]
+        return help
+        """ if (state == "greeting"):
             return {"response":"I'm sorry, I don't know how to help you right now"}
         if (state == "sup_unsup"):
             return {"response":"help1"}
@@ -99,7 +102,7 @@ class Conv:
         elif (state == "classification"):
             return {"response":"help1"}
         elif (state == "regression"):
-            return {"response":"help1"}
+            return {"response":"help1"}"""
 
 
 
