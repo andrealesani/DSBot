@@ -34,6 +34,7 @@ class Conv:
     """returns a dictionary with 1 "response" field"""
     def get_response(self, intent: str, session_id, state="greeting"):
         """fsm manager"""
+        response = {"response": ["Sorry, I couldn't understand"]}
         if intent == "help":
             return self.send_help(session_id, state)
         elif state == "greeting":

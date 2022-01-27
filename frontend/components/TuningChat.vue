@@ -2,47 +2,46 @@
   <div>
     <!-- Chat history container -->
     <v-container fluid>
-      <v-row>
-        <v-col id="chat" flat class="chat-container">
-          <!-- For evey message print the icon and the v-card -->
-          <transition-group name="bounce">
-            <v-row
-              v-for="(item, index) in tuningChat"
-              :key="index"
-              :class="{ 'flex-row-reverse': !item.isBot }"
+      <v-col id="chat" flat class="chat-container">
+        <!-- For evey message print the icon and the v-card -->
+        <transition-group name="bounce">
+          <v-row
+            v-for="(item, index) in tuningChat"
+            :key="index"
+            :class="{ 'flex-row-reverse': !item.isBot }"
+          >
+            <v-col :cols="1">
+              <font-awesome-icon
+                :icon="item.isBot ? 'robot' : 'user'"
+                size="2x"
+                color="#424242"
+              />
+            </v-col>
+            <v-col
+              :cols="8"
+              :class="
+                item.isBot ? 'd-flex justify-start' : 'd-flex justify-end'
+              "
             >
-              <v-col :cols="1">
-                <font-awesome-icon
-                  :icon="item.isBot ? 'robot' : 'user'"
-                  size="2x"
-                  color="#424242"
-                />
-              </v-col>
-              <v-col
-                :cols="8"
-                :class="
-                  item.isBot ? 'd-flex justify-start' : 'd-flex justify-end'
-                "
+              <v-card
+                dark
+                :color="item.isBot ? '#115e63' : '#182859'"
+                class="message-bubble"
               >
-                <v-card
-                  dark
-                  :color="item.isBot ? '#115e63' : '#182859'"
-                  class="message-bubble"
-                >
-                  {{
-                    !item.isBot || item.message !== '#wait' ? item.message : ''
-                  }}
-                  <div v-if="item.isBot && item.message === '#wait'">
-                    <div class="typing__dot"></div>
-                    <div class="typing__dot"></div>
-                    <div class="typing__dot"></div>
-                  </div>
-                </v-card>
-              </v-col>
-            </v-row>
-          </transition-group>
-        </v-col>
-      </v-row>
+                {{
+                  !item.isBot || item.message !== '#wait' ? item.message : ''
+                }}
+                <div v-if="item.isBot && item.message === '#wait'">
+                  <div class="typing__dot"></div>
+                  <div class="typing__dot"></div>
+                  <div class="typing__dot"></div>
+                </div>
+              </v-card>
+            </v-col>
+          </v-row>
+        </transition-group>
+        <v-spacer></v-spacer>
+      </v-col>
 
       <!-- Area where u write the message -->
       <v-row dense>
@@ -147,6 +146,8 @@ export default {
   height: fit-content;
   overflow-y: auto;
   overflow-x: hidden;
+  display: flex;
+  flex-direction: column-reverse;
 }
 
 .message-bubble {
