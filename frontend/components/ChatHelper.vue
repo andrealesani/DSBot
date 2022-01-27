@@ -4,17 +4,36 @@
       <v-col>
         <!--      <v-img :src="require('@/assets/clusters_img.png')" aspect-ratio="1.8" />-->
         <transition name="bounce">
-          <img
-            v-if="imageBase64 !== null"
-            :src="`data:image/png;base64,${imageBase64}`"
-            alt=""
-          />
-          <div v-else class="GUIHelper">
-            <p>
-              <font-awesome-icon icon="question" size="2x" color="#115e63ff" />
+          <div class="GUIHelper">
+            <p v-if="showHelp">
+              <b>
+                Data Analysis Advisor is a bot that lets you approach data
+                analysis even with very little knowledge about this topic!
+              </b>
+              <br />
+              <br />
+              This section will be used to show you any content that might come
+              useful in order to make better decisions for your analysis.
+              <br />
+              Be as natural as you wish during your conversation, and if you are
+              stuck or need some help just type it in chat at any time.
+              <br />
+              <br />
+              DAA will do its best to support you during each step of your
+              journey!
             </p>
-            <br />
-            <p>This section is dedicated to helping you with your choices</p>
+            <div v-else>
+              <img
+                v-if="imageBase64 !== null"
+                :src="`data:image/png;base64,${imageBase64}`"
+                alt=""
+              />
+              <font-awesome-icon
+                v-else
+                icon="robot"
+                size="5x"
+              ></font-awesome-icon>
+            </div>
           </div>
         </transition>
       </v-col>
@@ -26,8 +45,9 @@
 import { mapState } from 'vuex'
 export default {
   computed: {
-    ...mapState(['imageBase64', 'resultsDetails']),
+    ...mapState(['imageBase64', 'resultsDetails', 'showHelp']),
   },
+  methods: {},
 }
 </script>
 <style scoped>
@@ -46,6 +66,8 @@ img {
   border-radius: 10px;
   font-family: 'Open Sans', Verdana, sans-serif;
   color: #115e63ff;
+  padding: 3em;
+  text-align: justify;
 }
 
 /* ANIMATIONS AND TRANSITIONS */

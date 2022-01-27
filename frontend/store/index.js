@@ -16,13 +16,15 @@ export const state = () => ({
     {
       isBot: true,
       message:
-        'Welcome to Data Analysis Advisor! We can help you getting relevant information from your data. Don’t hesitate to ask for more explanation during every step of the conversation.',
+        'Welcome to Data Analysis Advisor! 😁 We can help you getting relevant information from your data. Don’t hesitate to ask for more explanation during every step of the conversation.',
     },
     {
       isBot: true,
       message: 'Would you like to do supervised or unsupervised learning?',
     },
   ],
+  // When true, chatHelper component shows the help message
+  showHelp: true,
   // Analysis pipeline used in the last section of the webapp to tune the hyperparameters
   tuningPipeline: [],
   // No idea why it's needed
@@ -46,6 +48,7 @@ export const mutations = {
   },
   setImage(state, image) {
     state.imageBase64 = image
+    state.showHelp = false
   },
   setResultsDetails(state, details) {
     state.resultsDetails = details
@@ -76,9 +79,14 @@ export const mutations = {
   setAvailable(state, available) {
     state.backendAvailable = available
   },
-
   setPipelineEdited(state, edited) {
     state.pipelineEdited = edited
+  },
+  setShowHelp(state, bool) {
+    state.showHelp = bool
+  },
+  invertShowHelp(state) {
+    state.showHelp = !state.showHelp
   },
 }
 
@@ -132,10 +140,6 @@ export const actions = {
   },
 
   async waitForResults(context) {
-    console.log(
-      'WAIT FOR RESULTS with sessionID ' + this.state.sessionId,
-      this.state.e1
-    )
     if (this.state.e1 === 3 && !this.state.resultsReady) {
       console.log('/results/sessionId CALLED')
       const pollingResponse = await this.$axios
@@ -235,7 +239,9 @@ export const actions = {
         setTimeout(() => {
           // Removes the 3 dots and adds the actual message to the chat panel
           context.commit('removeWait')
-          context.commit('receiveChat', response.data.response)
+          for (let i = 0; i < response.data.response.length; i++) {
+            context.commit('receiveChat', response.data.response[i])
+          }
           if (
             response.data.response ===
             'Ok, parameter tuning is completed, in a moment you will see the results'
@@ -249,34 +255,16 @@ export const actions = {
       })
     return res
   },
+
+  // Clears the chat array
   clearChat(context) {
     context.commit('clearChat')
   },
-  async getHelp(context) {
+  getHelp(context) {
     if (this.state.e1 !== 2) {
-      alert('Help function is only available in step 2')
+      alert('Help button is only available in step 2')
       return
     }
-    const bodyRequest = {
-      session_id: this.state.sessionId,
-    }
-
-    const res = await this.$axios
-      .post('/get-help', bodyRequest)
-      .then(function (response) {
-        if (response.data.response !== null) {
-          // Adds the 3 dots to the chat panel
-          context.commit('receiveChat', '#wait')
-          setTimeout(() => {
-            // Removes the 3 dots and adds the actual message to the chat panel
-            context.commit('removeWait')
-            context.commit('receiveChat', response.data.response)
-          }, 1500)
-        }
-        if (response.data.image !== null) {
-          context.commit('setImage', response.data.image)
-        }
-      })
-    return res
+    context.commit('invertShowHelp')
   },
 }
