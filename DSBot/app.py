@@ -270,7 +270,7 @@ def answer_message():
             """conv.setConv2(session_id, ir_tuning)
             conv2 = conv.getConv2()"""
             intro = conv2.maxiManager(session_id)
-            fsm_response["response"] = fsm_response["response"] + " " + intro["response"]
+            fsm_response["response"].append(intro["response"][0])
     elif part == "2":
         fsm_response = conv2.conversationHandler(intent, entities, session_id)
     if fsm_response["response"] == "Ok, parameter tuning is completed, in a moment you will see the results":
