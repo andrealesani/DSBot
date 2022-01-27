@@ -6,7 +6,7 @@ nlu) and the current fsm state and returns the next state and the response to be
 is used to update the user's JSON file """
 import json
 import os
-
+import base64
 from conversation.fsm.json_helper import Json_helper
 
 from DSBot.conversation.fsm.pipelineDrivenConv import pipelineDrivenConv
@@ -86,6 +86,11 @@ class Conv:
         self.jh.updatePredState(session_id, state)
         help = self.jh.getHelp(state)
         del help["response2"]
+        with open(help["image"], "rb") as img_file:
+            my_string = base64.b64encode(img_file.read())
+            # trasformo il bytecode in stringa
+            base64_string = my_string.decode('utf-8')
+            help["image"] = str(base64_string)
         return help
         """ if (state == "greeting"):
             return {"response":"I'm sorry, I don't know how to help you right now"}
