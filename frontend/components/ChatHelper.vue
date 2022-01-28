@@ -8,7 +8,7 @@
             <p v-if="showHelp">
               <b>
                 Data Analysis Advisor is a bot that lets you approach data
-                analysis even with very little knowledge about this topic!
+                analysis even with very little knowledge about this topic
               </b>
               <br />
               <br />
@@ -16,7 +16,7 @@
               useful in order to make better decisions for your analysis.
               <br />
               Be as natural as you wish during your conversation, and if you are
-              stuck or need some help just type it in chat at any time.
+              stuck or need some help just ask for it in chat at any time.
               <br />
               <br />
               DAA will do its best to support you during each step of your
@@ -58,7 +58,9 @@ img {
 }
 
 .GUIHelper {
-  background: #d4d4d4;
+  border-style: solid;
+  border-color: #115e63ff;
+  border-width: 0.3em;
   min-height: 400px;
   display: flex;
   align-items: center;

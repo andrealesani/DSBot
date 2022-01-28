@@ -24,7 +24,7 @@ export const state = () => ({
     },
   ],
   // When true, chatHelper component shows the help message
-  showHelp: false,
+  showHelp: true,
   // Analysis pipeline used in the last section of the webapp to tune the hyperparameters
   tuningPipeline: [],
   // No idea why it's needed
@@ -141,7 +141,7 @@ export const actions = {
 
   async waitForResults(context) {
     if (this.state.e1 === 3 && !this.state.resultsReady) {
-      console.log('/results/sessionId CALLED')
+      console.log('CALLED /results/sessionId')
       const pollingResponse = await this.$axios
         .get(`/results/${this.state.sessionId}`)
         .then(function (response) {
@@ -243,7 +243,7 @@ export const actions = {
             context.commit('receiveChat', response.data.response[i])
           }
           if (
-            response.data.response ===
+            response.data.response[response.data.response.length - 1] ===
             'Ok, parameter tuning is completed, in a moment you will see the results'
           ) {
             context.commit('setStep', 3)
