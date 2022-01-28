@@ -50,7 +50,7 @@ class pipelineDrivenConv:
                     int(entities[0]["value"]))
             except:
                 #invalid user input
-                return {"response": "Sorry, I didn't understand"}
+                return {"response": ["Sorry, I didn't understand"]}
             #check: no mare parameters to set for current block
             if paramIndex == (len(block["parameters"]) - 1):
                 self.js.updatestate(session_id, "endBlock")
