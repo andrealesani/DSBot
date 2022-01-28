@@ -273,7 +273,7 @@ def answer_message():
             fsm_response["response"].append(intro["response"][0])
     elif part == "2":
         fsm_response = conv2.conversationHandler(intent, entities, session_id)
-    if fsm_response["response"] == "Ok, parameter tuning is completed, in a moment you will see the results":
+    if fsm_response["response"][0] == "Ok, parameter tuning is completed, in a moment you will see the results":
         data[session_id]['ir_tuning'] = conv2.pipelines[session_id]
         threading.Thread(target=execute_algorithm, kwargs={'ir': conv2.pipelines[session_id], 'session_id': session_id}).start()
         fsm_response["wf"] = "clustering"
