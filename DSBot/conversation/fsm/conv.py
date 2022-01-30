@@ -87,9 +87,6 @@ class Conv:
                 state = "start_pipeline"
                 response = {"response": ["Ok, " + intent + ". Let's set some parameters."]}
 
-        else:
-            response = {"response": ["I'm sorry, i couldn't get what you said. Would you repeat?"]}
-
         self.jh.updatestate(session_id, state)
         return response
 

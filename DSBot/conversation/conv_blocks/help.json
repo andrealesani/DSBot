@@ -1,6 +1,6 @@
 {
   "greeting": {
-    "response": ["SUPERVISED learning is used to learn how a certain feature depends on other variables and it tries to make predictions on new data.", "On the other hand", "UNSUPERVISED learning is used to understand how the data is distributed without a specific target to predict"],
+    "response": ["SUPERVISED learning is used to learn how a certain feature depends on other variables and what it does is trying to make predictions on new data.", "On the other hand", "UNSUPERVISED learning is used to understand how the data is distributed in a more general way"],
     "response2": ["If you have already collected some data (address, size, no. rooms, garden, renovation year, energy class) about the house sales in the neighborhood we can help you finding the right price for the house you are trying to sell. That’s a typical SUPERVISED learning task.", "Instead,","If you are a business owner and you’ve got the history of sales, we can help you finding the main types of customers that visit your website. That’s a typical unsupervised learning task.", "Instead, ...","If you are a business owner and you’ve got the history of sales, we can help you finding the main types of customers that visit your website. That’s a typical UNSUPERVISED learning task."],
     "image": "./conversation/conv_blocks/supvsunsup.png"
   },
