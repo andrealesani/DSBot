@@ -35,7 +35,7 @@ class Conv:
 
     def get_response(self, intent: str, session_id, state="greeting"):
         """fsm manager"""
-        response = {"response": ["Sorry, what did you just say?"]}
+        response = {"response": ["Sorry, I couldn't understand. Can you try to use synonyms or rephrase your message?"]}
         if intent == "help":
             return self.send_help(session_id, state)
         elif intent == "reset":
