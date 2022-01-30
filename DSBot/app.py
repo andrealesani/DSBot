@@ -270,8 +270,11 @@ def answer_message():
             """conv.setConv2(session_id, ir_tuning)
             conv2 = conv.getConv2()"""
             intro = conv2.maxiManager(session_id)
-            fsm_response["response"].append(intro["response"][0])
+            for s in intro["response"]:
+                fsm_response["response"].append(s)
     elif part == "2":
+        if json_data['payload'].isnumeric():
+            entities[0]["value"] = [int(json_data['payload'])]
         fsm_response = conv2.conversationHandler(intent, entities, session_id)
     if fsm_response["response"][0] == "Ok, parameter tuning is completed, in a moment you will see the results":
         data[session_id]['ir_tuning'] = conv2.pipelines[session_id]

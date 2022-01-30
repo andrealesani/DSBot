@@ -202,7 +202,27 @@ nlu:
   examples: |
     - the first
 
-    intent numer
+# TODO add examples
+- intent: reset
+  examples: |
+    -begin again
+    -error
+    -mistake
+    -restart
+    -made a mistake
+    -i made mistake
+    -i want to change
+    -i made error
+    -i want to restart
+    -i want to begin again
+    -start again please
+    -start from the beginning
+    -i want to exit
+    -exit
+    -reset
+    -i want reset prameters
+    -i inserted the wrong parameters and i want to change them
+    -i inserted the wrong parameters
 
 
 

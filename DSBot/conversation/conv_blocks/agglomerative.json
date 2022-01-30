@@ -1,27 +1,27 @@
 {
   "name": "agglomerative",
-  "description": "Conversation block used to tune the hyperparameters for clustering agglomerative algorithm",
+  "description": ["Conversation block used to tune the hyperparameters for clustering agglomerative algorithm"],
   "parameters": [
     {
       "name": "n_clusters",
       "is_special": "no",
-      "question": "What's the number of groups are you looking for? [Type '0' if you don't know]",
+      "question": ["What's the number of groups are you looking for?", "[Type '0' if you don't know]"],
       "answer_type": "int",
-      "help": "It is usually hard to read a graph with more than 7-8 clusters and it might not give useful information, but there might be specific cases where you need to find more"
+      "help": ["It is usually hard to read a graph with more than 7-8 clusters and it might not give useful information but,", "there might be specific cases where you need to find more"]
     },
     {
       "name": "linkage",
       "is_special": "no",
-      "question": "What linkage type do you want to use? You can choose between Single or Complete",
+      "question": ["What linkage type do you want to use? You can choose between Single or Complete"],
       "answer_type": "string",
-      "help": "Linkage method tends to produce long thin clusters in which nearby elements of the same cluster have small distances, but elements at opposite ends of a cluster may be much farther from each other than two elements of other clusters. On the other side, complete-linkage clustering calculates similarity of the farthest away pair of elements. One disadvantage to this method is that outliers can cause less-than-optimal merging"
+      "help": ["Linkage method tends to produce long thin clusters in which nearby elements of the same cluster have small distances, but elements at opposite ends of a cluster may be much farther from each other than two elements of other clusters.", "On the other side, complete-linkage clustering calculates similarity of the farthest away pair of elements."," One disadvantage to this method is that outliers can cause less-than-optimal merging"]
     },
     {
       "name": "affinity",
       "is_special": "no",
-      "question": "What affinity measure do you want to use? You can choose between Euclidean (default), Cosine or Manhattan",
+      "question": ["What affinity measure do you want to use?", "You can choose between Euclidean (default), Cosine or Manhattan"],
       "answer_type": "string",
-      "help": "Although euclidean measure is the simplest and most straight-forward one, the more dimensions your datasets, the less useful Euclidean distance becomes because of the so called 'curse of dimensionality'. If you need to deal with high dimensionality, you can opt to use cosine similarity, although this kind of measure doesn't take into account if a value is much bigger than another but only if it's positive or negative. If cosine doesn't give you satisfying results, you could try using Manhattan measure"
+      "help": ["Although euclidean measure is the simplest and most straight-forward one, the more dimensions your datasets, the less useful Euclidean distance becomes because of the so called 'curse of dimensionality'.", "If you need to deal with high dimensionality, you can opt to use cosine similarity, although this kind of measure doesn't take into account if a value is much bigger than another but only if it's positive or negative.", "If cosine doesn't give you satisfying results, you could try using Manhattan measure"]
     }
   ]
 }

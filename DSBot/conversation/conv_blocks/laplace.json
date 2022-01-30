@@ -1,13 +1,13 @@
 {
   "name": "laplace",
-  "description": "Conversation block used to tune the hyperparameters for feature selection's Laplace algorithm",
+  "description": ["Conversation block used to tune the hyperparameters for feature selection's Laplace algorithm"],
   "parameters": [
     {
       "name": "percentage",
       "is_special": "yes",
-      "question": "Type a decimal value between 0 and 1 that represents how much a feature should be different from the others in order to be kept (the higher the number the less features will be kept)",
+      "question": ["Type a decimal value between 0 and 1 that represents how much a feature should be different from the others", "in order to be kept (the higher the number the less features will be kept)"],
       "answer_type": "float",
-      "help": "!! We could show which features would be removed and which would be kept !!",
+      "help": ["!! We could show which features would be removed and which would be kept !!"],
       "media_path": "src/ecc/features-to-be-removed.png",
       "media_type": "img"
     }

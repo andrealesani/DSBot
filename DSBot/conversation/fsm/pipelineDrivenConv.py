@@ -39,8 +39,11 @@ class pipelineDrivenConv:
                 #TODO add detailed explanation in the json
                 pass"""
 
-
-        if self.js.getstate(session_id) == "parametersSetting":
+        if intent =="help":
+            # TODO uniforma formato getBlockHelp e getHelp
+            help = self.js.getBlockHelp(pipeline[blockIndex].name, paramIndex)
+            return {"response": help}
+        elif self.js.getstate(session_id) == "parametersSetting":
             #get current block
             with open('./conversation/conv_blocks/' + pipeline[blockIndex].name + ".json", 'r') as f:
                 block = json.load(f)
@@ -102,9 +105,10 @@ class pipelineDrivenConv:
             if (blockIndex < len(pipeline)):
                 with open('./conversation/conv_blocks/' + pipeline[blockIndex].name + ".json", 'r') as f:
                     block = json.load(f)
-                    # TODO divide description and question in 2 responses, the "response" will be an array of strings
-                    toReturn = block["description"] + " " + block["parameters"][paramIndex]["question"]
-                return {"response": [toReturn]}
+                    toReturn = block["description"]
+                    for s in block["parameters"][paramIndex]["question"]:
+                        toReturn.append(s)
+                return {"response": toReturn}
             else:
                 return {"response": ["Ok, parameter tuning is completed, in a moment you will see the results"]}
         elif self.hasParameters(pipeline[blockIndex]):
@@ -112,7 +116,7 @@ class pipelineDrivenConv:
                 block = json.load(f)
                 return {"response": ["Good! And" + block["parameters"][paramIndex]["question"]]}
         else:
-            return "BUBUBUB"
+            return "Should not be her MAXIMANAGER line 117"
 
     def hasParameters(self, block):
         if len(block.parameters) == 0 or not os.path.exists('./conversation/conv_blocks/' + block.name + '.json'):

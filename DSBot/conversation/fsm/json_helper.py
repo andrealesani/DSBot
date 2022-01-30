@@ -88,3 +88,9 @@ class Json_helper:
             helps = json.load(f)
             help = helps[state]
             return help
+
+    def getBlockHelp(self, block: str, param: int):
+        with open('./conversation/conv_blocks/' + block + '.json') as f:
+            helps = json.load(f)
+            help = helps["parameters"][param]["help"]
+            return help
