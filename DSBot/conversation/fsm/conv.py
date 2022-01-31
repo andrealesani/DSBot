@@ -36,7 +36,7 @@ class Conv:
     def get_response(self, intent: str, session_id, state="greeting"):
         """fsm manager"""
         #debug
-        response = {"response": ["Sorry, what did you just say?"]}
+        response = {"response": ["Sorry, I couldn't understand. Can you try to use synonyms or rephrase your message?"]}
 
         if state != "help" and intent == "help":
             self.jh.updatePredState(session_id, state)
@@ -57,11 +57,13 @@ class Conv:
                     response["response"].append(s)
             #TODO STATO CONFERMA RESET
         elif intent == "reset":
-            response = {"response": ["I understand this maybe frustrating but", "let me just restart from the beginning", "and ask me whenever you need help", "Would you like to perform supervised or unsupervised learning?"]}
+            response = {"response": ["I understand this may be frustrating but lets just restart from the beginning",
+                                     "Don't forget to ask me for help whenever you need",
+                                     "Would you like to perform supervised or unsupervised learning?"]}
             state = "greeting"
         elif state == "greeting":
             if intent == "greet":
-                state = "sup_unsup"
+                # state = "sup_unsup"
                 response = {"response": ["Hello!", "Would you like to do supervised or unsupervised learning?"]}
             elif intent == "supervised":
                 state = "supervised"
@@ -75,31 +77,33 @@ class Conv:
                 state = "start_pipeline"
                 response = {"response": ["Ok, " + intent + ". Let's set some parameters."]}
 
-        elif state == "sup_unsup":
-            if intent == "supervised":
-                state = "supervised"
-                response = {"response": self.jh.getQuestion(state)}
-                #response = {"response": ["Are you trying to predict a label or a categorical attribute?"]}
-            elif intent == "unsupervised":
-                state = "unsupervised"
-                response = {"response":self.jh.getQuestion(state)}
-                #response = {"response": ["Do you want to gather together in groups similar data or find some pattern in their features?"]}
-            elif intent == "clustering" or intent == "association" or intent == "classification" or intent == "regression":
-                state = "start_pipeline"
-                response = {"response": ["Ok, " + intent + ". Let's set some parameters."]}
-
+        #elif state == "sup_unsup":
+        #    if intent == "supervised":
+        #        state = "supervised"
+        #        response = {"response": self.jh.getQuestion(state)}
+        #        #response = {"response": ["Are you trying to predict a label or a categorical attribute?"]}
+        #    elif intent == "unsupervised":
+        #        state = "unsupervised"
+        #        response = {"response":self.jh.getQuestion(state)}
+        #        #response = {"response": ["Do you want to gather together in groups similar data or find some pattern in their features?"]}
+        #    elif intent == "clustering" or intent == "association" or intent == "classification" or intent == "regression":
+        #        state = "start_pipeline"
+        #        response = {"response": ["Ok, " + intent + ". Let's set some parameters."]}
+#
         elif state == "unsupervised":
-            if intent == "clustering" or intent == "association":
+            if intent == "greet":
+                response = {"response": ["Hi!",
+                                         "Do you want to gather together in groups similar data or find some pattern in their features?"]}
+            elif intent == "clustering" or intent == "association":
                 state = "start_pipeline"
                 response = {"response": ["Ok, " + intent + ". Let's set some parameters."]}
 
         elif state == "supervised":
-            if intent == "classification" or intent == "regression":
+            if intent == "greet":
+                response = {"response": ["Hi!", "Are you trying to predict a label or a categorical attribute?"]}
+            elif intent == "classification" or intent == "regression":
                 state = "start_pipeline"
                 response = {"response": ["Ok, " + intent + ". Let's set some parameters."]}
-
-        else:
-            response = {"response": ["I'm sorry, i couldn't get what you said. Would you repeat?"]}
 
         self.jh.updatestate(session_id, state)
         return response
@@ -136,12 +140,3 @@ class Conv:
             return {"response":"help1"}
         elif (state == "regression"):
             return {"response":"help1"}"""
-
-
-
-
-
-
-
-
-

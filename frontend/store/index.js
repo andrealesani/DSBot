@@ -234,27 +234,31 @@ export const actions = {
     const res = await this.$axios
       .post(data.destination, bodyRequest)
       .then(function (response) {
-        // Adds the 3 dots to the chat panel
         context.commit('receiveChat', '#wait')
-        setTimeout(() => {
-          // Removes the 3 dots and adds the actual message to the chat panel
-          context.commit('removeWait')
-          for (let i = 0; i < response.data.response.length; i++) {
+        for (let i = 0; i < response.data.response.length; i++) {
+          setTimeout(() => {
+            // Removes the 3 dots and adds the actual message to the chat panel
+            context.commit('removeWait')
             context.commit('receiveChat', response.data.response[i])
-          }
-          if (
-            response.data.response[response.data.response.length - 1] ===
-            'Ok, parameter tuning is completed, in a moment you will see the results'
-          ) {
-            context.commit('setStep', 3)
-          }
-          if (
-            response.data.image !== null &&
-            response.data.image !== undefined
-          ) {
-            context.commit('setImage', response.data.image)
-          }
-        }, 1500)
+            // Adds the 3 dots to the chat panel for the next message (it doesn't add them if it's the last message)
+            if (i < response.data.response.length - 1) {
+              context.commit('receiveChat', '#wait')
+            }
+            // If analysis has started go to loading screen
+            if (
+              response.data.response[i] ===
+              'Ok, parameter tuning is completed, in a moment you will see the results'
+            ) {
+              context.commit('setStep', 3)
+            }
+          }, 1500 * (i + 1))
+        }
+        // context.commit('removeWait')
+
+        // If there is an image attached to the message show it inside ChatHelper component
+        if (response.data.image !== null && response.data.image !== undefined) {
+          context.commit('setImage', response.data.image)
+        }
       })
     return res
   },
