@@ -235,25 +235,53 @@ export const actions = {
       .post(data.destination, bodyRequest)
       .then(function (response) {
         context.commit('receiveChat', '#wait')
-        for (let i = 0; i < response.data.response.length; i++) {
+        // Array of strings containing the messages sent by the bot
+        const messagesArray = response.data.response
+        // Typing speed of the bot (in milliseconds per character)
+        const typingSpeed = 25
+        // Maximum wait time for a message to be written
+        const maxWaitTime = 3000
+        // Minimum wait time for a message to be written
+        const minWaitTime = 1500
+        // Time to wait before starting to print the current message
+        let totalTime = 0
+        // Print the messages
+        for (let i = 0; i < messagesArray.length; i++) {
+          // Number of characters in the message
+          const charSum = messagesArray[i].length
+          // Actual typing speed of the bot. It inherits the value of 'typingSpeed' for long messages, but it's overwritten for short messages
+          let actualSpeed
+          // It slows down the typing speed if the message is too short and would be sent too quickly
+          if (messagesArray[i].length * typingSpeed < minWaitTime) {
+            actualSpeed = 1500 / charSum
+          }
+          // It caps the maximum time for a message to be sent to 3 seconds
+          else if (messagesArray[i].length * typingSpeed > maxWaitTime) {
+            actualSpeed = 3000 / charSum
+          } else {
+            actualSpeed = typingSpeed
+          }
           setTimeout(() => {
-            // Removes the 3 dots and adds the actual message to the chat panel
+            // Removes the 3 dots
             context.commit('removeWait')
-            context.commit('receiveChat', response.data.response[i])
+            // Adds the actual message to the chat panel
+            context.commit('receiveChat', messagesArray[i])
             // Adds the 3 dots to the chat panel for the next message (it doesn't add them if it's the last message)
-            if (i < response.data.response.length - 1) {
+            if (i < messagesArray.length - 1) {
               context.commit('receiveChat', '#wait')
             }
-            // If analysis has started go to loading screen
+            // Go to loading screen if the analysis has started
             if (
-              response.data.response[i] ===
+              messagesArray[i] ===
               'Ok, parameter tuning is completed, in a moment you will see the results'
             ) {
               context.commit('setStep', 3)
             }
-          }, 1500 * (i + 1))
+          }, totalTime + charSum * actualSpeed)
+          console.log(messagesArray[i])
+          console.log('took ' + charSum * actualSpeed + 'ms to be printed')
+          totalTime += charSum * actualSpeed
         }
-        // context.commit('removeWait')
 
         // If there is an image attached to the message show it inside ChatHelper component
         if (response.data.image !== null && response.data.image !== undefined) {
