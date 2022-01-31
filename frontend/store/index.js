@@ -242,7 +242,7 @@ export const actions = {
         // Maximum wait time for a message to be written
         const maxWaitTime = 3000
         // Minimum wait time for a message to be written
-        const minWaitTime = 1500
+        const minWaitTime = 2000
         // Time to wait before starting to print the current message
         let totalTime = 0
         // Print the messages
@@ -252,12 +252,12 @@ export const actions = {
           // Actual typing speed of the bot. It inherits the value of 'typingSpeed' for long messages, but it's overwritten for short messages
           let actualSpeed
           // It slows down the typing speed if the message is too short and would be sent too quickly
-          if (messagesArray[i].length * typingSpeed < minWaitTime) {
-            actualSpeed = 1500 / charSum
+          if (charSum * typingSpeed < minWaitTime) {
+            actualSpeed = minWaitTime / charSum
           }
           // It caps the maximum time for a message to be sent to 3 seconds
-          else if (messagesArray[i].length * typingSpeed > maxWaitTime) {
-            actualSpeed = 3000 / charSum
+          else if (charSum * typingSpeed > maxWaitTime) {
+            actualSpeed = maxWaitTime / charSum
           } else {
             actualSpeed = typingSpeed
           }
