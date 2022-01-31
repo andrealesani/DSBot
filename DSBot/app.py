@@ -231,15 +231,13 @@ def answer_message():
 
     # get user input
     json_data = request.get_json(force=True)
-    # get intent
-    intent = rasa.parseIntent(json_data['payload'])
-    # get entity
-    entities = rasa.parseEntities(json_data['payload'])
+    # get intent and entity
+    intent, entity = rasa.parse(json_data['payload'])
 
     # call fsm (1 or 2) and update conv-state
     if part == "1":
-        fsm_response = conv.get_response(intent, session_id, state)  # fsm_response is a dictionary with 1 "response" field
-        # check if fsm 1 ended
+        fsm_response = conv.get_response(intent, session_id, state)  # fsm_response is a dictionary with 1 "response" field that is a list of strings
+        # check if fsm 1 ended and in case, introduce the first block and ask the first question
         if jh.getstate(session_id) == "start_pipeline":
             jh.updatepart(session_id)
             """scores = {}
@@ -259,6 +257,7 @@ def answer_message():
             ir_tuning = create_IR(
                 ["kmeans", "labelRemove", "oneHotEncode", "outliersRemove", "varianceThreshold", "missingValuesRemove",
                  "pca2", "scatterplot", "normalization"])"""
+            #TODO creare dinamicamente/randomicamente(giusto per far vedere che supporta diverse pipeline) diverse pipeline
             #####problema: discrepanza tra alcuni blocchetti (tra json e implementazione) sia nome che parametri diversi
             ir_tuning = create_IR(["missingValuesRemove", "oneHotEncode", "outliersRemove", "varianceThreshold", "kmeans", "pca2", "scatterplot"])
             """#stampa il tipo di oggetto del primo blocco della pipeline
@@ -273,9 +272,9 @@ def answer_message():
             for s in intro["response"]:
                 fsm_response["response"].append(s)
     elif part == "2":
-        if json_data['payload'].isnumeric():
-            entities[0]["value"] = [int(json_data['payload'])]
-        fsm_response = conv2.conversationHandler(intent, entities, session_id)
+        fsm_response = conv2.conversationHandler(intent, entity, session_id)
+    else:
+        fsm_response = {"response": ["Oh no! Unfortunately something went wrong please reload the page :')"]}
     if fsm_response["response"][0] == "Ok, parameter tuning is completed, in a moment you will see the results":
         data[session_id]['ir_tuning'] = conv2.pipelines[session_id]
         threading.Thread(target=execute_algorithm, kwargs={'ir': conv2.pipelines[session_id], 'session_id': session_id}).start()

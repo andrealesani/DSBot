@@ -52,7 +52,15 @@ nlu:
     - correct
     - exactly
     - for sure
-
+    -i understand
+    -ok
+    -right
+- intent: example
+  examples: |
+    -tell me some examples
+    -show examples
+    -examples
+    -give me some examples
 - intent: deny
   examples: |
     - no
@@ -110,6 +118,9 @@ nlu:
     - supervised
     - I want to make predictons on new data
     - I'd like to learn from current data
+    - there are labels so
+    - i think there are labels
+    - i want to predict new labels
 
 - intent: unsupervised
   examples : |
@@ -117,6 +128,9 @@ nlu:
     - I want to learn how data is distributed
     - I'd like to learn how data is distributed
     - I want to learn distribution of features
+    - i have got no labels
+    - there aren't labels
+    - there are no lables so
 
 - intent: clustering
   examples : |
@@ -128,21 +142,118 @@ nlu:
     - I'd like to find similarities between clients
     - I want to divide my data into groups
     - I want to use kmeans algorithm
-    - I want [5]{"entity": "n_clusters", "value":5} clusters
-    - I want [4]{"entity": "n_clusters", "value":4} clusters
-    - I want [3]{"entity": "n_clusters", "value":3} clusters
+
+#i want [5](numbclusters) clusters  AGGLOMERATIVE/K-MEANS
+#perform [single/complete](linkageType) linkage AGGLOMERATIVE
+#i want to use [eculidean/cosine/manhattan](distanceType) distance AGGLOMERATIVE
+#use [0,234](epsilonValue) as epsilon DBSCAN
+#i want at least[4](minSamples) samples DBSCAN
+- intent: clust_algorithm
+  examples: |
     - I want [2]{"entity": "n_clusters", "value":2} clusters
+    - I want [3]{"entity": "n_clusters", "value":3} clusters
+    - I want [4]{"entity": "n_clusters", "value":4} clusters
+    - I want [5]{"entity": "n_clusters", "value":5} clusters
     - I want [6]{"entity": "n_clusters", "value":6} clusters
     - I want [7]{"entity": "n_clusters", "value":7} clusters
     - I want [8]{"entity": "n_clusters", "value":8} clusters
     - I want [9]{"entity": "n_clusters", "value":9} clusters
     - I want [10]{"entity": "n_clusters", "value":10} clusters
+    - I want [2]{"entity": "n_clusters", "value":2} groups
+    - I want [3]{"entity": "n_clusters", "value":3} groups
+    - I want [4]{"entity": "n_clusters", "value":4} groups
     - I want [5]{"entity": "n_clusters", "value":5} groups
+    - I want [6]{"entity": "n_clusters", "value":6} groups
+    - I want [7]{"entity": "n_clusters", "value":7} groups
+    - I want [8]{"entity": "n_clusters", "value":8} groups
+    - I want [9]{"entity": "n_clusters", "value":9} groups
+    - I want [10]{"entity": "n_clusters", "value":10} groups
+    - I want [2]{"entity": "n_clusters", "value":2} segments
+    - I want [3]{"entity": "n_clusters", "value":3} segments
+    - I want [4]{"entity": "n_clusters", "value":4} segments
     - I want [5]{"entity": "n_clusters", "value":5} segments
+    - I want [6]{"entity": "n_clusters", "value":6} segments
+    - I want [7]{"entity": "n_clusters", "value":7} segments
+    - I want [8]{"entity": "n_clusters", "value":8} segments
+    - I want [9]{"entity": "n_clusters", "value":9} segments
+    - I want [10]{"entity": "n_clusters", "value":10} segments
+    - I want at least [2]{"entity": "n_clusters", "value":2} clusters
+    - I want at least [3]{"entity": "n_clusters", "value":3} clusters
+    - I want at least [4]{"entity": "n_clusters", "value":4} clusters
+    - I want at least [5]{"entity": "n_clusters", "value":5} clusters
+    - I want at least [6]{"entity": "n_clusters", "value":6} clusters
+    - I want at least [7]{"entity": "n_clusters", "value":7} clusters
+    - I want at least [8]{"entity": "n_clusters", "value":8} clusters
+    - I want at least [9]{"entity": "n_clusters", "value":9} clusters
+    - I want at least [10]{"entity": "n_clusters", "value":10} clusters
+    - I want at least [2]{"entity": "n_clusters", "value":2} groups
+    - I want at least [3]{"entity": "n_clusters", "value":3} groups
+    - I want at least [4]{"entity": "n_clusters", "value":4} groups
+    - I want at least [5]{"entity": "n_clusters", "value":5} groups
+    - I want at least [6]{"entity": "n_clusters", "value":6} groups
+    - I want at least [7]{"entity": "n_clusters", "value":7} groups
+    - I want at least [8]{"entity": "n_clusters", "value":8} groups
+    - I want at least [9]{"entity": "n_clusters", "value":9} groups
+    - I want at least [10]{"entity": "n_clusters", "value":10} groups
+    - I want at least [2]{"entity": "n_clusters", "value":2} segments
+    - I want at least [3]{"entity": "n_clusters", "value":3} segments
+    - I want at least [4]{"entity": "n_clusters", "value":4} segments
+    - I want at least [5]{"entity": "n_clusters", "value":5} segments
+    - I want at least [6]{"entity": "n_clusters", "value":6} segments
+    - I want at least [7]{"entity": "n_clusters", "value":7} segments
+    - I want at least [8]{"entity": "n_clusters", "value":8} segments
+    - I want at least [9]{"entity": "n_clusters", "value":9} segments
+    - I want at least [10]{"entity": "n_clusters", "value":10} segments
+    - [2]{"entity": "n_clusters", "value":5} clusters should be fine
+    - [3]{"entity": "n_clusters", "value":5} clusters should be fine
+    - [4]{"entity": "n_clusters", "value":5} clusters should be fine
     - [5]{"entity": "n_clusters", "value":5} clusters should be fine
+    - [6]{"entity": "n_clusters", "value":5} clusters should be fine
+    - [7]{"entity": "n_clusters", "value":5} clusters should be fine
+    - [8]{"entity": "n_clusters", "value":5} clusters should be fine
+    - [9]{"entity": "n_clusters", "value":5} clusters should be fine
+    - [10]{"entity": "n_clusters", "value":5} clusters should be fine
     - [5]{"entity": "n_clusters", "value":5} groups are enough
     - I need [5]{"entity": "n_clusters", "value":5} segments
+    - at least [2]{"entity": "n_clusters", "value":5} clusters should be fine
+    - at least [3]{"entity": "n_clusters", "value":5} clusters should be fine
+    - at least [4]{"entity": "n_clusters", "value":5} clusters should be fine
+    - at least [5]{"entity": "n_clusters", "value":5} clusters should be fine
+    - at least [6]{"entity": "n_clusters", "value":5} clusters should be fine
+    - at least [7]{"entity": "n_clusters", "value":5} clusters should be fine
+    - at least [8]{"entity": "n_clusters", "value":5} clusters should be fine
+    - at least [9]{"entity": "n_clusters", "value":5} clusters should be fine
+    - at least [10]{"entity": "n_clusters", "value":5} clusters should be fine
+    - at least [5]{"entity": "n_clusters", "value":5} groups are enough
+    - I need at least [5]{"entity": "n_clusters", "value":5} segments
     - set n_clusters to [3]{"entity": "n_clusters", "value":3}
+    -i want to use [eculidean]{"entity": "distanceType", "value": "euclidean"} distance
+    -i want to use [eculidean]{"entity": "distanceType", "value": "euclidean"}
+    -use [eculidean]{"entity": "distanceType", "value": "euclidean"}
+    -[eculidean]{"entity": "distanceType", "value": "euclidean"}
+    -i want to use [cosine]{"entity": "distanceType", "value": "cosine"} distance
+    -i want to use [cosine]{"entity": "distanceType", "value": "cosine"}
+    -use [cosine]{"entity": "distanceType", "value": "cosine"} distance
+    -[cosine]{"entity": "distanceType", "value": "cosine"}
+    -i want to use [manhattan]{"entity": "distanceType", "value": "manhattan"} distance
+    -i want to use [manhattan]{"entity": "distanceType", "value": "manhattan"}
+    -use [manhattan]{"entity": "distanceType", "value": "manhattan"}
+    -[manhattan]{"entity": "distanceType", "value": "manhattan"}
+    -i want to use [0,1]{"entity": "epsilon", "value": 0.1}
+    -i want to use [0.1]{"entity": "epsilon", "value": 0.1}
+    -i want to use [0,2]{"entity": "epsilon", "value": 0.2}
+    -i want to use [0.2]{"entity": "epsilon", "value": 0.2}
+    -i want to use [0,3]{"entity": "epsilon", "value": 0.3}
+    -i want to use [0.3]{"entity": "epsilon", "value": 0.3}
+    -i want to use [0,4]{"entity": "epsilon", "value": 0.4}
+    -i want to use [0.4]{"entity": "epsilon", "value": 0.4}
+    -i want to use [0,5]{"entity": "epsilon", "value": 0.5}
+    -i want to use [0.5]{"entity": "epsilon", "value": 0.5}
+    -i want to use [0,6]{"entity": "epsilon", "value": 0.6}
+    -i want to use [0.6]{"entity": "epsilon", "value": 0.6}
+    -i want to use [0,7]{"entity": "epsilon", "value": 0.7}
+    -i want to use [0.7]{"entity": "epsilon", "value": 0.7}
+
 
 
 - intent: association
@@ -171,19 +282,6 @@ nlu:
     - at least [6]{"entity": "min_samples", "value":6} points per each group
     - set minPts to [8]{"entity": "min_samples", "value":8}
 
-- intent: varianceTreshold
-  examples: |
-    -
-
-- intent: laplace
-  examples: |
-    -
-
-- intent: kmeans
-  examples: |
-    - kmeans
-    - I want to use kmeans algorithm
-
 - intent: agglomerative
   examples: |
     -agglomerative
@@ -198,21 +296,13 @@ nlu:
     -I want [manhattan]{"entity": "affinity", "value": "manhattan"} affinity
     -I want [cosine]{"entity": "affinity", "value": "cosine"} affinity
 
-- intent: first_sentence
-  examples: |
-    - the first
 
 # TODO add examples
 - intent: reset
   examples: |
     -begin again
-    -error
-    -mistake
     -restart
-    -made a mistake
-    -i made mistake
-    -i want to change
-    -i made error
+    -i want to change everything
     -i want to restart
     -i want to begin again
     -start again please
@@ -223,7 +313,16 @@ nlu:
     -i want reset prameters
     -i inserted the wrong parameters and i want to change them
     -i inserted the wrong parameters
-
-
-
-
+- intent: back_one
+  examples: |
+    -i want to repeat last one
+    -repeat last question please
+    -i want to change my last answer
+    -made a mistake
+    -i made mistake
+    -error
+    -mistake
+    -i made an error
+    -the last parameter inserted was wrong
+    -i want to change the last parameter
+    -i want to change the previous parameter

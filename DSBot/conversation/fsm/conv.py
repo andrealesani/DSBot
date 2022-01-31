@@ -31,14 +31,33 @@ class Conv:
             pass
 
     # TODO clean code, make it read from JSON file
+    #TODO per implementare il back di uno stato fai update pred state a ogni chiamata
     """returns a dictionary with 1 "response" field"""
     def get_response(self, intent: str, session_id, state="greeting"):
         """fsm manager"""
+        #debug
         response = {"response": ["Sorry, what did you just say?"]}
-        if intent == "help":
-            return self.send_help(session_id, state)
+
+        if state != "help" and intent == "help":
+            self.jh.updatePredState(session_id, state)
+            response = self.send_help(state, 1)
+            state = "help"
+            response["response"].extend(["Got it?", "I could tell you some applied real life examples", "But maybe you have already made up your mind and I do not wanna bother you further"])
+        elif state == "help":
+            if intent == "affirm":
+                state = self.jh.getPredState(session_id)
+                response = {"response": ["So you're a data scientist and kept it from me :))))))) muaahahahahha"]}
+                for s in self.jh.getQuestion(state):
+                    response["response"].append(s)
+            elif intent == "help" or intent == "deny" or intent == "example":
+                state = self.jh.getPredState(session_id)
+                response = self.send_help(state, 2)
+                response["response"].append("So after these nice examples you've got to choose")
+                for s in self.jh.getQuestion(state):
+                    response["response"].append(s)
+            #TODO STATO CONFERMA RESET
         elif intent == "reset":
-            response = {"response": ["I understand this maybe frustrating but", "lets just restart from the beginning", "and ask me whenever you need help", "Would you like to perform supervised or unsupervised learning?"]}
+            response = {"response": ["I understand this maybe frustrating but", "let me just restart from the beginning", "and ask me whenever you need help", "Would you like to perform supervised or unsupervised learning?"]}
             state = "greeting"
         elif state == "greeting":
             if intent == "greet":
@@ -46,13 +65,12 @@ class Conv:
                 response = {"response": ["Hello!", "Would you like to do supervised or unsupervised learning?"]}
             elif intent == "supervised":
                 state = "supervised"
-                response = {"response": ["Are you trying to predict a label or a categorical attribute?"]}
-                #   TODO sistema il formato della risposta
-                response["response"].append("Capito Gigio?")
-                print(response["response"][0], response["response"][1])
+                response = {"response": self.jh.getQuestion(state)}
+                #response = {"response": ["Are you trying to predict a label or a categorical attribute?"]}
             elif intent == "unsupervised":
                 state = "unsupervised"
-                response = {"response": ["Do you want to gather together in groups similar data or find some pattern in their features?"]}
+                response = {"response":self.jh.getQuestion(state)}
+                #response = {"response": ["Do you want to gather together in groups similar data or find some pattern in their features?"]}
             elif intent == "clustering" or intent == "association" or intent == "classification" or intent == "regression":
                 state = "start_pipeline"
                 response = {"response": ["Ok, " + intent + ". Let's set some parameters."]}
@@ -60,10 +78,12 @@ class Conv:
         elif state == "sup_unsup":
             if intent == "supervised":
                 state = "supervised"
-                response = {"response": ["Are you trying to predict a label or a categorical attribute?"]}
+                response = {"response": self.jh.getQuestion(state)}
+                #response = {"response": ["Are you trying to predict a label or a categorical attribute?"]}
             elif intent == "unsupervised":
                 state = "unsupervised"
-                response = {"response": ["Do you want to gather together in groups similar data or find some pattern in their features?"]}
+                response = {"response":self.jh.getQuestion(state)}
+                #response = {"response": ["Do you want to gather together in groups similar data or find some pattern in their features?"]}
             elif intent == "clustering" or intent == "association" or intent == "classification" or intent == "regression":
                 state = "start_pipeline"
                 response = {"response": ["Ok, " + intent + ". Let's set some parameters."]}
@@ -84,11 +104,16 @@ class Conv:
         self.jh.updatestate(session_id, state)
         return response
 
-    def send_help(self, session_id, state: str):
+    def send_help(self, state: str, helpN: int):
         """returns a hint for each state the user can be in"""
-        self.jh.updatePredState(session_id, state)
         help = self.jh.getHelp(state)
-        del help["response2"]
+        if helpN == 1:
+            del help["response2"]
+        else:
+            del help["response"]
+            help["response"] = help["response2"]
+            del help["response2"]
+            #TODO sposta il codice per trascrivere l'immagine in json_helper.getHelp()
         with open(help["image"], "rb") as img_file:
             my_string = base64.b64encode(img_file.read())
             # trasformo il bytecode in stringa

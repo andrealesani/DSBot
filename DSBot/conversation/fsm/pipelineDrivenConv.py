@@ -28,7 +28,7 @@ class pipelineDrivenConv:
         self.js.setBlockIndex(session_id, 0)
         # self.param = 0  # metti in json indice parametro =0
 
-    def conversationHandler(self, intent, entities, session_id):
+    def conversationHandler(self, intent, entity, session_id):
         # retrieve current user's conversation state
         pipeline = self.pipelines[session_id]
         blockIndex = self.js.getBlockIndex(session_id)
@@ -39,22 +39,23 @@ class pipelineDrivenConv:
                 #TODO add detailed explanation in the json
                 pass"""
 
-        if intent =="help":
+        if intent == "help":
             # TODO uniforma formato getBlockHelp e getHelp
             help = self.js.getBlockHelp(pipeline[blockIndex].name, paramIndex)
             return {"response": help}
         elif self.js.getstate(session_id) == "parametersSetting":
-            #get current block
+            # get current block
             with open('./conversation/conv_blocks/' + pipeline[blockIndex].name + ".json", 'r') as f:
                 block = json.load(f)
             # update parameter with the user's choice (number)
+            # TODO modify to set categorical parameters
             try:
                 pipeline[blockIndex].parameters[block["parameters"][paramIndex]["name"]].tune_value(
-                    int(entities[0]["value"]))
+                    int(entity))
             except:
-                #invalid user input
+                # invalid user input
                 return {"response": ["Sorry, I didn't understand"]}
-            #check: no mare parameters to set for current block
+            # check: no more parameters to set for current block
             if paramIndex == (len(block["parameters"]) - 1):
                 self.js.updatestate(session_id, "endBlock")
             else:
