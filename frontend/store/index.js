@@ -25,6 +25,8 @@ export const state = () => ({
   ],
   // When true, chatHelper component shows the help message
   showHelp: true,
+  // True when the bot is still typing (the 3 typing dots in the chat are still present)
+  botIsTyping: false,
   // Analysis pipeline used in the last section of the webapp to tune the hyperparameters
   tuningPipeline: [],
   // No idea why it's needed
@@ -54,6 +56,10 @@ export const mutations = {
     state.resultsDetails = details
   },
   sendChat(state, msg) {
+    if (state.botIsTyping) {
+      return null
+    }
+
     state.tuningChat.push({ isBot: false, message: msg })
   },
   removeWait(state) {
@@ -87,6 +93,14 @@ export const mutations = {
   },
   invertShowHelp(state) {
     state.showHelp = !state.showHelp
+  },
+  botStartedTyping(state) {
+    state.botIsTyping = true
+    console.log('bot started typing')
+  },
+  botFinishedTyping(state) {
+    state.botIsTyping = false
+    console.log('bot finished typing')
   },
 }
 
@@ -223,6 +237,12 @@ export const actions = {
   async sendChatMessage(context, data) {
     // The data can be {destination: '/yourDestination', payload: userUtterance}
 
+    console.log('SendMessage: botIsTyping is ' + this.botIsTyping)
+
+    if (context.state.botIsTyping) {
+      return null
+    }
+
     // Add the message to the chat panel
     context.commit('sendChat', data.payload)
 
@@ -234,6 +254,7 @@ export const actions = {
     const res = await this.$axios
       .post(data.destination, bodyRequest)
       .then(function (response) {
+        context.commit('botStartedTyping')
         context.commit('receiveChat', '#wait')
         // Array of strings containing the messages sent by the bot
         const messagesArray = response.data.response
@@ -269,6 +290,8 @@ export const actions = {
             // Adds the 3 dots to the chat panel for the next message (it doesn't add them if it's the last message)
             if (i < messagesArray.length - 1) {
               context.commit('receiveChat', '#wait')
+            } else {
+              context.commit('botFinishedTyping')
             }
             // Go to loading screen if the analysis has started
             if (

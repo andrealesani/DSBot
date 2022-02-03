@@ -104,7 +104,7 @@ export default {
     }
   },
   computed: {
-    ...mapState(['tuningChat']),
+    ...mapState(['tuningChat', 'botIsTyping']),
   },
   updated() {
     this.scrollToEnd()
@@ -116,7 +116,11 @@ export default {
     },
     sendText() {
       // check that the user has effectively written something
-      if (this.utterance.trim() !== '' && this.utterance !== '\n') {
+      if (
+        this.utterance.trim() !== '' &&
+        this.utterance !== '\n' &&
+        !this.botIsTyping
+      ) {
         // if the chat component is being used to communicate with mmcc
         if (this.destination === 'mmcc') this.toFramework(this.utterance)
         else
@@ -126,6 +130,7 @@ export default {
           })
         this.utterance = ''
       }
+      console.log('TuningChat: botIsTyping is ' + this.botIsTyping)
     },
     scrollToEnd() {
       const container = this.$el.querySelector('#chat')
