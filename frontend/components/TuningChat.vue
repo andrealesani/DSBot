@@ -52,7 +52,7 @@
             flat
             no-resize
             class="my-text-area"
-            :label="botIsTyping ? '' : 'Write here to chat'"
+            :label="botIsTyping ? 'Bot is typing' : 'Write here to chat'"
             rows="2"
             :background-color="botIsTyping ? '#dcdcdc' : '#bbdbdb'"
             hide-details="true"
@@ -77,7 +77,7 @@
         <v-col cols="1">
           <v-btn
             height="100%"
-            color="secondary"
+            :color="showHelp ? 'secondary' : '#3a497d'"
             :depressed="true"
             @click="userHelp"
           >
@@ -106,7 +106,7 @@ export default {
     }
   },
   computed: {
-    ...mapState(['tuningChat', 'botIsTyping']),
+    ...mapState(['tuningChat', 'botIsTyping', 'showHelp']),
   },
   updated() {
     this.scrollToEnd()
