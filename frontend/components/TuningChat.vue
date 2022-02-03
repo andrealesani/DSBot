@@ -52,9 +52,9 @@
             flat
             no-resize
             class="my-text-area"
-            :label="botIsTyping ? 'Bot is typing' : 'Write here to chat'"
+            :label="botIsTyping ? 'Bot is typing...' : 'Write here to chat'"
             rows="2"
-            :background-color="botIsTyping ? '#dcdcdc' : '#bbdbdb'"
+            :background-color="botIsTyping ? '#dcdcdc' : '#c5d4ff'"
             hide-details="true"
             :disabled="botIsTyping"
             @keyup.enter="sendText"
