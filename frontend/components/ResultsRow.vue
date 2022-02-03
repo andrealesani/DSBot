@@ -1,9 +1,9 @@
 <template>
   <v-row justify="center">
-    <v-col :cols="3" :xl="5">
+    <v-col>
       <tuning-chat />
     </v-col>
-    <v-col :cols="9" :xl="7">
+    <v-col>
       <img :src="`data:image/png;base64,${imageBase64}`" alt="" height="700" />
     </v-col>
     <v-col v-if="resultsDetails !== ''">

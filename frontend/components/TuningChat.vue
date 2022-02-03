@@ -14,7 +14,7 @@
               <font-awesome-icon
                 :icon="item.isBot ? 'robot' : 'user'"
                 size="2x"
-                color="#424242"
+                color="#555555"
               />
             </v-col>
             <v-col
@@ -25,7 +25,7 @@
             >
               <v-card
                 dark
-                :color="item.isBot ? '#115e63' : '#182859'"
+                :color="item.isBot ? 'bot' : 'user'"
                 class="message-bubble"
               >
                 {{
@@ -51,10 +51,12 @@
             solo
             flat
             no-resize
-            label="Write here to chat"
+            class="my-text-area"
+            :label="botIsTyping ? '' : 'Write here to chat'"
             rows="2"
-            background-color="#d4d4d4"
+            :background-color="botIsTyping ? '#dcdcdc' : '#bbdbdb'"
             hide-details="true"
+            :disabled="botIsTyping"
             @keyup.enter="sendText"
           ></v-textarea>
         </v-col>
@@ -63,7 +65,7 @@
         <v-col cols="1" class="align-self-stretch">
           <v-btn
             height="100%"
-            color="primary"
+            color="secondary"
             :depressed="true"
             @click="sendText"
           >
@@ -75,7 +77,7 @@
         <v-col cols="1">
           <v-btn
             height="100%"
-            color="primary"
+            color="secondary"
             :depressed="true"
             @click="userHelp"
           >
@@ -119,7 +121,7 @@ export default {
       if (
         this.utterance.trim() !== '' &&
         this.utterance !== '\n' &&
-        !this.botIsTyping
+        !this.botIsTyping // this should never be false because textarea is disabled turing typing
       ) {
         // if the chat component is being used to communicate with mmcc
         if (this.destination === 'mmcc') this.toFramework(this.utterance)
@@ -130,7 +132,6 @@ export default {
           })
         this.utterance = ''
       }
-      console.log('TuningChat: botIsTyping is ' + this.botIsTyping)
     },
     scrollToEnd() {
       const container = this.$el.querySelector('#chat')
