@@ -27,8 +27,6 @@ export const state = () => ({
   showHelp: true,
   // True when the bot is still typing (the 3 typing dots in the chat are still present)
   botIsTyping: false,
-  // Boolean to keep track if the GUI component is showing the generic help or something else
-  helpClicked: false,
   // Analysis pipeline used in the last section of the webapp to tune the hyperparameters
   tuningPipeline: [],
   // No idea why it's needed

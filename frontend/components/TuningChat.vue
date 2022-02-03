@@ -25,7 +25,7 @@
             >
               <v-card
                 dark
-                :color="item.isBot ? 'bot' : 'user'"
+                :color="item.isBot ? 'bot' : 'primary'"
                 class="message-bubble"
               >
                 {{
@@ -54,7 +54,7 @@
             class="my-text-area"
             :label="botIsTyping ? 'Bot is typing...' : 'Write here to chat'"
             rows="2"
-            :background-color="botIsTyping ? '#dcdcdc' : '#c5d4ff'"
+            :background-color="botIsTyping ? '#dcdcdc' : '#dce6f8'"
             hide-details="true"
             :disabled="botIsTyping"
             @keyup.enter="sendText"
@@ -65,7 +65,7 @@
         <v-col cols="1" class="align-self-stretch">
           <v-btn
             height="100%"
-            color="secondary"
+            color="primary"
             :depressed="true"
             @click="sendText"
           >
@@ -76,8 +76,9 @@
         <!-- 'HELP' button -->
         <v-col cols="1">
           <v-btn
+            v-if="destination === '/send-message'"
             height="100%"
-            :color="showHelp ? 'secondary' : '#3a497d'"
+            :color="showHelp ? 'primary' : 'secondary'"
             :depressed="true"
             @click="userHelp"
           >

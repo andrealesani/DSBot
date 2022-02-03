@@ -12,6 +12,7 @@
       <v-switch
         v-model="hasIndex"
         flat
+        color="secondary"
         :label="`The file rows have ${hasIndex ? '' : 'not'} Keys`"
       ></v-switch>
       <!-- </v-flex> -->
@@ -19,6 +20,7 @@
       <v-switch
         v-model="hasColumnNames"
         flat
+        color="secondary"
         :label="`The file rows have ${
           hasColumnNames ? '' : 'not'
         } column names`"
@@ -41,7 +43,7 @@
       </v-flex>
     </v-card>
     <!-- <v-btn color="primary"> Continue </v-btn> -->
-    <v-btn color="primary" @click="sendData"> Continue </v-btn>
+    <v-btn color="secondary" @click="sendData"> Continue </v-btn>
   </div>
 </template>
 

@@ -58,7 +58,7 @@ img {
 
 .GUIHelper {
   border-style: solid;
-  border-color: var(--v-secondary-base);
+  border-color: var(--v-primary-base);
   border-width: 0.3em;
   min-height: 400px;
   display: flex;
@@ -66,7 +66,7 @@ img {
   justify-content: center;
   border-radius: 10px;
   font-family: 'Open Sans', Verdana, sans-serif;
-  color: var(--v-secondary-base);
+  color: var(--v-primary-base);
   padding: 3em;
   text-align: justify;
 }

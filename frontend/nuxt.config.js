@@ -74,7 +74,8 @@ export default {
           success: colors.green.accent3,
         },
         light: {
-          secondary: '#1d243d',
+          primary: '#192758',
+          secondary: '#364880',
           user: '#192758',
           bot: '#115E63',
         },
