@@ -2,7 +2,6 @@
   <v-col>
     <v-row justify="center">
       <v-col>
-        <!--      <v-img :src="require('@/assets/clusters_img.png')" aspect-ratio="1.8" />-->
         <transition name="bounce">
           <div class="GUIHelper">
             <p v-if="showHelp">
