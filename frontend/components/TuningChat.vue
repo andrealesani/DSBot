@@ -47,6 +47,7 @@
       <v-row dense>
         <v-col xl="9" lg="9" md="8" sm="7">
           <v-textarea
+            id="chat-input"
             v-model="utterance"
             solo
             flat
@@ -111,6 +112,7 @@ export default {
   },
   updated() {
     this.scrollToEnd()
+    this.focusChat()
   },
   methods: {
     ...mapActions(['toFramework', 'sendChatMessage', 'getHelp']),
@@ -139,6 +141,11 @@ export default {
       // console.log(container);
       if (container) {
         container.scrollTop = container.scrollHeight
+      }
+    },
+    focusChat() {
+      if (!this.botIsTyping) {
+        this.$el.querySelector('#chat-input').focus()
       }
     },
   },
