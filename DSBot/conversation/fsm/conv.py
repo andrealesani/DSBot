@@ -42,7 +42,7 @@ class Conv:
             self.jh.updatePredState(session_id, state)
             response = self.send_help(state, 1)
             state = "help"
-            response["response"].extend(["Got it?", "I could tell you some applied real life examples", "But maybe you have already made up your mind and I do not wanna bother you further"])
+            response["response"].extend(["Got it?"])
         elif state == "help" and (intent == "affirm" or intent == "help" or intent == "deny" or intent == "example"):
             if intent == "affirm":
                 state = self.jh.getPredState(session_id)

@@ -42,6 +42,9 @@ class pipelineDrivenConv:
         if intent == "help":
             # TODO uniforma formato getBlockHelp e getHelp
             help = self.js.getBlockHelp(pipeline[blockIndex].name, paramIndex)
+            with open('./conversation/conv_blocks/' + pipeline[blockIndex].name + ".json", 'r') as f:
+                block = json.load(f)
+            help.extend(block["parameters"][paramIndex]["question"])
             return {"response": help}
         elif self.js.getstate(session_id) == "parametersSetting":
             # get current block

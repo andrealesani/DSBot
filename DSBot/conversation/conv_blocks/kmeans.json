@@ -7,7 +7,7 @@
       "is_special": "no",
       "question": ["Type a number between 2 and 10."],
       "answer_type": "int",
-      "help": ["It is usually hard to read a graph with more than 5-6 clusters and it might not give useful information but,", "there might be specific cases where you need to find more"]
+      "help": ["It is usually hard to read a graph with more than 5-6 clusters and it might not give useful information,", "but there might be specific cases where you need to find more."]
     }
   ]
 }
