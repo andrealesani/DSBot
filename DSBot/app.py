@@ -258,7 +258,6 @@ def answer_message():
                 ["kmeans", "labelRemove", "oneHotEncode", "outliersRemove", "varianceThreshold", "missingValuesRemove",
                  "pca2", "scatterplot", "normalization"])"""
             #TODO creare dinamicamente/randomicamente(giusto per far vedere che supporta diverse pipeline) diverse pipeline
-            #####problema: discrepanza tra alcuni blocchetti (tra json e implementazione) sia nome che parametri diversi
             ir_tuning = create_IR(["missingValuesRemove", "oneHotEncode", "outliersRemove", "varianceThreshold", "kmeans", "pca2", "scatterplot"])
             """#stampa il tipo di oggetto del primo blocco della pipeline
             print(type(ir_tuning[0]))

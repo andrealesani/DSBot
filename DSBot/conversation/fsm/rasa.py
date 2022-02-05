@@ -12,7 +12,10 @@ class Rasa:
 
     def parse(self, utterance: str):
         """to avoid inferring wrong entities if the user inserts only a number"""
-        if utterance.isnumeric():
+        num = utterance[0]
+        #print(num)
+        if num.isnumeric():
+            #print("salva il numero")
             entity = float(utterance)
             intent = "NotAnIntent"
         else:

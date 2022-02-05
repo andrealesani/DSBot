@@ -52,6 +52,7 @@ class pipelineDrivenConv:
             try:
                 pipeline[blockIndex].parameters[block["parameters"][paramIndex]["name"]].tune_value(
                     int(entity))
+                #print(pipeline[blockIndex].parameters[block["parameters"][paramIndex]["name"]].value)
             except:
                 # invalid user input
                 return {"response": ["Sorry, I didn't understand"]}
