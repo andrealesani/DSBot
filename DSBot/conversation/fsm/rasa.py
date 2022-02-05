@@ -12,8 +12,7 @@ class Rasa:
 
     def parse(self, utterance: str):
         """to avoid inferring wrong entities if the user inserts only a number"""
-        num = utterance[0]
-        #print(num)
+        num = utterance.strip()
         if num.isnumeric():
             #print("salva il numero")
             entity = float(utterance)
