@@ -75,7 +75,7 @@ class Conv:
                 #response = {"response": ["Do you want to gather together in groups similar data or find some pattern in their features?"]}
             elif intent == "clustering" or intent == "association" or intent == "classification" or intent == "regression":
                 state = "start_pipeline"
-                response = {"response": ["Ok, " + intent + ". Let's set some parameters."]}
+                response = {"response": ["Ok, you want to do " + intent + ". Let's set some parameters."]}
 
         #elif state == "sup_unsup":
         #    if intent == "supervised":
@@ -96,14 +96,14 @@ class Conv:
                                          "Do you want to gather together in groups similar data or find some pattern in their features?"]}
             elif intent == "clustering" or intent == "association":
                 state = "start_pipeline"
-                response = {"response": ["Ok, " + intent + ". Let's set some parameters."]}
+                response = {"response": ["Ok, you want to do " + intent + ". Let's set some parameters."]}
 
         elif state == "supervised":
             if intent == "greet":
                 response = {"response": ["Hi!", "Are you trying to predict a label or a categorical attribute?"]}
             elif intent == "classification" or intent == "regression":
                 state = "start_pipeline"
-                response = {"response": ["Ok, " + intent + ". Let's set some parameters."]}
+                response = {"response": ["Ok, you want to do " + intent + ". Let's set some parameters."]}
 
         self.jh.updatestate(session_id, state)
         return response
