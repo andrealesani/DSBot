@@ -46,7 +46,7 @@ class Conv:
         elif state == "help" and (intent == "affirm" or intent == "help" or intent == "deny" or intent == "example"):
             if intent == "affirm":
                 state = self.jh.getPredState(session_id)
-                response = {"response": ["So you're a data scientist and kept it from me :))))))) muaahahahahha"]}
+                response = {"response": ["So you're a data scientist and kept it from me 🐱‍🐉 🤷‍♂️"]}
                 for s in self.jh.getQuestion(state):
                     response["response"].append(s)
             elif intent == "help" or intent == "deny" or intent == "example":
