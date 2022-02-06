@@ -1,6 +1,6 @@
 {
   "name": "varianceThreshold",
-  "description": ["I saw that there are a lot of features in your dataset.", "Variance Threshold algorithm lets you remove the less significant ones in order to remove noise and make the analysis quicker."],
+  "description": ["I saw that there are a lot of features in your dataset. Variance Threshold algorithm lets you remove the less significant ones in order to remove noise and make the analysis quicker."],
   "parameters": [
     {
       "name": "threshold",
