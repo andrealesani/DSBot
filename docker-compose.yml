@@ -47,7 +47,9 @@ services:
     #models/nlu-20211205-183513.tar.gz
     #models/nlu-20211211-223805.tar.gz
     #models/nlu-20220129-190912.tar.gz
+    #models/nlu-20220131-132107.tar.gz
+
     command: >
       run
       --enable-api
-      -m models/nlu-20220131-132107.tar.gz
+      -m models/nlu-20220206-232153.tar.gz

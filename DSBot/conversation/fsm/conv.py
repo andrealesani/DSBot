@@ -1,4 +1,4 @@
-# TODO enum for states
+
 """This class manages the first and second part of conversation. It differentiates between the two parts with the
 attribute "part" saved in a JSON named with the user's sessionID. In the JSON file there is also an attribute "state"
 in which the state of the fsm is updated. The method get_response receives as input the intent (extracted by the RASA
@@ -30,7 +30,7 @@ class Conv:
         except:
             pass
 
-    # TODO clean code, make it read from JSON file
+
     #TODO per implementare il back di uno stato fai update pred state a ogni chiamata
     """returns a dictionary with 1 "response" field"""
     def get_response(self, intent: str, session_id, state="greeting"):
@@ -46,13 +46,13 @@ class Conv:
         elif state == "help" and (intent == "affirm" or intent == "help" or intent == "deny" or intent == "example"):
             if intent == "affirm":
                 state = self.jh.getPredState(session_id)
-                response = {"response": ["So you're a data scientist and kept it from me 🐱‍🐉 🤷‍♂️"]}
+                response = {"response": ["So you're a data scientist and kept it from me 🤷‍♂️"]}
                 for s in self.jh.getQuestion(state):
                     response["response"].append(s)
             elif intent == "help" or intent == "deny" or intent == "example":
                 state = self.jh.getPredState(session_id)
                 response = self.send_help(state, 2)
-                response["response"].append("So after these nice examples you've got to choose")
+                response["response"].append("So after these nice examples you've got to choose 👀")
                 for s in self.jh.getQuestion(state):
                     response["response"].append(s)
             #TODO STATO CONFERMA RESET
@@ -68,13 +68,14 @@ class Conv:
             elif intent == "supervised":
                 state = "supervised"
                 response = {"response": self.jh.getQuestion(state)}
-                #response = {"response": ["Are you trying to predict a label or a categorical attribute?"]}
             elif intent == "unsupervised":
                 state = "unsupervised"
                 response = {"response":self.jh.getQuestion(state)}
-                #response = {"response": ["Do you want to gather together in groups similar data or find some pattern in their features?"]}
-            elif intent == "clustering" or intent == "association" or intent == "classification" or intent == "regression":
+            elif intent == "clustering":
                 state = "start_pipeline"
+                response = {"response": ["Ok, you want to do " + intent + ". Let's set some parameters."]}
+            elif intent == "association" or intent == "classification" or intent == "regression":
+                state = "greeting"
                 response = {"response": ["Ok, you want to do " + intent + ". Let's set some parameters."]}
 
         #elif state == "sup_unsup":
@@ -94,15 +95,18 @@ class Conv:
             if intent == "greet":
                 response = {"response": ["Hi!",
                                          "Do you want to gather together in groups similar data or find some pattern in their features?"]}
-            elif intent == "clustering" or intent == "association":
+            elif intent == "clustering":
                 state = "start_pipeline"
+                response = {"response": ["Ok, you want to do " + intent + ". Let's set some parameters."]}
+            elif intent == "association":
+                state = "unsupervised"
                 response = {"response": ["Ok, you want to do " + intent + ". Let's set some parameters."]}
 
         elif state == "supervised":
             if intent == "greet":
                 response = {"response": ["Hi!", "Are you trying to predict a label or a categorical attribute?"]}
             elif intent == "classification" or intent == "regression":
-                state = "start_pipeline"
+                state = "supervised"
                 response = {"response": ["Ok, you want to do " + intent + ". Let's set some parameters."]}
 
         self.jh.updatestate(session_id, state)
@@ -124,19 +128,20 @@ class Conv:
             base64_string = my_string.decode('utf-8')
             help["image"] = str(base64_string)
         return help
-        """ if (state == "greeting"):
-            return {"response":"I'm sorry, I don't know how to help you right now"}
-        if (state == "sup_unsup"):
-            return {"response":"help1"}
-        elif (state == "unsupervised"):
-            return {"response":"help1"}
-        elif (state == "supervised"):
-            return {"response":"help1"}
-        elif (state == "clustering"):
-            return {"response":"help1"}
-        elif (state == "association"):
-            return {"response":"help1"}
-        elif (state == "classification"):
-            return {"response":"help1"}
-        elif (state == "regression"):
-            return {"response":"help1"}"""
+        #if (state == "greeting"):
+        #    return {"response":"I'm sorry, I don't know how to help you right now"}
+        #if (state == "sup_unsup"):
+        #    return {"response":"help1"}
+        #elif (state == "unsupervised"):
+        #    return {"response":"help1"}
+        #elif (state == "supervised"):
+        #    return {"response":"help1"}
+        #elif (state == "clustering"):
+        #    return {"response":"help1"}
+        #elif (state == "association"):
+        #    return {"response":"help1"}
+        #elif (state == "classification"):
+        #    return {"response":"help1"}
+        #elif (state == "regression"):
+        #    return {"response":"help1"}
+#
