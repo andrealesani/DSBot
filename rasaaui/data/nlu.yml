@@ -20,6 +20,8 @@ nlu:
 - intent: help
   examples: |
     - i didn't understand
+    - i don't understand
+    - can't understand
     - don't know
     - help
     - can i have some examples
@@ -46,6 +48,7 @@ nlu:
   examples: |
     - yes
     - y
+    - yes please
     - indeed
     - of course
     - that sounds good
@@ -55,12 +58,17 @@ nlu:
     -i understand
     -ok
     -right
+    - yes thanks
+
 - intent: example
   examples: |
     -tell me some examples
     -show examples
     -examples
     -give me some examples
+    - can you show me some examples
+    -do you have any examples?
+
 - intent: deny
   examples: |
     - no
@@ -71,6 +79,7 @@ nlu:
     - no way
     - not really
     - nope
+    - no thanks
 
 - intent: mood_great
   examples: |
@@ -145,11 +154,6 @@ nlu:
     - i want to use kmeans algorithm
     - gather together in groups
 
-#i want [5](numbclusters) clusters  AGGLOMERATIVE/K-MEANS
-#perform [single/complete](linkageType) linkage AGGLOMERATIVE
-#i want to use [eculidean/cosine/manhattan](distanceType) distance AGGLOMERATIVE
-#use [0,234](epsilonValue) as epsilon DBSCAN
-#i want at least[4](minSamples) samples DBSCAN
 - intent: clust_algorithm
   examples: |
     - I want [2]{"entity": "n_clusters", "value":2} clusters
@@ -257,9 +261,8 @@ nlu:
     -i want to use [0.7]{"entity": "epsilon", "value": 0.7}
 
 
-
 - intent: association
-  examples : |
+  examples: |
     - association
     - I want to see relatioships between features
     - find patterns between features
@@ -267,6 +270,20 @@ nlu:
 - intent: regression
   examples: |
     - regression
+    - i want to perform regression
+    - i want to predict real numbers
+    - i want to predict continuous values
+    - continuous values
+    - real numbers
+
+- intent: classification
+  examples: |
+    - classification
+    - predict labels
+    - i want to predict labels
+    - i want to predict categorical values
+    - i want to classify my data
+    - categorical values
 
 - intent: dbscan
   examples: |
@@ -300,7 +317,6 @@ nlu:
     -I want [cosine]{"entity": "affinity", "value": "cosine"} affinity
 
 
-# TODO add examples
 - intent: reset
   examples: |
     -begin again
@@ -310,22 +326,21 @@ nlu:
     -i want to begin again
     -start again please
     -start from the beginning
+    -i made too many mistakes
     -i want to exit
     -exit
     -reset
     -i want reset prameters
     -i inserted the wrong parameters and i want to change them
     -i inserted the wrong parameters
-#- intent: back_one
-#  examples: |
-#    -i want to repeat last one
-#    -repeat last question please
-#    -i want to change my last answer
-#    -made a mistake
-#    -i made mistake
-#    -error
-#    -mistake
-#    -i made an error
-#    -the last parameter inserted was wrong
-#    -i want to change the last parameter
-#    -i want to change the previous parameter
+    -i want to repeat last one
+    -repeat last question please
+    -i want to change my last answer
+    -made a mistake
+    -i made mistake
+    -error
+    -mistake
+    -i made an error
+    -the last parameter inserted was wrong
+    -i want to change the last parameter
+    -i want to change the previous parameter

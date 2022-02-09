@@ -56,11 +56,21 @@ class Conv:
                 for s in self.jh.getQuestion(state):
                     response["response"].append(s)
             #TODO STATO CONFERMA RESET
-        elif intent == "reset":
-            response = {"response": ["I understand this may be frustrating but lets just restart from the beginning",
+        elif state != "reset" and intent == "reset":
+            self.jh.updatePredState(session_id, state)
+            response = {"response": ["Would you like to start all over again?"]}
+            state = "reset"
+        elif state == "reset":
+            if (intent == "affirm" or intent == "reset"):
+                response = {"response": ["I understand this may be frustrating but lets just restart from the beginning",
                                      "Don't forget to ask me for help whenever you need",
                                      "Would you like to perform supervised or unsupervised learning?"]}
-            state = "greeting"
+                state = "greeting"
+                self.jh.updatePredState(session_id, state)
+            else:
+                state = self.jh.getPredState(session_id)
+                response = {"response": ["All right then, lets go on"]}
+                response["response"].extend(self.jh.getQuestion(self.jh.getPredState(session_id)))
         elif state == "greeting":
             if intent == "greet":
                 # state = "sup_unsup"
@@ -76,7 +86,7 @@ class Conv:
                 response = {"response": ["Ok, you want to do " + intent + ". Let's set some parameters."]}
             elif intent == "association" or intent == "classification" or intent == "regression":
                 state = "greeting"
-                response = {"response": ["Ok, you want to do " + intent + ". Let's set some parameters."]}
+                response = {"response": ["Ok, you want to do " + intent + "."]}
 
         #elif state == "sup_unsup":
         #    if intent == "supervised":
@@ -100,14 +110,14 @@ class Conv:
                 response = {"response": ["Ok, you want to do " + intent + ". Let's set some parameters."]}
             elif intent == "association":
                 state = "unsupervised"
-                response = {"response": ["Ok, you want to do " + intent + ". Let's set some parameters."]}
+                response = {"response": ["Ok, you want to do " + intent + "."]}
 
         elif state == "supervised":
             if intent == "greet":
                 response = {"response": ["Hi!", "Are you trying to predict a label or a categorical attribute?"]}
             elif intent == "classification" or intent == "regression":
                 state = "supervised"
-                response = {"response": ["Ok, you want to do " + intent + ". Let's set some parameters."]}
+                response = {"response": ["Ok, you want to do " + intent + "."]}
 
         self.jh.updatestate(session_id, state)
         return response
@@ -145,3 +155,7 @@ class Conv:
         #elif (state == "regression"):
         #    return {"response":"help1"}
 #
+
+#"I understand this may be frustrating but lets just restart from the beginning",
+#                                     "Don't forget to ask me for help whenever you need",
+#                                     "Would you like to perform supervised or unsupervised learning?"

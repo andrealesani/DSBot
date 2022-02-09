@@ -46,7 +46,25 @@ class pipelineDrivenConv:
                 block = json.load(f)
             help.extend(block["parameters"][paramIndex]["question"])
             return {"response": help}
-        elif self.js.getstate(session_id) == "parametersSetting":
+        if intent == "reset" and self.js.getstate(session_id) != "reset":
+            self.js.updatePredState(session_id, self.js.getstate(session_id))
+            self.js.updatestate(session_id, "reset")
+            return {"response": ["Would you like to start all over again?"]}
+        elif self.js.getstate(session_id) == "reset":
+            if intent == "affirm" or intent == "reset":
+                self.js.reset(session_id)
+                return {
+                    "response": ["I understand this may be frustrating but lets just restart from the beginning",
+                                 "Don't forget to ask me for help whenever you need",
+                                 "Would you like to perform supervised or unsupervised learning?"]}
+            else:
+                self.js.updatestate(self.jh.getPredState(session_id))
+                response = {"response": ["All right then, lets go on"]}
+                with open('./conversation/conv_blocks/' + pipeline[blockIndex].name + ".json", 'r') as f:
+                    block = json.load(f)
+                response["response"].extend(block["parameters"][paramIndex]["question"])
+                return response
+        if self.js.getstate(session_id) == "parametersSetting":
             # get current block
             with open('./conversation/conv_blocks/' + pipeline[blockIndex].name + ".json", 'r') as f:
                 block = json.load(f)
@@ -121,7 +139,7 @@ class pipelineDrivenConv:
                 block = json.load(f)
                 return {"response": ["Good! And" + block["parameters"][paramIndex]["question"]]}
         else:
-            return "Should not be her MAXIMANAGER line 117"
+            return {"response": "Should not be her MAXIMANAGER line 117"}
 
     def hasParameters(self, block):
         if len(block.parameters) == 0 or not os.path.exists('./conversation/conv_blocks/' + block.name + '.json'):

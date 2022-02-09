@@ -41,15 +41,17 @@ services:
     # - run 'rasa train nlu'
     # - take note of the output and replace it in the command below
 
-    #entrypoint: /bin/bash
-    #tty: true
+    entrypoint: /bin/bash
+    tty: true
 
     #models/nlu-20211205-183513.tar.gz
     #models/nlu-20211211-223805.tar.gz
     #models/nlu-20220129-190912.tar.gz
     #models/nlu-20220131-132107.tar.gz
+    #models/nlu-20220206-232153.tar.gz
+    #models/nlu-20220207-191607.tar.gz
 
-    command: >
-      run
-      --enable-api
-      -m models/nlu-20220206-232153.tar.gz
+    #command: >
+    #  run
+    #  --enable-api
+    #  -m models/nlu-20220209-200454.tar.gz

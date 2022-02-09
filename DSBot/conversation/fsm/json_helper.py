@@ -33,7 +33,12 @@ class Json_helper:
             updated["part"] = "2"
         with open('./conversation/temp/conv_' + str(id), 'w') as f:
             f.write(json.dumps(updated))
-
+    def resetpart(self, id: str, part: int):
+        with open('./conversation/temp/conv_' + str(id), 'r') as f:
+            updated = json.load(f)
+            updated["part"] = str(part)
+        with open('./conversation/temp/conv_' + str(id), 'w') as f:
+            f.write(json.dumps(updated))
     def getstate(self, id: str):
         with open('./conversation/temp/conv_' + str(id), 'r') as f:
             conv = json.load(f)
@@ -103,3 +108,9 @@ class Json_helper:
             helps = json.load(f)
             help = helps["parameters"][param]["help"]
             return help
+
+    def reset(self, id):
+        self.setParamIndex(id, 0)
+        self.setBlockIndex(id, 0)
+        self.updatestate(id, "greeting")
+        self.resetpart(id, 1)
