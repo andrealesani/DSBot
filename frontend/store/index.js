@@ -294,10 +294,7 @@ export const actions = {
               context.commit('botFinishedTyping')
             }
             // Go to loading screen if the analysis has started
-            if (
-              messagesArray[i] ===
-              'Ok, parameter tuning is completed, in a moment you will see the results'
-            ) {
+            if (messagesArray[i] === 'Ok, parameter tuning is completed.') {
               context.commit('setStep', 3)
             }
           }, totalTime + charSum * actualSpeed)
