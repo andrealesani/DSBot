@@ -3,6 +3,7 @@
     <v-card class="mb-12" height="300px" flat>
       <v-file-input
         v-model="dataset"
+        color="secondary"
         truncate-length="15"
         :error="fileInputError"
         label="select a CSV"
@@ -30,6 +31,7 @@
       <v-flex xs5>
         <v-select
           v-model="separator"
+          color="secondary"
           :items="separator_list"
           :error="separatorError"
           label="Separator"
@@ -38,6 +40,7 @@
       <v-flex xs7>
         <v-text-field
           v-model="label"
+          color="secondary"
           label="Label (leave blank if not present)"
         ></v-text-field>
       </v-flex>

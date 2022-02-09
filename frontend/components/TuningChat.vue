@@ -55,7 +55,7 @@
             class="my-text-area"
             :label="botIsTyping ? 'Bot is typing...' : 'Write here to chat'"
             rows="2"
-            :background-color="botIsTyping ? '#dcdcdc' : '#dce6f8'"
+            :background-color="botIsTyping ? '#dcdcdc' : '#c8d9d6'"
             hide-details="true"
             :disabled="botIsTyping"
             @keyup.enter="sendText"
@@ -79,7 +79,7 @@
           <v-btn
             v-if="destination === '/send-message'"
             height="100%"
-            :color="showHelp ? 'primary' : 'secondary'"
+            :color="showHelp ? 'primary' : '#364880'"
             :depressed="true"
             @click="userHelp"
           >
