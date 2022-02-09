@@ -5,7 +5,7 @@ from DSBot.conversation.fsm.json_helper import Json_helper
 
 
 # TODO declare as constants frequently used string or file paths such as:
-#  "Ok, parameter tuning is completed, in a moment you will see the results", './conversation/conv_blocks/'
+#  "Ok, parameter tuning is completed", './conversation/conv_blocks/'
 class pipelineDrivenConv:
 
     def __init__(self):
@@ -120,7 +120,7 @@ class pipelineDrivenConv:
                 while not self.hasParameters(pipeline[blockIndex]):
                     blockIndex += 1
             except IndexError:
-                return {"response": ["Ok, parameter tuning is completed"]}
+                return {"response": ["Ok, parameter tuning is completed."]}
             self.js.setBlockIndex(session_id, blockIndex)
             self.js.setParamIndex(session_id, 0)
 
@@ -133,7 +133,7 @@ class pipelineDrivenConv:
                         toReturn.append(s)
                 return {"response": toReturn}
             else:
-                return {"response": ["Ok, parameter tuning is completed"]}
+                return {"response": ["Ok, parameter tuning is completed."]}
         elif self.hasParameters(pipeline[blockIndex]):
             with open('./conversation/conv_blocks/' + pipeline[blockIndex].name + ".json", 'r') as f:
                 block = json.load(f)
