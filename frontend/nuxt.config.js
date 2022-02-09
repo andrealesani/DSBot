@@ -75,7 +75,7 @@ export default {
         },
         light: {
           primary: '#192758',
-          secondary: '#364880',
+          secondary: '#115E63',
           user: '#192758',
           bot: '#115E63',
         },
