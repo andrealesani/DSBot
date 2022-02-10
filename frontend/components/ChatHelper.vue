@@ -17,6 +17,9 @@
               Be as natural as you wish during your conversation, and if you are
               stuck or need some help just ask for it in chat at any time.
               <br />
+              You can also ask to restart the conversation if you mistyped
+              something or you think we took the wrong path
+              <br />
               <br />
               DAA will do its best to support you during each step of your
               journey!
