@@ -32,7 +32,14 @@
           </v-stepper-content>
 
           <v-stepper-content step="2" class="px-10 pb-8">
-            <insert-sentence></insert-sentence>
+            <v-row>
+              <v-col>
+                <tuning-chat destination="/send-message"></tuning-chat>
+              </v-col>
+              <v-col>
+                <chat-helper></chat-helper>
+              </v-col>
+            </v-row>
           </v-stepper-content>
 
           <v-stepper-content step="3" class="px-10 pb-8">
@@ -83,7 +90,7 @@ export default {
   },
   methods: {
     ...mapMutations(['setStep', 'setResultsReady', 'setAvailable']),
-    ...mapActions(['toFramework', 'waitForResults']),
+    ...mapActions(['toFramework', 'waitForResults', 'getHelp']),
     restart() {
       this.setAvailable(true)
       this.setResultsReady(false)

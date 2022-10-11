@@ -1,48 +1,69 @@
 <template>
   <div>
+    <!-- Chat history container -->
     <v-container fluid>
-      <v-row>
-        <v-col id="chat" flat class="chat-container">
+      <v-col id="chat" flat class="chat-container">
+        <!-- For evey message print the icon and the v-card -->
+        <transition-group name="bounce">
           <v-row
             v-for="(item, index) in tuningChat"
             :key="index"
             :class="{ 'flex-row-reverse': !item.isBot }"
           >
-            <v-col :cols="2">
+            <v-col :cols="1">
               <font-awesome-icon
                 :icon="item.isBot ? 'robot' : 'user'"
                 size="2x"
-                color="#424242"
+                color="#555555"
               />
             </v-col>
-            <v-col :cols="9">
+            <v-col
+              :cols="8"
+              :class="
+                item.isBot ? 'd-flex justify-start' : 'd-flex justify-end'
+              "
+            >
               <v-card
-                :color="item.isBot ? 'white' : 'accent'"
-                class="py-1 px-2"
+                dark
+                :color="item.isBot ? 'bot' : 'primary'"
+                class="message-bubble"
               >
-                {{ item.message }}
+                {{
+                  !item.isBot || item.message !== '#wait' ? item.message : ''
+                }}
+                <div v-if="item.isBot && item.message === '#wait'">
+                  <div class="typing__dot"></div>
+                  <div class="typing__dot"></div>
+                  <div class="typing__dot"></div>
+                </div>
               </v-card>
             </v-col>
           </v-row>
-        </v-col>
-      </v-row>
+        </transition-group>
+        <v-spacer></v-spacer>
+      </v-col>
 
+      <!-- Area where u write the message -->
       <v-row dense>
-        <v-col xl="10" lg="9" md="8" sm="7">
+        <v-col xl="9" lg="9" md="8" sm="7">
           <v-textarea
+            id="chat-input"
             v-model="utterance"
             solo
             flat
             no-resize
-            label="Write here to chat"
-            rows="3"
-            background-color="grey lighten-3"
+            class="my-text-area"
+            :label="botIsTyping ? 'Bot is typing...' : 'Write here to chat'"
+            rows="2"
+            :background-color="botIsTyping ? '#dcdcdc' : '#c8d9d6'"
             hide-details="true"
+            :disabled="botIsTyping"
             @keyup.enter="sendText"
           ></v-textarea>
         </v-col>
 
-        <v-col cols="2" class="align-self-stretch">
+        <!-- 'Send message' button -->
+        <v-col cols="1" class="align-self-stretch">
           <v-btn
             height="100%"
             color="primary"
@@ -50,6 +71,19 @@
             @click="sendText"
           >
             <font-awesome-icon icon="chevron-right" size="2x" color="white" />
+          </v-btn>
+        </v-col>
+
+        <!-- 'HELP' button -->
+        <v-col cols="1">
+          <v-btn
+            v-if="destination === '/send-message'"
+            height="100%"
+            :color="showHelp ? 'primary' : '#364880'"
+            :depressed="true"
+            @click="userHelp"
+          >
+            <font-awesome-icon icon="question" size="2x" color="white" />
           </v-btn>
         </v-col>
       </v-row>
@@ -74,15 +108,25 @@ export default {
     }
   },
   computed: {
-    ...mapState(['tuningChat']),
+    ...mapState(['tuningChat', 'botIsTyping', 'showHelp']),
   },
   updated() {
     this.scrollToEnd()
+    this.focusChat()
   },
   methods: {
-    ...mapActions(['toFramework', 'sendChatMessage']),
+    ...mapActions(['toFramework', 'sendChatMessage', 'getHelp']),
+    userHelp() {
+      this.getHelp()
+    },
     sendText() {
-      if (this.utterance.trim() !== '' && this.utterance !== '\n') {
+      // check that the user has effectively written something
+      if (
+        this.utterance.trim() !== '' &&
+        this.utterance !== '\n' &&
+        !this.botIsTyping // this should never be false because textarea is disabled turing typing
+      ) {
+        // if the chat component is being used to communicate with mmcc
         if (this.destination === 'mmcc') this.toFramework(this.utterance)
         else
           this.sendChatMessage({
@@ -99,14 +143,90 @@ export default {
         container.scrollTop = container.scrollHeight
       }
     },
+    focusChat() {
+      if (!this.botIsTyping) {
+        this.$el.querySelector('#chat-input').focus()
+      }
+    },
   },
 }
 </script>
 
 <style scoped>
 .chat-container {
-  height: 600px; /* This component is this tall. Deal with it. */
+  min-height: 500px;
+  max-height: 700px;
+  min-width: 500px;
+  height: fit-content;
   overflow-y: auto;
   overflow-x: hidden;
+  display: flex;
+  flex-direction: column-reverse;
+}
+
+.message-bubble {
+  padding: 5pt 12pt;
+  block-size: fit-content;
+  inline-size: fit-content;
+  border-radius: 30px !important;
+  font-size: medium;
+  font-family: 'Open Sans', Verdana, sans-serif;
+}
+
+/* ANIMATIONS AND TRANSITIONS */
+
+.bounce-enter-active {
+  animation: bounce-in 0.3s;
+}
+.bounce-leave-active {
+  animation: bounce-in 0.5s reverse;
+}
+@keyframes bounce-in {
+  0% {
+    transform: scale(0);
+  }
+  50% {
+    transform: scale(1.1);
+  }
+  100% {
+    transform: scale(1);
+  }
+}
+
+/* 'BOT IS TYPING' ANIMATION */
+
+.typing__dot {
+  float: left;
+  width: 8px;
+  height: 8px;
+  margin: 0 4px;
+  background: #8cb8a8;
+  border-radius: 50%;
+  opacity: 0;
+  animation: loadingFade 1s infinite;
+}
+
+.typing__dot:nth-child(1) {
+  animation-delay: 0s;
+}
+
+.typing__dot:nth-child(2) {
+  animation-delay: 0.2s;
+}
+
+.typing__dot:nth-child(3) {
+  animation-delay: 0.4s;
+}
+
+@keyframes loadingFade {
+  0% {
+    opacity: 0;
+  }
+  50% {
+    opacity: 0.8;
+  }
+  100% {
+    opacity: 0;
+  }
 }
 </style>

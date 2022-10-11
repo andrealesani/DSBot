@@ -62,6 +62,15 @@ nlu:
       - You found different clusters with respect the one I see
       - Groups are overlapped
       - There are too many groups
+      - I don’t like the crosses of the points
+      - There are no visible clusters
+      - I don’t like this graphical and spatial representation of nine clusters
+      - There are no division between the clusters
+      - I don’t understand what such clusters represent nor what the blue group represents
+      - I don’t understand what such clusters represent
+      - I do not understand blue dots
+      - What the cluster represent
+
 
   - intent: bad_silhouette
     examples: |
@@ -96,6 +105,16 @@ nlu:
       - Dots groups make no sense
       - Sets make no sense
       - Clusters make no sense
+      - I do not like the results
+      - Can you change the visualization? 
+      - I do not like the visualization
+      - I don’t like the representation
+      - The clusters are not defined
+      - There is not a clear division
+      - I don’t get what this dimension means and the groups are too few
+      - I don’t like the visualization of blue dots
+      - I do not like the results
+
 
   - intent: fitting
     examples: |

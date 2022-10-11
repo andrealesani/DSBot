@@ -3,6 +3,7 @@
     <v-card class="mb-12" height="300px" flat>
       <v-file-input
         v-model="dataset"
+        color="secondary"
         truncate-length="15"
         :error="fileInputError"
         label="select a CSV"
@@ -12,6 +13,7 @@
       <v-switch
         v-model="hasIndex"
         flat
+        color="secondary"
         :label="`The file rows have ${hasIndex ? '' : 'not'} Keys`"
       ></v-switch>
       <!-- </v-flex> -->
@@ -19,6 +21,7 @@
       <v-switch
         v-model="hasColumnNames"
         flat
+        color="secondary"
         :label="`The file rows have ${
           hasColumnNames ? '' : 'not'
         } column names`"
@@ -28,6 +31,7 @@
       <v-flex xs5>
         <v-select
           v-model="separator"
+          color="secondary"
           :items="separator_list"
           :error="separatorError"
           label="Separator"
@@ -36,12 +40,13 @@
       <v-flex xs7>
         <v-text-field
           v-model="label"
+          color="secondary"
           label="Label (leave blank if not present)"
         ></v-text-field>
       </v-flex>
     </v-card>
     <!-- <v-btn color="primary"> Continue </v-btn> -->
-    <v-btn color="primary" @click="sendData"> Continue </v-btn>
+    <v-btn color="secondary" @click="sendData"> Continue </v-btn>
   </div>
 </template>
 

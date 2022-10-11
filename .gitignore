@@ -132,3 +132,5 @@ dmypy.json
 .pyre/
 
 DSBot/temp/
+frontend/package-lock.json
+DSBot/conversation/temp

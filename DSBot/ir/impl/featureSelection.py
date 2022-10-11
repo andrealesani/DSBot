@@ -57,7 +57,7 @@ class IRVarianceThreshold(IRFeatureSelection):
                                                   VarianceThreshold)
 
     def parameter_tune(self, dataset):
-        self.parameters['threshold'].max_v=dataset.std().max()
+        self.parameters['threshold'].max_v=round(dataset.std().max(), 1)
 
 
 class IRSelectKBest(IRFeatureSelection):

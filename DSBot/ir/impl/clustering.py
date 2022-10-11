@@ -90,8 +90,8 @@ class IRAgglomerativeClustering(IRClustering):
     def __init__(self):
         super(IRAgglomerativeClustering, self).__init__("agglomerativeClustering",
                                                         [IRNumPar("n_clusters", 2, "int", 2, 10, 1),
-                                                         IRCatPar("linkage", "single", ['single','complete','ward']),
-                                                         IRCatPar("affinity", "euclidean", ["euclidean", "l1", "l2", "manhattan", "cosine", "precomputed"])],  # TODO: what is the maximum?
+                                                         IRCatPar("linkage", "single", ['single','complete']), #FIXME: ward
+                                                         IRCatPar("affinity", "euclidean", ["euclidean", "l1", "l2", "manhattan", "cosine"])],  # FIXME: precomputed
                                                         AgglomerativeClustering)
 
 

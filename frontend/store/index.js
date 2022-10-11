@@ -1,13 +1,37 @@
 export const state = () => ({
+  // Variable used by the v-stepper component to know which section of the webapp to show
   e1: 1,
+  // Variable that is going to be filled with the sessionId
   sessionId: 1,
+  // No idea
   requestDescription: '',
+  // It becomes true when the backend has run the analysis and has sent the graph image
   resultsReady: false,
+  // Variable that stores an image received from the backend, for example the results of the analysis
   imageBase64: null,
+  // No idea
   resultsDetails: '',
-  tuningChat: [],
+  // Object used to store the chat messages and their sender. Initialized with welcome message
+  tuningChat: [
+    {
+      isBot: true,
+      message:
+        'Welcome to Data Analysis Advisor! 😁 We can help you getting relevant information from your data. Don’t hesitate to ask for more explanation during every step of the conversation.',
+    },
+    {
+      isBot: true,
+      message: 'Would you like to do supervised or unsupervised learning?',
+    },
+  ],
+  // When true, chatHelper component shows the help message
+  showHelp: true,
+  // True when the bot is still typing (the 3 typing dots in the chat are still present)
+  botIsTyping: false,
+  // Analysis pipeline used in the last section of the webapp to tune the hyperparameters
   tuningPipeline: [],
+  // No idea why it's needed
   backendAvailable: true,
+  // I guess it's used in the last section of the webapp
   pipelineEdited: false,
 })
 
@@ -26,12 +50,31 @@ export const mutations = {
   },
   setImage(state, image) {
     state.imageBase64 = image
+    state.showHelp = false
   },
   setResultsDetails(state, details) {
     state.resultsDetails = details
   },
   sendChat(state, msg) {
+    if (state.botIsTyping) {
+      return null
+    }
+
     state.tuningChat.push({ isBot: false, message: msg })
+  },
+  removeWait(state) {
+    state.tuningChat.pop()
+    /* const chat = state.tuningChat
+    for (const element in chat) {
+      if (element.isBot && element.message === '#wait') {
+        const deletedElement = state.tuningChat.splice(chat.indexOf(element), 1)
+        if (deletedElement.len < 1) alert("couldn't deletedElement")
+        else alert('element deleted')
+      }
+    } */
+  },
+  clearChat(state) {
+    state.tuningChat = []
   },
   receiveChat(state, msg) {
     if (msg) state.tuningChat.push({ isBot: true, message: msg })
@@ -42,9 +85,22 @@ export const mutations = {
   setAvailable(state, available) {
     state.backendAvailable = available
   },
-
   setPipelineEdited(state, edited) {
     state.pipelineEdited = edited
+  },
+  setShowHelp(state, bool) {
+    state.showHelp = bool
+  },
+  invertShowHelp(state) {
+    state.showHelp = !state.showHelp
+  },
+  botStartedTyping(state) {
+    state.botIsTyping = true
+    console.log('bot started typing')
+  },
+  botFinishedTyping(state) {
+    state.botIsTyping = false
+    console.log('bot finished typing')
   },
 }
 
@@ -98,14 +154,14 @@ export const actions = {
   },
 
   async waitForResults(context) {
-    console.log('WAIT FOR RESULTS', this.state.e1)
     if (this.state.e1 === 3 && !this.state.resultsReady) {
-      console.log('GET RESULTS CALLED')
+      console.log('CALLED /results/sessionId')
       const pollingResponse = await this.$axios
         .get(`/results/${this.state.sessionId}`)
         .then(function (response) {
           console.log(response)
           if (response.data.ready) {
+            context.commit('setStep', 3)
             context.commit('setImage', response.data.img)
             context.commit('setResultsDetails', response.data.details)
             context.commit('setResultsReady', response.data.ready)
@@ -177,25 +233,93 @@ export const actions = {
     return res
   },
 
+  // Sends the message to the backend, then adds the user message to the chat panel, waits for server response and adds it to chat panel too
   async sendChatMessage(context, data) {
     // The data can be {destination: '/yourDestination', payload: userUtterance}
+
+    console.log('SendMessage: botIsTyping is ' + this.botIsTyping)
+
+    if (context.state.botIsTyping) {
+      return null
+    }
 
     // Add the message to the chat panel
     context.commit('sendChat', data.payload)
 
     // This is the data sent to the backend
     const bodyRequest = {
+      session_id: this.state.sessionId,
       payload: data.payload,
     }
     const res = await this.$axios
       .post(data.destination, bodyRequest)
       .then(function (response) {
-        // Add the response to the chat panel
-        context.commit('receiveChat', response.data)
+        context.commit('botStartedTyping')
+        context.commit('receiveChat', '#wait')
+        // Array of strings containing the messages sent by the bot
+        const messagesArray = response.data.response
+        // Typing speed of the bot (in milliseconds per character)
+        const typingSpeed = 25
+        // Maximum wait time for a message to be written
+        const maxWaitTime = 3000
+        // Minimum wait time for a message to be written
+        const minWaitTime = 2000
+        // Time to wait before starting to print the current message
+        let totalTime = 0
+        // Print the messages
+        for (let i = 0; i < messagesArray.length; i++) {
+          // Number of characters in the message
+          const charSum = messagesArray[i].length
+          // Actual typing speed of the bot. It inherits the value of 'typingSpeed' for long messages, but it's overwritten for short messages
+          let actualSpeed
+          // It slows down the typing speed if the message is too short and would be sent too quickly
+          if (charSum * typingSpeed < minWaitTime) {
+            actualSpeed = minWaitTime / charSum
+          }
+          // It caps the maximum time for a message to be sent to 3 seconds
+          else if (charSum * typingSpeed > maxWaitTime) {
+            actualSpeed = maxWaitTime / charSum
+          } else {
+            actualSpeed = typingSpeed
+          }
+          setTimeout(() => {
+            // Removes the 3 dots
+            context.commit('removeWait')
+            // Adds the actual message to the chat panel
+            context.commit('receiveChat', messagesArray[i])
+            // Adds the 3 dots to the chat panel for the next message (it doesn't add them if it's the last message)
+            if (i < messagesArray.length - 1) {
+              context.commit('receiveChat', '#wait')
+            } else {
+              context.commit('botFinishedTyping')
+            }
+            // Go to loading screen if the analysis has started
+            if (messagesArray[i] === 'Ok, parameter tuning is completed.') {
+              context.commit('setStep', 3)
+            }
+          }, totalTime + charSum * actualSpeed)
+          console.log(messagesArray[i])
+          console.log('took ' + charSum * actualSpeed + 'ms to be printed')
+          totalTime += charSum * actualSpeed
+        }
 
-        // Do something with the response if necessary, for example:
-        // console.log(response)
+        // If there is an image attached to the message show it inside ChatHelper component
+        if (response.data.image !== null && response.data.image !== undefined) {
+          context.commit('setImage', response.data.image)
+        }
       })
     return res
+  },
+
+  // Clears the chat array
+  clearChat(context) {
+    context.commit('clearChat')
+  },
+  getHelp(context) {
+    if (this.state.e1 !== 2) {
+      alert('Help button is only available in step 2')
+      return
+    }
+    context.commit('invertShowHelp')
   },
 }

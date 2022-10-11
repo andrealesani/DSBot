@@ -1,0 +1,15 @@
+{
+  "name": "varianceThreshold",
+  "description": ["I saw that there are a lot of features in your dataset. Variance Threshold algorithm lets you remove the less significant ones in order to remove noise and make the analysis quicker."],
+  "parameters": [
+    {
+      "name": "threshold",
+      "is_special": "yes",
+      "question": ["Type a decimal value between 0 and 10 that will be the minimum variance for a feature not to be removed for the analysis."],
+      "answer_type": "float",
+      "help": ["Variance threshold is a feature selection algorithm. Variance tells you the degree of spread in your data set. We are trying to remove those features which values are almost the same."],
+      "media_path": "src/ecc/features-to-be-removed.png",
+      "media_type": "img"
+    }
+  ]
+}

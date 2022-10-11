@@ -9,6 +9,7 @@
     </v-card>
     <!-- <v-btn color="primary"> Continue </v-btn> -->
     <v-btn color="primary" @click="sendUtterance(utterance)"> Continue </v-btn>
+    <v-btn color="primary" @click="clearChat()"> Clear chat </v-btn>
   </div>
 </template>
 
@@ -23,7 +24,7 @@ export default {
     }
   },
   methods: {
-    ...mapActions(['sendUtterance']),
+    ...mapActions(['sendUtterance', 'clearChat']),
   },
 }
 </script>
